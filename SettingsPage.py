@@ -16,7 +16,6 @@ class Settings():
     img6 = CTkImage(Image.open("Icons\\folder.png"),size=(24,24))
     
     def settings(frame,button,app):
-        button.configure(fg_color= "#0967CC",state= DISABLED)
         
         global settings_page
         settings_page = CTkFrame(frame,height= 330,width= 600,fg_color="#510723",corner_radius= 6)
@@ -64,25 +63,25 @@ class Settings():
         Settings.select_loc("Yes")
  
         dev_image = CTkLabel(settings_page,height= 130,width= 200,text= '',fg_color="#510723",image= Settings.img2,corner_radius= 4)
-        dev_image.place(x= 390,y= 50)
+        dev_image.place(x= 390,y= 53)
         
         git_button = CTkButton(settings_page,text= "GitHub   ",compound=LEFT,font=("TImes",15),height= 40,width=200,fg_color="#770B33",corner_radius= 4,border_color="#0967CC",border_width=0,image= Settings.img3,command= lambda: [app.update(), webbrowser.open("https://github.com/Mr-G254",new= 2)])
-        git_button.place(x= 390,y= 185)
+        git_button.place(x= 390,y= 188)
         git_button.bind('<Enter>',lambda Event: Extra.highlight(Event,git_button))
         git_button.bind('<Leave>',lambda Event: Extra.unhighlight(Event,git_button))
         
         lin_button = CTkButton(settings_page,text= "Linkedin",compound=LEFT,font=("TImes",15),height= 40,width=200,fg_color="#770B33",corner_radius= 4,border_color="#0967CC",border_width=0,image= Settings.img4,command= lambda: [app.update(), webbrowser.open("https://www.linkedin.com/in/ezekiel-gikuhi-6a0757259/",new= 2)])
-        lin_button.place(x= 390,y= 230)
+        lin_button.place(x= 390,y= 233)
         lin_button.bind('<Enter>',lambda Event: Extra.highlight(Event,lin_button))
         lin_button.bind('<Leave>',lambda Event: Extra.unhighlight(Event,lin_button))
         
         gm_button = CTkButton(settings_page,text= "Gmail   ",compound=LEFT,font=("TImes",15),height= 40,width=200,fg_color="#770B33",corner_radius= 4,border_color="#0967CC",border_width=0,image= Settings.img5,command= lambda: Settings.copy_email(app))
-        gm_button.place(x= 390,y= 275)
+        gm_button.place(x= 390,y= 278)
         gm_button.bind('<Enter>',lambda Event: Extra.highlight(Event,gm_button))
         gm_button.bind('<Leave>',lambda Event: Extra.unhighlight(Event,gm_button))
         
-        back = CTkButton(settings_page,text= "Back",font=("TImes",14),height= 27,width=150,fg_color="#283747",corner_radius= 4,border_color="#0967CC",border_width=0,command= lambda: Extra.back(settings_page,button))
-        back.place(x=225,y=290)
+        back = CTkButton(settings_page,text= "Back",font=("TImes",14),height= 28,width=150,fg_color="#770B33",corner_radius= 4,border_color="#0967CC",border_width=0,command= lambda: Extra.back(settings_page,button))
+        back.place(x=225,y=291)
         back.bind('<Enter>',lambda Event: Extra.highlight(Event,back))
         back.bind('<Leave>',lambda Event: Extra.unhighlight(Event,back))
         

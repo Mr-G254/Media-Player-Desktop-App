@@ -3,6 +3,7 @@ from customtkinter import*
 class Extra():
     buttons_a = []
     buttons_b = []
+    buttons_c = []
     
     frames_a = []
     frames_b = []
@@ -24,6 +25,7 @@ class Extra():
         app.after(1200,toast.place_forget())
         
     def configure_buttons(button,list):
+        button.configure(fg_color= "#0967CC",state= DISABLED)
         for i in list:
             if i != button:
                 i.configure(state= NORMAL,fg_color="#510723")
