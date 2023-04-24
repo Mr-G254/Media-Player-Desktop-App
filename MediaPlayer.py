@@ -1,9 +1,10 @@
-from tkinter import ttk
+from tkinter import ttk,Button
 from customtkinter import*
-from PIL import Image
+from PIL import ImageTk,Image
 from SettingsPage import Settings
 from FoldersPage import Folders
 from Extra import*
+from tkhtmlview import HTMLLabel
 
 app = CTk()
 app.title("Media Player")
@@ -28,6 +29,10 @@ class HomeUI():
     img13 = CTkImage(Image.open("Icons\\recent_bg.png"),size=(64,64))
     img14 = CTkImage(Image.open("Icons\playlist_bg.png"),size=(64,64))
     img15 = CTkImage(Image.open("Icons\heart_bg.png"),size=(64,64))
+    img16 = CTkImage(Image.open("Icons\previous-button.png"),size=(32,32))
+    img17 = CTkImage(Image.open("Icons\play.png"),size=(64,64))
+    img18 = CTkImage(Image.open("Icons\pause.png"),size=(64,64))
+    img19 = CTkImage(Image.open("Icons\\next-button.png"),size=(32,32))
     
     frame = CTkFrame(app,height= 600,width=1000,fg_color="#641E16")
     frame.place(x= 0,y= 0)
@@ -67,9 +72,36 @@ class HomeUI():
         pic = CTkLabel(HomeUI.frame,height= 140,width= 235,fg_color="#510723",text="",font=("TImes",15),image= HomeUI.img10,compound= LEFT,corner_radius= 6)
         pic.place(x= 761,y= 5)
         
-        controlframe = CTkFrame(HomeUI.frame,fg_color="#510723",height= 90,width=990,corner_radius= 6)
-        controlframe.place(x=5,y=505)
-        
+        controlframe = CTkFrame(HomeUI.frame,fg_color="#510723",height= 100,width=990,corner_radius= 6)
+        controlframe.place(x=5,y=495)
+
+        p_label = CTkLabel(controlframe,text="00:00:00",fg_color="#510723",height=20)
+        p_label.place(x=5,y=5)
+
+        progressbar = CTkProgressBar(controlframe, orientation="horizontal",width=865,height=5)
+        progressbar.place(x= 60,y= 12)
+
+        r_label = CTkLabel(controlframe,text="00:00:00",fg_color="#510723",height=20)
+        r_label.place(x=935,y=5)
+
+        msclabel = CTkLabel(controlframe,height= 70,width= 70,image= HomeUI.img1,text = '',fg_color=['gray86', 'gray17'],corner_radius= 4,anchor= CENTER)
+        msclabel.place(x= 5,y= 25)
+
+        previous_btn = CTkButton(controlframe,text= "",image= HomeUI.img16,height= 35,width=35,fg_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0)
+        previous_btn.place(x=415,y=36)
+        previous_btn.bind('<Enter>',lambda Event: Extra.highlight(Event,previous_btn))
+        previous_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,previous_btn))
+
+        play_btn = CTkButton(controlframe,text= "",image= HomeUI.img17,height= 64,width=64,fg_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0)
+        play_btn.place(x=462,y=20)
+        play_btn.bind('<Enter>',lambda Event: Extra.highlight(Event,play_btn))
+        play_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,play_btn))
+
+        next_btn = CTkButton(controlframe,text= "",image= HomeUI.img19,height= 35,width=35,fg_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0)
+        next_btn.place(x=540,y=36)
+        next_btn.bind('<Enter>',lambda Event: Extra.highlight(Event,next_btn))
+        next_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,next_btn))
+
         HomeUI.menu()
         
     def menu():
