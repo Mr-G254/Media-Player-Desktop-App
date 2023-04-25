@@ -4,11 +4,13 @@ from PIL import ImageTk,Image
 from SettingsPage import Settings
 from FoldersPage import Folders
 from Extra import*
-from tkhtmlview import HTMLLabel
+from MusicPage import Music
 
 app = CTk()
 app.title("Media Player")
-app.geometry("1000x600+100+50")
+app.geometry("500x300+350+200")
+app.attributes('-topmost',True)
+app.overrideredirect(True)
 app.resizable(False,False)
 
 class HomeUI():
@@ -33,15 +35,34 @@ class HomeUI():
     img17 = CTkImage(Image.open("Icons\play.png"),size=(64,64))
     img18 = CTkImage(Image.open("Icons\pause.png"),size=(64,64))
     img19 = CTkImage(Image.open("Icons\\next-button.png"),size=(32,32))
+    img20 = CTkImage(Image.open("Icons\logo.png"),size=(128,128))
     
     frame = CTkFrame(app,height= 600,width=1000,fg_color="#641E16")
     frame.place(x= 0,y= 0)
+
+    def splash():
+        global logo
+        logo = CTkLabel(HomeUI.frame,text="",image= HomeUI.img20,corner_radius= 4)
+        logo.place(x=186,y=86)
+
+        # app.after(3000,HomeUI.home)
+        HomeUI.home()
        
     def home():
+        logo.place_forget()
+        app.attributes('-topmost',False)
+        app.geometry("1000x600+100+50")
+        app.overrideredirect(False)
+
         global name
         name = CTkLabel(HomeUI.frame,height= 100,width= 135,fg_color="#510723",text="",font=("TImes",15),corner_radius= 6)
         name.place(x= 5,y= 5)
+
+        global name2
+        name2 = CTkLabel(HomeUI.frame,height= 100,width= 135,fg_color="#510723",text="",font=("TImes",15),corner_radius= 6)
         
+        
+        global topbar
         topbar = CTkFrame(HomeUI.frame,height= 40,width= 466,corner_radius= 5,border_color="#0967CC",border_width=2)
         topbar.place(x= 217,y= 15)
         
@@ -69,6 +90,7 @@ class HomeUI():
         search_btn.bind('<Enter>',lambda Event: Extra.highlight(Event,search_btn))
         search_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,search_btn))
         
+        global pic
         pic = CTkLabel(HomeUI.frame,height= 140,width= 235,fg_color="#510723",text="",font=("TImes",15),image= HomeUI.img10,compound= LEFT,corner_radius= 6)
         pic.place(x= 761,y= 5)
         
@@ -76,29 +98,30 @@ class HomeUI():
         controlframe.place(x=5,y=495)
 
         p_label = CTkLabel(controlframe,text="00:00:00",fg_color="#510723",height=20)
-        p_label.place(x=5,y=5)
+        p_label.place(x=5,y=3)
 
-        progressbar = CTkProgressBar(controlframe, orientation="horizontal",width=865,height=5)
-        progressbar.place(x= 60,y= 12)
+        progressbar = CTkSlider(controlframe,from_=0,to=865,progress_color="#770B33",fg_color=['gray86', 'gray17'], orientation="horizontal",width=865)
+        progressbar.set(865)
+        progressbar.place(x= 60,y= 5)
 
         r_label = CTkLabel(controlframe,text="00:00:00",fg_color="#510723",height=20)
-        r_label.place(x=935,y=5)
+        r_label.place(x=935,y=3)
 
         msclabel = CTkLabel(controlframe,height= 70,width= 70,image= HomeUI.img1,text = '',fg_color=['gray86', 'gray17'],corner_radius= 4,anchor= CENTER)
         msclabel.place(x= 5,y= 25)
 
         previous_btn = CTkButton(controlframe,text= "",image= HomeUI.img16,height= 35,width=35,fg_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0)
-        previous_btn.place(x=415,y=36)
+        previous_btn.place(x=415,y=41)
         previous_btn.bind('<Enter>',lambda Event: Extra.highlight(Event,previous_btn))
         previous_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,previous_btn))
 
         play_btn = CTkButton(controlframe,text= "",image= HomeUI.img17,height= 64,width=64,fg_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0)
-        play_btn.place(x=462,y=20)
+        play_btn.place(x=462,y=25)
         play_btn.bind('<Enter>',lambda Event: Extra.highlight(Event,play_btn))
         play_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,play_btn))
 
         next_btn = CTkButton(controlframe,text= "",image= HomeUI.img19,height= 35,width=35,fg_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0)
-        next_btn.place(x=540,y=36)
+        next_btn.place(x=540,y=41)
         next_btn.bind('<Enter>',lambda Event: Extra.highlight(Event,next_btn))
         next_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,next_btn))
 
@@ -108,20 +131,20 @@ class HomeUI():
         menuframe = CTkFrame(HomeUI.frame,height= 250,width=50,fg_color="#510723",corner_radius= 6)
         menuframe.place(x=5,y=150)
         
-        menubtn = CTkButton(menuframe,height= 35,width= 45,image= HomeUI.img0,text = '',corner_radius= 4,fg_color="#510723",anchor= CENTER)
+        menubtn = CTkButton(menuframe,height= 35,width= 45,image= HomeUI.img0,text = '',corner_radius= 4,fg_color="#510723",anchor= CENTER,command= lambda: [Extra.configure_buttons(menubtn, Extra.buttons_a),HomeUI.home_action()])
         menubtn.place(x= 3,y= 3)
         menubtn.configure(fg_color= "#0967CC",state= DISABLED)
         Extra.buttons_a.append(menubtn)
         
-        mscbtn = CTkButton(menuframe,height= 35,width= 45,image= HomeUI.img1,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER)
+        mscbtn = CTkButton(menuframe,height= 35,width= 45,image= HomeUI.img1,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [Extra.configure_buttons(mscbtn, Extra.buttons_a),Music.music(HomeUI.frame,app,topbar,pic,name2)])
         mscbtn.place(x= 3,y= 48)
         Extra.buttons_a.append(mscbtn)
         
-        vdbtn = CTkButton(menuframe,height= 35,width= 45,image= HomeUI.img2,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER)
+        vdbtn = CTkButton(menuframe,height= 35,width= 45,image= HomeUI.img2,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [Extra.configure_buttons(vdbtn, Extra.buttons_a)])
         vdbtn.place(x= 3,y= 88)
         Extra.buttons_a.append(vdbtn)
         
-        ytbtn = CTkButton(menuframe,height= 35,width= 45,image= HomeUI.img4,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER)
+        ytbtn = CTkButton(menuframe,height= 35,width= 45,image= HomeUI.img4,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [Extra.configure_buttons(ytbtn, Extra.buttons_a)])
         ytbtn.place(x= 3,y= 128)
         Extra.buttons_a.append(ytbtn)
         
@@ -142,6 +165,14 @@ class HomeUI():
         ext.place(x=5,y=405)
         ext.bind('<Enter>',lambda Event: Extra.highlight(Event,ext))
         ext.bind('<Leave>',lambda Event: Extra.unhighlight(Event,ext))  
+
+    def home_action():
+        for i in Extra.frames_a:
+            i.place_forget()
+
+        pic.place(x= 761,y= 5)
+        name2.place_forget()
+        topbar.place(x= 217,y= 15)
         
     def recent_page():
         name.configure(image= HomeUI.img13)
@@ -152,6 +183,6 @@ class HomeUI():
     def fav_page():
         name.configure(image= HomeUI.img15)
               
-HomeUI.home()
+HomeUI.splash()
 
 app.mainloop()

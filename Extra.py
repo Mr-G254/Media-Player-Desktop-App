@@ -1,12 +1,12 @@
 from customtkinter import*
 
 class Extra():
-    buttons_a = []
-    buttons_b = []
-    buttons_c = []
+    buttons_a = [] #Buttons in the menu
+    buttons_b = [] #Folder and settings button
+    buttons_c = [] #Buttons in the home page(playlist, recent and favourites)
     
     frames_a = []
-    frames_b = []
+    frames_b = [] #Folder and Settings frame
     
     def highlight(Event,x):
         x.configure(border_width=2)
@@ -38,3 +38,7 @@ class Extra():
     def back(frame,button):
         frame.place_forget()
         button.configure(state= NORMAL,fg_color="#510723")
+
+    def close_small_frames():
+        for i in Extra.frames_b:
+            i.place_forget()
