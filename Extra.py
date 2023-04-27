@@ -7,6 +7,10 @@ class Extra():
     
     frames_a = []
     frames_b = [] #Folder and Settings frame
+
+    Folders = []
+    Recent = []
+    Favourites = []
     
     def highlight(Event,x):
         x.configure(border_width=2)

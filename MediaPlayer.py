@@ -11,7 +11,7 @@ app = CTk()
 app.title("Media Player")
 app.geometry("500x300+350+200")
 app.lift()
-app.overrideredirect(True)
+# app.overrideredirect(True)
 app.resizable(False,False)
 
 class HomeUI():
@@ -55,7 +55,7 @@ class HomeUI():
        
     def home():
         # logo.place_forget()
-        app.attributes('-topmost',False)
+        # app.attributes('-topmost',False)
         app.geometry("1000x600+100+50")
         app.overrideredirect(False)
 
@@ -131,7 +131,7 @@ class HomeUI():
         next_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,next_btn))
 
         global fav_btn
-        fav_btn = CTkButton(controlframe,text= "",image= HomeUI.img21,height= 30,width=30,fg_color="#510723",corner_radius= 4,border_color="#510723",border_width=0,command=lambda:[HomeUI.fav_song(fav_btn)])
+        fav_btn = CTkButton(controlframe,text= "",image= HomeUI.img21,height= 30,width=30,fg_color="#510723",corner_radius= 4,border_color="#510723",hover_color="#510723",border_width=0,command=lambda:[HomeUI.fav_song(fav_btn)])
         fav_btn.place(x=930,y=35)
         fav_btn.bind('<Enter>',lambda Event: Extra.highlight(Event,fav_btn))
         fav_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,fav_btn))
@@ -172,7 +172,7 @@ class HomeUI():
         stbtn.place(x= 3,y= 213)
         Extra.buttons_b.append(stbtn)  
         
-        ext = CTkButton(HomeUI.frame,text= "",image= HomeUI.img11,height= 40,width=50,fg_color="#510723",corner_radius= 5,border_color="#0967CC",border_width=0,command= lambda:[(Database.db.close(),app.destroy())])
+        ext = CTkButton(HomeUI.frame,text= "",image= HomeUI.img11,height= 40,width=50,fg_color="#510723",corner_radius= 5,border_color="#0967CC",border_width=0,command= lambda:[(Database.close(),app.destroy())])
         ext.place(x=5,y=405)
         ext.bind('<Enter>',lambda Event: Extra.highlight(Event,ext))
         ext.bind('<Leave>',lambda Event: Extra.unhighlight(Event,ext))  
@@ -195,11 +195,11 @@ class HomeUI():
         name.configure(image= HomeUI.img15)
 
     def fav_song(x):
-        if HomeUI.favourite==True:
-            x.configure(image= HomeUI.img22)
+        if HomeUI.favourite == True:
+            x.configure(image= HomeUI.img21)
             HomeUI.favourite = False
         else:
-            x.configure(image= HomeUI.img21)
+            x.configure(image= HomeUI.img22)
             HomeUI.favourite = True
               
 HomeUI.home()
