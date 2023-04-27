@@ -38,20 +38,11 @@ class HomeUI():
     img17 = CTkImage(Image.open("Icons\play.png"),size=(64,64))
     img18 = CTkImage(Image.open("Icons\pause.png"),size=(64,64))
     img19 = CTkImage(Image.open("Icons\\next-button.png"),size=(32,32))
-    img20 = CTkImage(Image.open("Icons\logo.png"),size=(128,128))
     img21 = CTkImage(Image.open("Icons\hearta.png"),size=(24,24))
     img22 = CTkImage(Image.open("Icons\heartb.png"),size=(24,24))
     
     frame = CTkFrame(app,height= 600,width=1000,fg_color="#641E16")
     frame.place(x= 0,y= 0)
-
-    def splash():
-        global logo
-        logo = CTkLabel(HomeUI.frame,text="",image= HomeUI.img20,corner_radius= 4)
-        logo.place(x=186,y=86)
-
-        # app.after(3000,HomeUI.home)
-        # HomeUI.home()
        
     def home():
         # logo.place_forget()
