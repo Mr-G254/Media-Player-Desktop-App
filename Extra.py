@@ -1,7 +1,7 @@
 from customtkinter import*
 
 class Extra():
-    buttons_a = [] #Buttons in the menu
+    buttons_a = [] #Buttons in the menu except Folder and settings button
     buttons_b = [] #Folder and settings button
     buttons_c = [] #Buttons in the home page(playlist, recent and favourites)
     
@@ -46,3 +46,8 @@ class Extra():
     def close_small_frames():
         for i in Extra.frames_b:
             i.place_forget()
+
+        for i in Extra.buttons_b:
+            i.configure(state= NORMAL,fg_color="#510723")
+
+        

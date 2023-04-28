@@ -30,13 +30,13 @@ class Settings():
         settings_page.place(x= 60,y= 150)
         
         st_img = CTkLabel(settings_page,height= 30,width=30,text= '',fg_color="#510723",image= Settings.img1,corner_radius= 5)
-        st_img.place(x= 50,y= 10)
+        st_img.place(x= 55,y= 10)
                 
         st_label = CTkLabel(settings_page,text="Settings",font=("TImes",16),height= 30,width=170,fg_color="#0967CC",corner_radius= 4)
-        st_label.place(x= 90,y= 10)
+        st_label.place(x= 95,y= 10)
 
         cls = CTkButton(settings_page,height= 30,width=25,text= '',fg_color="#510723",image= Settings.img7,corner_radius= 4,border_color="#0967CC",border_width=0,command= lambda: Extra.back(settings_page,button))
-        cls.place(x= 265,y =10)
+        cls.place(x= 270,y =10)
         cls.bind('<Enter>',lambda Event: Extra.highlight(Event,cls))
         cls.bind('<Leave>',lambda Event: Extra.unhighlight(Event,cls))
         
