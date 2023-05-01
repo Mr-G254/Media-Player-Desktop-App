@@ -11,6 +11,8 @@ class Extra():
     Folders = []
     Recent = []
     Favourites = []
+
+    All_songs = []
     
     def highlight(Event,x):
         x.configure(border_width=2)

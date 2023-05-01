@@ -23,7 +23,7 @@ class Database():
         db.execute("CREATE TABLE Favourites(id integer,Name text,Path text);")
 
         db.execute("CREATE TABLE Storage(id integer PRIMARY KEY,Path text);")
-        db.execute('INSERT INTO Storage(Path) VALUES(?)',("Always ask"))
+        db.execute('INSERT INTO Storage(Path) VALUES(?)',["Always ask"])
         
         db.commit() 
 
@@ -55,7 +55,7 @@ class Database():
         return value[1]
     
     def update_location(location):
-        update = "UPDATE Storage set Path = '"+ location +"' WHERE id = 0"
+        update = "UPDATE Storage set Path = '"+ location +"' WHERE id = 1"
         db.execute(update)
         db.commit()
     
@@ -66,11 +66,28 @@ class Database():
             db.commit()
 
             Database.get_folder()
+    
+    def add_folder(folder_name,folder_path):
+        db.execute("INSERT INTO Folders(Name,Path) VALUES(?,?)",(folder_name,folder_path))
+        db.commit()
+
+        Database.get_folder()
 
     def close():
         db.close()
 
+    def load_songs():
+        Extra.All_songs.clear()
+        for i in Extra.Folders:
+            values = i.split("=")
+            for x in os.listdir(values[2]):
+                if x.endswith(".mp3"):
+                    Extra.All_songs.append(f"{x}={values[2]}\{x}")
+        
+        Extra.All_songs.sort()
+
 Database.get_folder()
 Database.get_recent()
 Database.get_favourites()
+Database.load_songs()
     

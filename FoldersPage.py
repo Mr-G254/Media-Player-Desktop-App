@@ -28,7 +28,7 @@ class Folders():
         fd_label = CTkLabel(folders_page,text="Folders",font=("TImes",16),height= 30,width=170,fg_color="#0967CC",corner_radius= 4)
         fd_label.place(x= 70,y= 10)
         
-        add = CTkButton(folders_page,height= 30,width=25,text= '',fg_color="#510723",image= Folders.img1,corner_radius= 4,border_color="#0967CC",border_width=0)
+        add = CTkButton(folders_page,height= 30,width=25,text= '',fg_color="#510723",hover_color="#510723",image= Folders.img1,corner_radius= 4,border_color="#0967CC",border_width=0,command= Folders.new_folder)
         add.place(x= 245,y =10)
         add.bind('<Enter>',lambda Event: Extra.highlight(Event,add))
         add.bind('<Leave>',lambda Event: Extra.unhighlight(Event,add))
@@ -42,18 +42,17 @@ class Folders():
 
     def load_folders():
 
-        fd_frame_0 = CTkFrame(folders_page,width=300,height=250,fg_color="#510723",corner_radius= 6)
-        fd_frame_0.place(x=0,y=45)
+        # fd_frame_0 = CTkFrame(folders_page,width=300,height=250,fg_color="#510723",corner_radius= 6)
+        # fd_frame_0.place(x=0,y=45)
 
-        fd_frame = CTkScrollableFrame(fd_frame_0,width=275,height=240,fg_color="#510723",corner_radius= 6)
-        fd_frame.place(x=0,y=0)
+        fd_frame = CTkScrollableFrame(folders_page,width=300,height=230,fg_color="#510723",corner_radius= 6,orientation="vertical")
+        fd_frame.place(x=0,y=40)
 
-        Y = 5
+        Y = 0
         for i in Extra.Folders:
-            print(i)
             values = str(i).split("=")
-            fd = CTkFrame(fd_frame_0,height=35,width=220,fg_color="#770B33",border_color="#0967CC",border_width=0)
-            fd.place(x=35,y=Y)
+            fd = CTkFrame(fd_frame,height=35,width=220,fg_color="#770B33",border_color="#0967CC",border_width=0)
+            fd.grid(column= 0,row= Y,padx= 30,pady= 2)
             
             lb = CTkLabel(fd,text=values[1],font=("TImes",16),fg_color="#770B33")
             lb.place(x=15,y=2)
@@ -64,7 +63,7 @@ class Folders():
             fd.bind('<Enter>',lambda Event, fd=fd, del_btn=del_btn: Folders.hover_in(Event,fd,del_btn))
             fd.bind('<Leave>',lambda Event, fd=fd, del_btn=del_btn: Folders.hover_out(Event,fd,del_btn))
 
-            Y = Y + 40
+            Y = Y + 1
     
     def hover_in(Event,frame,button):
         frame.configure(border_width = 2)
@@ -76,7 +75,12 @@ class Folders():
 
     def new_folder():
         lc = filedialog.askdirectory()
-        # if lc:
+        if lc != "":
+            values = lc.split("""/""") 
+            print(values)
+            Database.add_folder(values[len(values)-1],lc)
+
+            Folders.load_folders()
 
 
 

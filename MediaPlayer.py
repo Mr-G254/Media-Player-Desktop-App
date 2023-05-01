@@ -45,8 +45,6 @@ class HomeUI():
     frame.place(x= 0,y= 0)
        
     def home():
-        # logo.place_forget()
-        # app.attributes('-topmost',False)
         app.geometry("1000x600+100+50")
         app.overrideredirect(False)
 
