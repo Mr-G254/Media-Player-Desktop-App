@@ -59,13 +59,15 @@ class Database():
         db.execute(update)
         db.commit()
     
-    def del_folder(folder_id,folder_name):
+    def del_folder(Event,folder_id,folder_name,folder_class):
         prompt = messagebox.askyesno("Delete Folder",f"Are you sure you want to delete {folder_name} folder")
         if prompt:
             db.execute(f"DELETE FROM Folders WHERE id={folder_id}")
             db.commit()
 
             Database.get_folder()
+            folder_class.load_folders()
+            Database.load_songs()
     
     def add_folder(folder_name,folder_path):
         db.execute("INSERT INTO Folders(Name,Path) VALUES(?,?)",(folder_name,folder_path))

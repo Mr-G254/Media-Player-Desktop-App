@@ -41,13 +41,10 @@ class Folders():
         Folders.load_folders()
 
     def load_folders():
-
-        # fd_frame_0 = CTkFrame(folders_page,width=300,height=250,fg_color="#510723",corner_radius= 6)
-        # fd_frame_0.place(x=0,y=45)
-
         fd_frame = CTkScrollableFrame(folders_page,width=300,height=230,fg_color="#510723",corner_radius= 6,orientation="vertical")
         fd_frame.place(x=0,y=40)
 
+        global Y
         Y = 0
         for i in Extra.Folders:
             values = str(i).split("=")
@@ -57,21 +54,23 @@ class Folders():
             lb = CTkLabel(fd,text=values[1],font=("TImes",16),fg_color="#770B33")
             lb.place(x=15,y=2)
 
-            del_btn = CTkButton(fd,text="",image=Folders.img2,fg_color="#770B33",height=25,width=25,hover_color="#770B33",hover=False,command= lambda: [Database.del_folder(values[0],values[1]),Folders.load_folders()])
-            del_btn.bind('<Enter>',lambda Event, fd=fd, del_btn=del_btn: Folders.hover_in(Event,fd,del_btn))
+            fd.bind('<Enter>',lambda Event, fd=fd: Extra.highlight(Event,fd))
+            fd.bind('<Leave>',lambda Event, fd=fd: Extra.unhighlight(Event,fd))
+            fd.bind('<Button-1>',lambda Event: Database.del_folder(Event,values[0],values[1],Folders))
 
-            fd.bind('<Enter>',lambda Event, fd=fd, del_btn=del_btn: Folders.hover_in(Event,fd,del_btn))
-            fd.bind('<Leave>',lambda Event, fd=fd, del_btn=del_btn: Folders.hover_out(Event,fd,del_btn))
+            lb.bind('<Enter>',lambda Event, fd=fd: Extra.highlight(Event,fd))
+            lb.bind('<Leave>',lambda Event, fd=fd: Extra.unhighlight(Event,fd))
+            lb.bind('<Button-1>',lambda Event: Database.del_folder(Event,values[0],values[1],Folders))
 
             Y = Y + 1
     
     def hover_in(Event,frame,button):
         frame.configure(border_width = 2)
-        button.place(x=180,y=3)
+        # button.grid(column= 1,row= Y)
 
     def hover_out(Event,frame,button):
         frame.configure(border_width = 0)
-        button.place_forget()
+        # button.grid_forget()
 
     def new_folder():
         lc = filedialog.askdirectory()
