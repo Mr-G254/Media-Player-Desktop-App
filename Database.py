@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 from Extra import*
 from tkinter import messagebox
+from MusicPage import*
 
 class Database():
     global db
@@ -68,12 +69,21 @@ class Database():
             Database.get_folder()
             folder_class.load_folders()
             Database.load_songs()
+            try:
+                Music.show_all_songs()
+            except:
+                pass
     
     def add_folder(folder_name,folder_path):
         db.execute("INSERT INTO Folders(Name,Path) VALUES(?,?)",(folder_name,folder_path))
         db.commit()
 
         Database.get_folder()
+        Database.load_songs()
+        try:
+            Music.show_all_songs()
+        except:
+                pass
 
     def close():
         db.close()

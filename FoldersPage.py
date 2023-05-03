@@ -48,6 +48,8 @@ class Folders():
         Y = 0
         for i in Extra.Folders:
             values = str(i).split("=")
+            id = values[0]
+            name = values[1]
             fd = CTkFrame(fd_frame,height=35,width=220,fg_color="#770B33",border_color="#0967CC",border_width=0)
             fd.grid(column= 0,row= Y,padx= 30,pady= 2)
             
@@ -56,11 +58,11 @@ class Folders():
 
             fd.bind('<Enter>',lambda Event, fd=fd: Extra.highlight(Event,fd))
             fd.bind('<Leave>',lambda Event, fd=fd: Extra.unhighlight(Event,fd))
-            fd.bind('<Button-1>',lambda Event: Database.del_folder(Event,values[0],values[1],Folders))
+            fd.bind('<Button-1>',lambda Event, id=id, name=name: Database.del_folder(Event,id,name,Folders))
 
             lb.bind('<Enter>',lambda Event, fd=fd: Extra.highlight(Event,fd))
             lb.bind('<Leave>',lambda Event, fd=fd: Extra.unhighlight(Event,fd))
-            lb.bind('<Button-1>',lambda Event: Database.del_folder(Event,values[0],values[1],Folders))
+            lb.bind('<Button-1>',lambda Event, id=id, name=name: Database.del_folder(Event,id,name,Folders))
 
             Y = Y + 1
     
@@ -74,9 +76,9 @@ class Folders():
 
     def new_folder():
         lc = filedialog.askdirectory()
+        print(lc)
         if lc != "":
             values = lc.split("""/""") 
-            print(values)
             Database.add_folder(values[len(values)-1],lc)
 
             Folders.load_folders()
