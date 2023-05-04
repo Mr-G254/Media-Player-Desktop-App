@@ -1,19 +1,26 @@
 from customtkinter import*
 from Extra import*
-import audioplayer
+from pygame import mixer
 
 class Controls():
+    mixer.init()
+    duration = 0
 
-    def controls(Home_class):
+    def controls(Home_class,app):
+        global App
+        App = app
+
         global Home
         Home = Home_class
 
         controlframe = CTkFrame(Home_class.frame,fg_color="#510723",height= 100,width=990,corner_radius= 6)
         controlframe.place(x=5,y=495)
 
+        global p_label
         p_label = CTkLabel(controlframe,text="00:00",fg_color="#510723",height=20,width=55,anchor=CENTER)
         p_label.place(x=5,y=3)
 
+        global progressbar
         progressbar = CTkSlider(controlframe,from_=0,to=865,progress_color="#770B33",fg_color=['gray86', 'gray17'], orientation="horizontal",width=865)
         progressbar.set(865)
         progressbar.place(x= 60,y= 5)
@@ -56,20 +63,50 @@ class Controls():
 
     def play_song(Event,file_path,file_name):
         song_name.configure(text=file_name)
+
+        length = mixer.Sound(file_path).get_length()
+        Controls.duration = length
+        r_label.configure(text = Controls.audio_duration(length))
+
         play_btn.configure(image= Home.img18)
 
-        global song
-        song = audioplayer.AudioPlayer(file_path)
-        song.play(loop=False, block=False)
+        mixer.music.load(file_path)
+        mixer.music.play()
 
         play_btn.configure(command= Controls.pause)
+        Controls.update_progress()
 
     def pause():
-        song.pause()
+        mixer.music.pause()
+
         play_btn.configure(command= Controls.resume)
         play_btn.configure(image= Home.img17)
 
     def resume():
-        song.resume()
+        mixer.music.unpause()
+
         play_btn.configure(command= Controls.pause)
         play_btn.configure(image= Home.img18)
+
+    def audio_duration(length):
+        sec = round(length)
+        hours = int(sec // 3600)  
+        length %= 3600
+        mins = int(length // 60)  
+        length %= 60
+        seconds = int(length)  
+
+        if hours == 0:
+            return(f"{str(mins).rjust(2,'0')}:{str(seconds).rjust(2,'0')}")
+        else:
+            return(f"{str(hours).rjust(2,'0')}:{str(mins).rjust(2,'0')}:{str(seconds).rjust(2,'0')}")
+    
+    def update_progress():
+        while mixer.music.get_busy():
+            current_time = mixer.music.get_pos()/1000
+            p_label.configure(text = Controls.audio_duration(current_time))
+            progressbar.set(int(((current_time/Controls.duration)*865)))
+            App.update()
+
+        if mixer.music.get_busy() == False:
+            App.after(500,Controls.update_progress)

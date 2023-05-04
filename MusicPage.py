@@ -2,18 +2,24 @@ from customtkinter import*
 from PIL import Image
 from Extra import*
 from Controls import*
+from pygame import mixer
+from mutagen.mp3 import MP3
 
 class Music():
+    # mixer.init()
     img0 = CTkImage(Image.open("Icons\music_bg.png"),size=(64,64))
 
 
     def music(frame,app,a,b,c):
+        global App
+        App = app
+
         Extra.close_small_frames()
         a.place_forget()
         b.place_forget()
         c.configure(image=Music.img0)
         c.place(x= 5,y= 5)
-        app.update()
+        App.update()
 
 
         global music_page
@@ -51,12 +57,18 @@ class Music():
             lb.bind('<Leave>',lambda Event, msc=msc: Extra.unhighlight(Event,msc))
             lb.bind('<Button-1>',lambda Event, path=path, name=name: Controls.play_song(Event,path,name))
 
+            dur = MP3(path).info.length
+            dur_label = CTkLabel(msc,text=Controls.audio_duration(dur),font=("TImes",16),fg_color="#510723")
+            dur_label.place(x=600,y=2)
+
             if x==1:
                 msc.configure(fg_color="#641E16")
                 lb.configure(fg_color="#641E16")
+                dur_label.configure(fg_color="#641E16")
 
                 x = 0
             else:
                 x = 1
 
             Y = Y + 1
+            # App.update()
