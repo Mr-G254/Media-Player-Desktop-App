@@ -1,10 +1,14 @@
 from customtkinter import*
 from Extra import*
-from pygame import mixer
+from pygame import mixer,error
 
 class Controls():
     mixer.init()
+    current_song=""
+
     duration = 0
+    current_time = 0
+    added_time = 0
 
     def controls(Home_class,app):
         global App
@@ -13,21 +17,21 @@ class Controls():
         global Home
         Home = Home_class
 
-        controlframe = CTkFrame(Home_class.frame,fg_color="#510723",height= 100,width=990,corner_radius= 6)
+        controlframe = CTkFrame(Home_class.frame,fg_color="#510723",height= 100,width=1020,corner_radius= 6)
         controlframe.place(x=5,y=495)
 
-        global p_label
-        p_label = CTkLabel(controlframe,text="00:00",fg_color="#510723",height=20,width=55,anchor=CENTER)
-        p_label.place(x=5,y=3)
+        # global p_label
+        # p_label = CTkLabel(controlframe,text="00:00",fg_color="#510723",height=20,width=55,anchor=CENTER)
+        # p_label.place(x=5,y=3)
 
         global progressbar
-        progressbar = CTkSlider(controlframe,from_=0,to=865,progress_color="#770B33",fg_color=['gray86', 'gray17'], orientation="horizontal",width=865)
-        progressbar.set(865)
-        progressbar.place(x= 60,y= 5)
+        progressbar = CTkSlider(controlframe,from_=0,to=1000,progress_color="#770B33",fg_color=['gray86', 'gray17'], orientation="horizontal",width=1000,state = 'disabled',command=Controls.move_progress)
+        progressbar.set(1000)
+        progressbar.place(x= 10,y= 5)
 
         global r_label
         r_label = CTkLabel(controlframe,text="00:00",fg_color="#510723",height=20,width=40,anchor=CENTER)
-        r_label.place(x=935,y=3)
+        r_label.place(x=970,y=25)
 
         msclabel = CTkLabel(controlframe,height= 70,width= 70,image= Home_class.img1,text = '',fg_color=['gray86', 'gray17'],corner_radius= 4,anchor= CENTER)
         msclabel.place(x= 5,y= 25)
@@ -57,20 +61,24 @@ class Controls():
 
         global fav_btn
         fav_btn = CTkButton(controlframe,text= "",image= Home_class.img21,height= 30,width=30,fg_color="#510723",corner_radius= 4,border_color="#510723",hover_color="#510723",border_width=0,command=lambda:[Home_class.fav_song(fav_btn)])
-        fav_btn.place(x=930,y=35)
+        fav_btn.place(x=970,y=55)
         fav_btn.bind('<Enter>',lambda Event: Extra.highlight(Event,fav_btn))
         fav_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,fav_btn))
 
     def play_song(Event,file_path,file_name):
+        Controls.current_time = 0
+        Controls.added_time = 0
+
         song_name.configure(text=file_name)
 
-        length = mixer.Sound(file_path).get_length()
+        Controls.current_song = file_path
+        length = mixer.Sound(Controls.current_song).get_length()
         Controls.duration = length
-        r_label.configure(text = Controls.audio_duration(length))
+        # r_label.configure(text = Controls.audio_duration(length))
 
         play_btn.configure(image= Home.img18)
-
-        mixer.music.load(file_path)
+        progressbar.configure(state = 'normal')
+        mixer.music.load(Controls.current_song)
         mixer.music.play()
 
         play_btn.configure(command= Controls.pause)
@@ -89,8 +97,7 @@ class Controls():
         play_btn.configure(image= Home.img18)
 
     def audio_duration(length):
-        sec = round(length)
-        hours = int(sec // 3600)  
+        hours = int(length // 3600)  
         length %= 3600
         mins = int(length // 60)  
         length %= 60
@@ -103,10 +110,34 @@ class Controls():
     
     def update_progress():
         while mixer.music.get_busy():
-            current_time = mixer.music.get_pos()/1000
-            p_label.configure(text = Controls.audio_duration(current_time))
-            progressbar.set(int(((current_time/Controls.duration)*865)))
+            Controls.current_time = mixer.music.get_pos()/1000
+            time = Controls.current_time + Controls.added_time
+            r_label.configure(text = Controls.audio_duration(time))
+            progressbar.set(int(((time/Controls.duration)*1000)))
             App.update()
 
         if mixer.music.get_busy() == False:
             App.after(500,Controls.update_progress)
+
+    def move_progress(value):
+        print (value)
+        Controls.current_time = mixer.music.get_pos()/1000
+        x = (Controls.current_time/Controls.duration)* 1000
+        Controls.added_time = (value - x)*(Controls.duration/1000)
+        # time = ((value/865)*Controls.duration) - Controls.current_time
+        # progressbar.set(value)
+
+        try:
+            if Controls.added_time < 0:
+                mixer.music.rewind()
+                mixer.music.set_pos((Controls.current_time + Controls.added_time))
+                Controls.current_time = mixer.music.get_pos()/1000
+                Controls.added_time = 0
+            else:
+                mixer.music.set_pos(Controls.added_time)
+        except :
+            mixer.music.load(Controls.current_song)
+            mixer.music.play()
+            mixer.music.set_pos((Controls.current_time + Controls.added_time))
+            # Controls.current_time = mixer.music.get_pos()/1000
+            # Controls.added_time = 0

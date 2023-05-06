@@ -42,11 +42,11 @@ class HomeUI():
     img21 = CTkImage(Image.open("Icons\hearta.png"),size=(24,24))
     img22 = CTkImage(Image.open("Icons\heartb.png"),size=(24,24))
     
-    frame = CTkFrame(app,height= 600,width=1000,fg_color="#641E16")
+    frame = CTkFrame(app,height= 600,width=1030,fg_color="#641E16")
     frame.place(x= 0,y= 0)
        
     def home():
-        app.geometry("1000x600+100+50")
+        app.geometry("1030x600+100+50")
         app.overrideredirect(False)
 
         global name
@@ -59,7 +59,7 @@ class HomeUI():
         
         global topbar
         topbar = CTkFrame(HomeUI.frame,height= 40,width= 466,corner_radius= 5,border_color="#0967CC",border_width=2)
-        topbar.place(x= 217,y= 15)
+        topbar.place(x= 232,y= 15)
         
         recent = CTkButton(topbar,text="Recents",image= HomeUI.img7,compound= LEFT,font=("TImes",15),fg_color="#510723",width= 150,height=30,corner_radius= 4,command= lambda: [Extra.configure_buttons(recent, Extra.buttons_c),HomeUI.recent_page()])
         recent.place(x= 5,y=5)
@@ -76,18 +76,18 @@ class HomeUI():
         recent.invoke()
         
         search = CTkEntry(HomeUI.frame,height= 35,width= 550,font=("TImes",14),corner_radius= 5,border_color="#0967CC",fg_color=['gray86', 'gray17'],border_width=0)
-        search.place(x= 147,y= 60)
+        search.place(x= 162,y= 60)
         search.bind('<FocusIn>',lambda Event: Extra.highlight(Event,search))
         search.bind('<FocusOut>',lambda Event: Extra.unhighlight(Event,search))
         
         search_btn = CTkButton(HomeUI.frame,text= "",image= HomeUI.img12,height= 35,width=50,fg_color=['gray86', 'gray17'],corner_radius= 4,border_color="#0967CC",border_width=0)
-        search_btn.place(x=703,y= 60)
+        search_btn.place(x=718,y= 60)
         search_btn.bind('<Enter>',lambda Event: Extra.highlight(Event,search_btn))
         search_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,search_btn))
         
         global pic
         pic = CTkLabel(HomeUI.frame,height= 140,width= 235,fg_color="#510723",text="",font=("TImes",15),image= HomeUI.img10,compound= LEFT,corner_radius= 6)
-        pic.place(x= 761,y= 5)
+        pic.place(x= 791,y= 5)
 
         Controls.controls(HomeUI,app)
         HomeUI.menu()
@@ -135,7 +135,7 @@ class HomeUI():
         for i in Extra.frames_a:
             i.place_forget()
 
-        pic.place(x= 761,y= 5)
+        pic.place(x= 791,y= 5)
         name2.place_forget()
         topbar.place(x= 217,y= 15)
         

@@ -23,7 +23,7 @@ class Music():
 
 
         global music_page
-        music_page = CTkFrame(frame,height= 385,width= 935,fg_color="#641E16",corner_radius= 6)
+        music_page = CTkFrame(frame,height= 385,width= 965,fg_color="#641E16",corner_radius= 6)
         
         if music_page in Extra.frames_a:
             pass
@@ -36,7 +36,7 @@ class Music():
         Music.show_all_songs()
 
     def show_all_songs():
-        music_frame = CTkScrollableFrame(music_page,height= 380,width= 915,fg_color="#641E16",corner_radius= 6)
+        music_frame = CTkScrollableFrame(music_page,height= 380,width= 945,fg_color="#641E16",corner_radius= 6)
         music_frame.place(x=0,y=0)
 
         Y = 0
@@ -45,7 +45,7 @@ class Music():
             value = i.split("=")
             name = value[0].replace('.mp3','')
             path = value[1]
-            msc = CTkFrame(music_frame,height=35,width=910,fg_color="#510723",border_color="#0967CC",border_width=0)
+            msc = CTkFrame(music_frame,height=35,width=940,fg_color="#510723",border_color="#0967CC",border_width=0)
             msc.grid(column= 0,row= Y,padx= 0,pady= 0)
             msc.bind('<Enter>',lambda Event, msc=msc: Extra.highlight(Event,msc))
             msc.bind('<Leave>',lambda Event, msc=msc: Extra.unhighlight(Event,msc))
