@@ -4,7 +4,8 @@ from pygame import mixer,error
 
 class Controls():
     mixer.init()
-    current_song=""
+    current_song = ""
+    song_value = ""
 
     duration = 0
     current_time = 0
@@ -19,10 +20,6 @@ class Controls():
 
         controlframe = CTkFrame(Home_class.frame,fg_color="#510723",height= 100,width=1020,corner_radius= 6)
         controlframe.place(x=5,y=495)
-
-        # global p_label
-        # p_label = CTkLabel(controlframe,text="00:00",fg_color="#510723",height=20,width=55,anchor=CENTER)
-        # p_label.place(x=5,y=3)
 
         global progressbar
         progressbar = CTkSlider(controlframe,from_=0,to=1000,progress_color="#770B33",fg_color=['gray86', 'gray17'], orientation="horizontal",width=1000,state = 'disabled',command=Controls.move_progress)
@@ -43,7 +40,7 @@ class Controls():
         song_name = CTkLabel(song_frame,height= 40,width= 100,text = '',fg_color="#510723",font=("TImes",16),anchor= W)
         song_name.place(x=0,y=0)
 
-        previous_btn = CTkButton(controlframe,text= "",image= Home_class.img16,height= 35,width=35,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0)
+        previous_btn = CTkButton(controlframe,text= "",image= Home_class.img16,height= 35,width=35,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0,command=Controls.previous_song)
         previous_btn.place(x=415,y=41)
         previous_btn.bind('<Enter>',lambda Event: Extra.highlight(Event,previous_btn))
         previous_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,previous_btn))
@@ -54,7 +51,7 @@ class Controls():
         play_btn.bind('<Enter>',lambda Event: Extra.highlight(Event,play_btn))
         play_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,play_btn))
 
-        next_btn = CTkButton(controlframe,text= "",image= Home_class.img19,height= 35,width=35,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0)
+        next_btn = CTkButton(controlframe,text= "",image= Home_class.img19,height= 35,width=35,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0,command=Controls.next_song)
         next_btn.place(x=540,y=41)
         next_btn.bind('<Enter>',lambda Event: Extra.highlight(Event,next_btn))
         next_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,next_btn))
@@ -65,7 +62,11 @@ class Controls():
         fav_btn.bind('<Enter>',lambda Event: Extra.highlight(Event,fav_btn))
         fav_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,fav_btn))
 
-    def play_song(Event,file_path,file_name):
+    def select_song(Event,file_path,file_name):
+        Controls.play_song(file_path,file_name)
+
+    def play_song(file_path,file_name):
+        Controls.song_value = f"{file_name}.mp3={file_path}"
         Controls.current_time = 0
         Controls.added_time = 0
 
@@ -74,7 +75,6 @@ class Controls():
         Controls.current_song = file_path
         length = mixer.Sound(Controls.current_song).get_length()
         Controls.duration = length
-        # r_label.configure(text = Controls.audio_duration(length))
 
         play_btn.configure(image= Home.img18)
         progressbar.configure(state = 'normal')
@@ -112,6 +112,11 @@ class Controls():
         while mixer.music.get_busy():
             Controls.current_time = mixer.music.get_pos()/1000
             time = Controls.current_time + Controls.added_time
+            if time < 0:
+                time = 0
+                Controls.current_time = 0
+                Controls.added_time = 0
+
             r_label.configure(text = Controls.audio_duration(time))
             progressbar.set(int(((time/Controls.duration)*1000)))
             App.update()
@@ -120,24 +125,40 @@ class Controls():
             App.after(500,Controls.update_progress)
 
     def move_progress(value):
-        print (value)
         Controls.current_time = mixer.music.get_pos()/1000
         x = (Controls.current_time/Controls.duration)* 1000
         Controls.added_time = (value - x)*(Controls.duration/1000)
-        # time = ((value/865)*Controls.duration) - Controls.current_time
-        # progressbar.set(value)
-
+        
         try:
             if Controls.added_time < 0:
-                mixer.music.rewind()
+                mixer.music.play()
                 mixer.music.set_pos((Controls.current_time + Controls.added_time))
-                Controls.current_time = mixer.music.get_pos()/1000
-                Controls.added_time = 0
+
             else:
                 mixer.music.set_pos(Controls.added_time)
+
         except :
             mixer.music.load(Controls.current_song)
             mixer.music.play()
             mixer.music.set_pos((Controls.current_time + Controls.added_time))
-            # Controls.current_time = mixer.music.get_pos()/1000
-            # Controls.added_time = 0
+
+    def next_song():
+        index = Extra.All_songs.index(Controls.song_value)
+        if index != len(Extra.All_songs)-1:
+            play_btn.configure(image= Home.img18)
+            name = Extra.All_songs[index+1]
+            value = name.split('=')
+            name = value[0].replace('.mp3','')
+            path = value[1]
+
+            Controls.play_song(path,name)
+
+    def previous_song():
+        index = Extra.All_songs.index(Controls.song_value)
+        if index != 0:
+            name = Extra.All_songs[index-1]
+            value = name.split('=')
+            name = value[0].replace('.mp3','')
+            path = value[1]
+
+            Controls.play_song(path,name)

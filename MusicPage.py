@@ -6,7 +6,6 @@ from pygame import mixer
 from mutagen.mp3 import MP3
 
 class Music():
-    # mixer.init()
     img0 = CTkImage(Image.open("Icons\music_bg.png"),size=(64,64))
 
 
@@ -49,13 +48,13 @@ class Music():
             msc.grid(column= 0,row= Y,padx= 0,pady= 0)
             msc.bind('<Enter>',lambda Event, msc=msc: Extra.highlight(Event,msc))
             msc.bind('<Leave>',lambda Event, msc=msc: Extra.unhighlight(Event,msc))
-            msc.bind('<Button-1>',lambda Event, path=path, name=name: Controls.play_song(Event,path,name))
+            msc.bind('<Button-1>',lambda Event, path=path, name=name: Controls.select_song(Event,path,name))
             
             lb = CTkLabel(msc,text=name,font=("TImes",16),fg_color="#510723")
             lb.place(x=15,y=2)
             lb.bind('<Enter>',lambda Event, msc=msc: Extra.highlight(Event,msc))
             lb.bind('<Leave>',lambda Event, msc=msc: Extra.unhighlight(Event,msc))
-            lb.bind('<Button-1>',lambda Event, path=path, name=name: Controls.play_song(Event,path,name))
+            lb.bind('<Button-1>',lambda Event, path=path, name=name: Controls.select_song(Event,path,name))
 
             dur = MP3(path).info.length
             dur_label = CTkLabel(msc,text=Controls.audio_duration(dur),font=("TImes",16),fg_color="#510723")
@@ -71,4 +70,3 @@ class Music():
                 x = 1
 
             Y = Y + 1
-            # App.update()
