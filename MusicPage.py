@@ -10,15 +10,12 @@ class Music():
 
 
     def music(frame,app,a,b,c):
-        global App
-        App = app
-
         Extra.close_small_frames()
         a.place_forget()
         b.place_forget()
         c.configure(image=Music.img0)
         c.place(x= 5,y= 5)
-        App.update()
+        app.update()
 
 
         global music_page
@@ -49,6 +46,8 @@ class Music():
             msc.bind('<Enter>',lambda Event, msc=msc: Extra.highlight(Event,msc))
             msc.bind('<Leave>',lambda Event, msc=msc: Extra.unhighlight(Event,msc))
             msc.bind('<Button-1>',lambda Event, path=path, name=name: Controls.select_song(Event,path,name))
+
+            Extra.song_frames.append(msc)
             
             lb = CTkLabel(msc,text=name,font=("TImes",16),fg_color="#510723")
             lb.place(x=15,y=2)

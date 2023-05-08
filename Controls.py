@@ -1,9 +1,20 @@
 from customtkinter import*
+from PIL import Image
 from Extra import*
-from pygame import mixer,error
+from pygame import mixer,USEREVENT,event,init
 
 class Controls():
+    img1 = CTkImage(Image.open("Icons\hearta.png"),size=(24,24))
+    img2 = CTkImage(Image.open("Icons\heartb.png"),size=(24,24))
+    img3 = CTkImage(Image.open("Icons\\volume.png"),size=(26,26))
+    img4 = CTkImage(Image.open("Icons\\volume-mute.png"),size=(26,26))
+
+    favourite = False
+    vol_on = True
+
+    init()
     mixer.init()
+    mixer.music.set_volume(0.5)
     current_song = ""
     song_value = ""
 
@@ -56,11 +67,19 @@ class Controls():
         next_btn.bind('<Enter>',lambda Event: Extra.highlight(Event,next_btn))
         next_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,next_btn))
 
+        global vol_btn
+        vol_btn = CTkButton(controlframe,text= "",image= Controls.img3,height= 30,width=30,fg_color="#510723",corner_radius= 4,border_color="#510723",hover_color="#510723",border_width=0,command=Controls.switch_vol)
+        vol_btn.place(x=830,y=55)
+
+        global vol_bar
+        vol_bar = CTkSlider(controlframe,from_=0,to=100,progress_color="#770B33",fg_color=['gray86', 'gray17'], orientation="horizontal",width=100,command=Controls.set_vol)
+        vol_bar.set(50)
+        vol_bar.place(x= 860,y= 65)
+
         global fav_btn
-        fav_btn = CTkButton(controlframe,text= "",image= Home_class.img21,height= 30,width=30,fg_color="#510723",corner_radius= 4,border_color="#510723",hover_color="#510723",border_width=0,command=lambda:[Home_class.fav_song(fav_btn)])
-        fav_btn.place(x=970,y=55)
-        fav_btn.bind('<Enter>',lambda Event: Extra.highlight(Event,fav_btn))
-        fav_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,fav_btn))
+        fav_btn = CTkButton(controlframe,text= "",image= Controls.img1,height= 30,width=30,fg_color="#510723",corner_radius= 4,border_color="#510723",hover_color="#510723",border_width=0,command=Controls.fav_song)
+        fav_btn.place(x=975,y=55)
+       
 
     def select_song(Event,file_path,file_name):
         Controls.play_song(file_path,file_name)
@@ -69,6 +88,9 @@ class Controls():
         Controls.song_value = f"{file_name}.mp3={file_path}"
         Controls.current_time = 0
         Controls.added_time = 0
+
+        index = Extra.All_songs.index(Controls.song_value)
+        Controls.select_frame(index)
 
         song_name.configure(text=file_name)
 
@@ -80,6 +102,10 @@ class Controls():
         progressbar.configure(state = 'normal')
         mixer.music.load(Controls.current_song)
         mixer.music.play()
+
+        global MUSIC_END
+        MUSIC_END = USEREVENT + 1
+        mixer.music.set_endevent(MUSIC_END)
 
         play_btn.configure(command= Controls.pause)
         Controls.update_progress()
@@ -124,6 +150,10 @@ class Controls():
         if mixer.music.get_busy() == False:
             App.after(500,Controls.update_progress)
 
+        for i in event.get():
+            if i.type == MUSIC_END:
+                Controls.end_song()
+
     def move_progress(value):
         Controls.current_time = mixer.music.get_pos()/1000
         x = (Controls.current_time/Controls.duration)* 1000
@@ -145,6 +175,7 @@ class Controls():
     def next_song():
         index = Extra.All_songs.index(Controls.song_value)
         if index != len(Extra.All_songs)-1:
+            Controls.select_frame(index+1)
             play_btn.configure(image= Home.img18)
             name = Extra.All_songs[index+1]
             value = name.split('=')
@@ -162,3 +193,39 @@ class Controls():
             path = value[1]
 
             Controls.play_song(path,name)
+
+    def end_song():
+        play_btn.configure(image= Home.img18)
+        Controls.next_song()
+
+    def select_frame(index):
+        for i in Extra.song_frames:
+            for x in i.winfo_children():
+                x.configure(text_color = "white")
+
+        frame = Extra.song_frames[index]
+        for i in frame.winfo_children():
+            i.configure(text_color = "#0967CC")
+
+    def fav_song():
+        if Controls.favourite == True:
+            fav_btn.configure(image= Controls.img1)
+            Controls.favourite = False
+        else:
+            fav_btn.configure(image= Controls.img2)
+            Controls.favourite = True
+
+    def switch_vol():
+        if Controls.vol_on == True:
+            vol_btn.configure(image= Controls.img4)
+            Controls.vol_on = False
+            mixer.music.set_volume(0)
+        else:
+            vol_btn.configure(image= Controls.img3)
+            Controls.vol_on = True
+            value = vol_bar.get()
+            mixer.music.set_volume((value/100))
+
+    def set_vol(value):
+        if Controls.vol_on:
+            mixer.music.set_volume((value/100))

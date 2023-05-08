@@ -7,6 +7,7 @@ from FoldersPage import*
 from Extra import*
 from MusicPage import*
 from Controls import*
+from VideoPage import*
 
 app = CTk()
 app.title("Media Player")
@@ -17,7 +18,7 @@ app.resizable(False,False)
 
 class HomeUI():
     size = "min"
-    favourite = False
+    
 
     img0 = CTkImage(Image.open("Icons\menu.png"),size=(32,32))
     img1 = CTkImage(Image.open("Icons\music.png"),size=(24,24))
@@ -39,8 +40,7 @@ class HomeUI():
     img17 = CTkImage(Image.open("Icons\play.png"),size=(64,64))
     img18 = CTkImage(Image.open("Icons\pause.png"),size=(62,62))
     img19 = CTkImage(Image.open("Icons\\next-button.png"),size=(32,32))
-    img21 = CTkImage(Image.open("Icons\hearta.png"),size=(24,24))
-    img22 = CTkImage(Image.open("Icons\heartb.png"),size=(24,24))
+    
     
     frame = CTkFrame(app,height= 600,width=1030,fg_color="#641E16")
     frame.place(x= 0,y= 0)
@@ -105,7 +105,7 @@ class HomeUI():
         mscbtn.place(x= 3,y= 48)
         Extra.buttons_a.append(mscbtn)
         
-        vdbtn = CTkButton(menuframe,height= 35,width= 45,image= HomeUI.img2,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [Extra.configure_buttons(vdbtn, Extra.buttons_a)])
+        vdbtn = CTkButton(menuframe,height= 35,width= 45,image= HomeUI.img2,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [Extra.configure_buttons(vdbtn, Extra.buttons_a),Video.video(HomeUI.frame,app,topbar,pic,name2)])
         vdbtn.place(x= 3,y= 88)
         Extra.buttons_a.append(vdbtn)
         
@@ -147,14 +147,6 @@ class HomeUI():
         
     def fav_page():
         name.configure(image= HomeUI.img15)
-
-    def fav_song(x):
-        if HomeUI.favourite == True:
-            x.configure(image= HomeUI.img21)
-            HomeUI.favourite = False
-        else:
-            x.configure(image= HomeUI.img22)
-            HomeUI.favourite = True
               
 HomeUI.home()
 

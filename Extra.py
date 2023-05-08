@@ -13,6 +13,7 @@ class Extra():
     Favourites = []
 
     All_songs = []
+    song_frames = []
     
     def highlight(Event,x):
         x.configure(border_width=2)
