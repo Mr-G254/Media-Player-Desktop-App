@@ -4,6 +4,7 @@ from pathlib import Path
 from Extra import*
 from tkinter import messagebox
 from MusicPage import*
+from VideoPage import*
 
 class Database():
     global db
@@ -69,8 +70,15 @@ class Database():
             Database.get_folder()
             folder_class.load_folders()
             Database.load_songs()
+            Video.get_thumbnails()
+
             try:
                 Music.show_all_songs()
+            except:
+                pass
+
+            try:
+                Video.show_all_videos()
             except:
                 pass
     
@@ -80,8 +88,15 @@ class Database():
 
         Database.get_folder()
         Database.load_songs()
+        Video.get_thumbnails()
+
         try:
             Music.show_all_songs()
+        except:
+                pass
+        
+        try:
+            Video.show_all_videos()
         except:
                 pass
 
@@ -90,13 +105,19 @@ class Database():
 
     def load_songs():
         Extra.All_songs.clear()
+        Extra.All_videos.clear()
+
         for i in Extra.Folders:
             values = i.split("=")
             for x in os.listdir(values[2]):
                 if x.endswith(".mp3"):
                     Extra.All_songs.append(f"{x}={values[2]}\{x}")
+                
+                if x.endswith(".mp4"):
+                    Extra.All_videos.append(f"{x}={values[2]}\{x}")
         
         Extra.All_songs.sort()
+        Extra.All_videos.sort()
 
 Database.get_folder()
 Database.get_recent()

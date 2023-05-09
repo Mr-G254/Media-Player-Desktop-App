@@ -14,6 +14,9 @@ class Extra():
 
     All_songs = []
     song_frames = []
+
+    All_videos = []
+    video_thumbnails = []
     
     def highlight(Event,x):
         x.configure(border_width=2)
@@ -53,4 +56,6 @@ class Extra():
         for i in Extra.buttons_b:
             i.configure(state= NORMAL,fg_color="#510723")
 
+    def destroy(frame):
+        frame.destroy()
         

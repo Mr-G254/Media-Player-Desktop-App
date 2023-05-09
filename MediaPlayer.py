@@ -40,6 +40,7 @@ class HomeUI():
     img17 = CTkImage(Image.open("Icons\play.png"),size=(64,64))
     img18 = CTkImage(Image.open("Icons\pause.png"),size=(62,62))
     img19 = CTkImage(Image.open("Icons\\next-button.png"),size=(32,32))
+    img20 = CTkImage(Image.open("Icons\\reject.png"),size=(21,21))
     
     
     frame = CTkFrame(app,height= 600,width=1030,fg_color="#641E16")
@@ -75,15 +76,20 @@ class HomeUI():
         
         recent.invoke()
         
-        search = CTkEntry(HomeUI.frame,height= 35,width= 550,font=("TImes",14),corner_radius= 5,border_color="#0967CC",fg_color=['gray86', 'gray17'],border_width=0)
-        search.place(x= 162,y= 60)
+        search_frame = CTkFrame(HomeUI.frame,height= 39,width= 555,fg_color=['gray86', 'gray17'],corner_radius= 5)
+        search_frame.place(x=172,y= 60)
+
+        global search
+        search = CTkEntry(search_frame,height= 35,width= 550,font=("TImes",14),corner_radius= 5,border_color="#0967CC",fg_color=['gray86', 'gray17'],border_width=0)
+        search.place(x= 2,y= 2)
         search.bind('<FocusIn>',lambda Event: Extra.highlight(Event,search))
         search.bind('<FocusOut>',lambda Event: Extra.unhighlight(Event,search))
+
+        global clear_btn
+        clear_btn = CTkButton(search_frame,text= "",image= HomeUI.img20,height= 35,width=25,fg_color=['gray86', 'gray17'],corner_radius= 4,hover=False)
         
-        search_btn = CTkButton(HomeUI.frame,text= "",image= HomeUI.img12,height= 35,width=50,fg_color=['gray86', 'gray17'],corner_radius= 4,border_color="#0967CC",border_width=0)
-        search_btn.place(x=718,y= 60)
-        search_btn.bind('<Enter>',lambda Event: Extra.highlight(Event,search_btn))
-        search_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,search_btn))
+        search_btn = CTkLabel(HomeUI.frame,text= "",image= HomeUI.img12,height= 35,width=35,fg_color="#641E16",corner_radius= 4)
+        search_btn.place(x=730,y= 60)
         
         global pic
         pic = CTkLabel(HomeUI.frame,height= 140,width= 235,fg_color="#510723",text="",font=("TImes",15),image= HomeUI.img10,compound= LEFT,corner_radius= 6)
@@ -101,11 +107,11 @@ class HomeUI():
         menubtn.configure(fg_color= "#0967CC",state= DISABLED)
         Extra.buttons_a.append(menubtn)
         
-        mscbtn = CTkButton(menuframe,height= 35,width= 45,image= HomeUI.img1,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [Extra.configure_buttons(mscbtn, Extra.buttons_a),Music.music(HomeUI.frame,app,topbar,pic,name2)])
+        mscbtn = CTkButton(menuframe,height= 35,width= 45,image= HomeUI.img1,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [Extra.configure_buttons(mscbtn, Extra.buttons_a),Music.music(HomeUI.frame,app,topbar,pic,name2,search,clear_btn)])
         mscbtn.place(x= 3,y= 48)
         Extra.buttons_a.append(mscbtn)
         
-        vdbtn = CTkButton(menuframe,height= 35,width= 45,image= HomeUI.img2,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [Extra.configure_buttons(vdbtn, Extra.buttons_a),Video.video(HomeUI.frame,app,topbar,pic,name2)])
+        vdbtn = CTkButton(menuframe,height= 35,width= 45,image= HomeUI.img2,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [Extra.configure_buttons(vdbtn, Extra.buttons_a),Video.video(HomeUI.frame,app,topbar,pic,name2,search,clear_btn)])
         vdbtn.place(x= 3,y= 88)
         Extra.buttons_a.append(vdbtn)
         
@@ -138,6 +144,7 @@ class HomeUI():
         pic.place(x= 791,y= 5)
         name2.place_forget()
         topbar.place(x= 217,y= 15)
+        search.unbind('<KeyRelease>')
         
     def recent_page():
         name.configure(image= HomeUI.img13)
