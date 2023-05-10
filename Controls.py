@@ -8,6 +8,11 @@ class Controls():
     img2 = CTkImage(Image.open("Icons\heartb.png"),size=(24,24))
     img3 = CTkImage(Image.open("Icons\\volume.png"),size=(26,26))
     img4 = CTkImage(Image.open("Icons\\volume-mute.png"),size=(26,26))
+    img5 = CTkImage(Image.open("Icons\music.png"),size=(24,24))
+    img6 = CTkImage(Image.open("Icons\previous-button.png"),size=(32,32))
+    img7 = CTkImage(Image.open("Icons\play.png"),size=(64,64))
+    img8 = CTkImage(Image.open("Icons\pause.png"),size=(62,62))
+    img9 = CTkImage(Image.open("Icons\\next-button.png"),size=(32,32))
 
     favourite = False
     vol_on = True
@@ -22,14 +27,11 @@ class Controls():
     current_time = 0
     added_time = 0
 
-    def controls(Home_class,app):
+    def controls(frame,app):
         global App
         App = app
 
-        global Home
-        Home = Home_class
-
-        controlframe = CTkFrame(Home_class.frame,fg_color="#510723",height= 100,width=1020,corner_radius= 6)
+        controlframe = CTkFrame(frame,fg_color="#510723",height= 100,width=1020,corner_radius= 6)
         controlframe.place(x=5,y=495)
 
         global progressbar
@@ -41,7 +43,7 @@ class Controls():
         r_label = CTkLabel(controlframe,text="00:00",fg_color="#510723",height=20,width=40,anchor=CENTER)
         r_label.place(x=970,y=25)
 
-        msclabel = CTkLabel(controlframe,height= 70,width= 70,image= Home_class.img1,text = '',fg_color=['gray86', 'gray17'],corner_radius= 4,anchor= CENTER)
+        msclabel = CTkLabel(controlframe,height= 70,width= 70,image= Controls.img5,text = '',fg_color=['gray86', 'gray17'],corner_radius= 4,anchor= CENTER)
         msclabel.place(x= 5,y= 25)
 
         song_frame = CTkFrame(controlframe,height= 40,width= 300,fg_color="#510723")
@@ -51,18 +53,18 @@ class Controls():
         song_name = CTkLabel(song_frame,height= 40,width= 100,text = '',fg_color="#510723",font=("TImes",16),anchor= W)
         song_name.place(x=0,y=0)
 
-        previous_btn = CTkButton(controlframe,text= "",image= Home_class.img16,height= 35,width=35,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0,command=Controls.previous_song)
+        previous_btn = CTkButton(controlframe,text= "",image= Controls.img6,height= 35,width=35,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0,command=Controls.previous_song)
         previous_btn.place(x=415,y=41)
         previous_btn.bind('<Enter>',lambda Event: Extra.highlight(Event,previous_btn))
         previous_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,previous_btn))
 
         global play_btn
-        play_btn = CTkButton(controlframe,text= "",image= Home_class.img17,height= 64,width=64,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0)
+        play_btn = CTkButton(controlframe,text= "",image= Controls.img7,height= 64,width=64,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0)
         play_btn.place(x=462,y=25)
         play_btn.bind('<Enter>',lambda Event: Extra.highlight(Event,play_btn))
         play_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,play_btn))
 
-        next_btn = CTkButton(controlframe,text= "",image= Home_class.img19,height= 35,width=35,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0,command=Controls.next_song)
+        next_btn = CTkButton(controlframe,text= "",image= Controls.img9,height= 35,width=35,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0,command=Controls.next_song)
         next_btn.place(x=540,y=41)
         next_btn.bind('<Enter>',lambda Event: Extra.highlight(Event,next_btn))
         next_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,next_btn))
@@ -98,7 +100,7 @@ class Controls():
         length = mixer.Sound(Controls.current_song).get_length()
         Controls.duration = length
 
-        play_btn.configure(image= Home.img18)
+        play_btn.configure(image= Controls.img8)
         progressbar.configure(state = 'normal')
         mixer.music.load(Controls.current_song)
         mixer.music.play()
@@ -114,13 +116,13 @@ class Controls():
         mixer.music.pause()
 
         play_btn.configure(command= Controls.resume)
-        play_btn.configure(image= Home.img17)
+        play_btn.configure(image= Controls.img7)
 
     def resume():
         mixer.music.unpause()
 
         play_btn.configure(command= Controls.pause)
-        play_btn.configure(image= Home.img18)
+        play_btn.configure(image= Controls.img8)
 
     def audio_duration(length):
         hours = int(length // 3600)  
@@ -173,10 +175,11 @@ class Controls():
             mixer.music.set_pos((Controls.current_time + Controls.added_time))
 
     def next_song():
+        play_btn.configure(image= Controls.img8)
         index = Extra.All_songs.index(Controls.song_value)
         if index != len(Extra.All_songs)-1:
             Controls.select_frame(index+1)
-            play_btn.configure(image= Home.img18)
+           
             name = Extra.All_songs[index+1]
             value = name.split('=')
             name = value[0].replace('.mp3','')
@@ -195,7 +198,7 @@ class Controls():
             Controls.play_song(path,name)
 
     def end_song():
-        play_btn.configure(image= Home.img18)
+        play_btn.configure(image= Controls.img8)
         Controls.next_song()
 
     def select_frame(index):

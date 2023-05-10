@@ -1,25 +1,23 @@
 from tkinter import ttk,Button
 from customtkinter import*
 from PIL import ImageTk,Image
+from Extra import*
 from Database import*
+from VideoPage import*
 from SettingsPage import*
 from FoldersPage import*
-from Extra import*
 from MusicPage import*
 from Controls import*
-from VideoPage import*
 
 app = CTk()
 app.title("Media Player")
-app.geometry("500x300+350+200")
+app.geometry("1030x600+100+50")
 app.lift()
-# app.overrideredirect(True)
 app.resizable(False,False)
 
 class HomeUI():
     size = "min"
     
-
     img0 = CTkImage(Image.open("Icons\menu.png"),size=(32,32))
     img1 = CTkImage(Image.open("Icons\music.png"),size=(24,24))
     img2 = CTkImage(Image.open('Icons\\video.png'),size=(24,24))
@@ -36,20 +34,14 @@ class HomeUI():
     img13 = CTkImage(Image.open("Icons\\recent_bg.png"),size=(64,64))
     img14 = CTkImage(Image.open("Icons\playlist_bg.png"),size=(64,64))
     img15 = CTkImage(Image.open("Icons\heart_bg.png"),size=(64,64))
-    img16 = CTkImage(Image.open("Icons\previous-button.png"),size=(32,32))
-    img17 = CTkImage(Image.open("Icons\play.png"),size=(64,64))
-    img18 = CTkImage(Image.open("Icons\pause.png"),size=(62,62))
-    img19 = CTkImage(Image.open("Icons\\next-button.png"),size=(32,32))
-    img20 = CTkImage(Image.open("Icons\\reject.png"),size=(21,21))
+    img16 = CTkImage(Image.open("Icons\\reject.png"),size=(21,21))
     
     
     frame = CTkFrame(app,height= 600,width=1030,fg_color="#641E16")
+    Extra.Home_frame = frame
     frame.place(x= 0,y= 0)
        
     def home():
-        app.geometry("1030x600+100+50")
-        app.overrideredirect(False)
-
         global name
         name = CTkLabel(HomeUI.frame,height= 100,width= 135,fg_color="#510723",text="",font=("TImes",15),corner_radius= 6)
         name.place(x= 5,y= 5)
@@ -86,7 +78,7 @@ class HomeUI():
         search.bind('<FocusOut>',lambda Event: Extra.unhighlight(Event,search))
 
         global clear_btn
-        clear_btn = CTkButton(search_frame,text= "",image= HomeUI.img20,height= 35,width=25,fg_color=['gray86', 'gray17'],corner_radius= 4,hover=False)
+        clear_btn = CTkButton(search_frame,text= "",image= HomeUI.img16,height= 35,width=25,fg_color=['gray86', 'gray17'],corner_radius= 4,hover=False)
         
         search_btn = CTkLabel(HomeUI.frame,text= "",image= HomeUI.img12,height= 35,width=35,fg_color="#641E16",corner_radius= 4)
         search_btn.place(x=730,y= 60)
@@ -95,7 +87,7 @@ class HomeUI():
         pic = CTkLabel(HomeUI.frame,height= 140,width= 235,fg_color="#510723",text="",font=("TImes",15),image= HomeUI.img10,compound= LEFT,corner_radius= 6)
         pic.place(x= 791,y= 5)
 
-        Controls.controls(HomeUI,app)
+        Controls.controls(HomeUI.frame,app)
         HomeUI.menu()
         
     def menu():

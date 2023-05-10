@@ -27,25 +27,30 @@ class Music():
         c.place(x= 5,y= 5)
         app.update()
 
-
-        global music_page
-        music_page = CTkFrame(frame,height= 385,width= 965,fg_color="#641E16",corner_radius= 6)
-        
-        if music_page in Extra.frames_a:
-            pass
+        if Extra.Music_frame != '':
+            Extra.configure_frames(Extra.Music_frame, Extra.frames_a)
+            Extra.Music_frame.place(x= 60,y= 105)
         else:
-            Extra.frames_a.append(music_page)
+            global music_page
+            music_page = CTkFrame(frame,height= 385,width= 965,fg_color="#641E16",corner_radius= 6)
+            Extra.Music_frame = music_page
             
-        Extra.configure_frames(music_page, Extra.frames_a)
-        music_page.place(x= 60,y= 105)
+            if music_page in Extra.frames_a:
+                pass
+            else:
+                Extra.frames_a.append(music_page)
+                
+            Extra.configure_frames(music_page, Extra.frames_a)
+            music_page.place(x= 60,y= 105)
 
-        
-
-        Music.show_all_songs()
+            
+            Music.show_all_songs()
 
     def show_all_songs():
         music_frame = CTkScrollableFrame(music_page,height= 380,width= 945,fg_color="#641E16",corner_radius= 6)
         music_frame.place(x=0,y=0)
+
+        Extra.song_frames.clear()
 
         Y = 0
         x = 0

@@ -10,6 +10,8 @@ class Folders():
     img2 = CTkImage(Image.open("Icons\\delete.png"),size=(20,20))
     
     def folders(frame,button,app):
+        global App
+        App =app
         
         global folders_page
         folders_page = CTkFrame(frame,height= 330,width= 300,fg_color="#510723",corner_radius= 6)
@@ -76,11 +78,11 @@ class Folders():
 
     def new_folder():
         lc = filedialog.askdirectory()
-        print(lc)
+        
         if lc != "":
             values = lc.split("""/""") 
             Database.add_folder(values[len(values)-1],lc)
-
+            App.update()
             Folders.load_folders()
 
 

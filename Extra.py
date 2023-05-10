@@ -1,6 +1,8 @@
 from customtkinter import*
 
-class Extra():
+class Extra():  
+    Home_frame = ''
+
     buttons_a = [] #Buttons in the menu except Folder and settings button
     buttons_b = [] #Folder and settings button
     buttons_c = [] #Buttons in the home page(playlist, recent and favourites)
@@ -17,22 +19,30 @@ class Extra():
 
     All_videos = []
     video_thumbnails = []
+
+    Music_frame = ''
+    Music_scrollframe = ''
+    Video_frame = ''
     
-    def highlight(Event,x):
-        x.configure(border_width=2)
+    def highlight(Event,widget):
+        widget.configure(border_width=2)
         
-    def unhighlight(Event,x):
-        x.configure(border_width=0)
+    def unhighlight(Event,widget):
+        widget.configure(border_width=0)
         
-    def notify(app,information):
+    def notify(information):
         H= len(information)*10
-        X= 500 - (H/2)
+        X= 515 - (H/2)
         
-        toast = CTkLabel(app,text= information,font=("TImes",16),height= 35,width=H,fg_color="#770B33",corner_radius= 4)
-        toast.place(x=X,y=550)
-        
-        app.update()
-        app.after(1200,toast.place_forget())
+        global toast
+        toast = CTkLabel(Extra.Home_frame,text= information,font=("TImes",16),height= 35,width=H,fg_color="#770B33",corner_radius= 4)
+        toast.place(x=X,y=20)
+
+    def undo_noyify():
+        try:
+            toast.destroy()
+        except:
+            pass
         
     def configure_buttons(button,list):
         button.configure(fg_color= "#0967CC",state= DISABLED)

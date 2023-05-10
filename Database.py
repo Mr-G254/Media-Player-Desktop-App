@@ -36,6 +36,8 @@ class Database():
             value = str(i[0]) + "=" + str(i[1]) + "=" + str(i[2])
             Extra.Folders.append(value)
 
+        Extra.Folders.sort()
+
     def get_recent():
         Extra.Recent.clear()
         recent = db.execute('SELECT* FROM Recent;')
@@ -64,41 +66,23 @@ class Database():
     def del_folder(Event,folder_id,folder_name,folder_class):
         prompt = messagebox.askyesno("Delete Folder",f"Are you sure you want to delete {folder_name} folder")
         if prompt:
+            Extra.notify(f"Deleting {folder_name} from Folders...")
             db.execute(f"DELETE FROM Folders WHERE id={folder_id}")
             db.commit()
 
             Database.get_folder()
             folder_class.load_folders()
             Database.load_songs()
-            Video.get_thumbnails()
+            Extra.undo_noyify()
 
-            try:
-                Music.show_all_songs()
-            except:
-                pass
-
-            try:
-                Video.show_all_videos()
-            except:
-                pass
-    
     def add_folder(folder_name,folder_path):
+        Extra.notify(f"Adding {folder_name} to Folders...")
         db.execute("INSERT INTO Folders(Name,Path) VALUES(?,?)",(folder_name,folder_path))
         db.commit()
 
         Database.get_folder()
         Database.load_songs()
-        Video.get_thumbnails()
-
-        try:
-            Music.show_all_songs()
-        except:
-                pass
-        
-        try:
-            Video.show_all_videos()
-        except:
-                pass
+        Extra.undo_noyify()
 
     def close():
         db.close()
@@ -118,6 +102,17 @@ class Database():
         
         Extra.All_songs.sort()
         Extra.All_videos.sort()
+
+        try:
+            Music.show_all_songs()
+        except:
+                pass
+        
+        Video.get_thumbnails()
+        try:
+            Video.show_all_videos()
+        except:
+                pass
 
 Database.get_folder()
 Database.get_recent()
