@@ -1,7 +1,10 @@
 from customtkinter import*
+from tkinter import*
 from PIL import Image
 from Extra import*
 from moviepy.editor import VideoFileClip
+import tkVideoPlayer
+import vlc
 import os
 from PIL import Image
 
@@ -61,16 +64,19 @@ class Video():
             vid_frame.grid(column= X,row= Y,pady=5,padx=1)
             vid_frame.bind('<Enter>',lambda Event, vid_frame=vid_frame: Extra.highlight(Event,vid_frame))
             vid_frame.bind('<Leave>',lambda Event, vid_frame=vid_frame: Extra.unhighlight(Event,vid_frame))
+            vid_frame.bind('<Button-1>',lambda Event, path=path, name=name:Video.play_video(Event,path,name))
 
             thumbn_label = CTkLabel(vid_frame,text='',image=img)
             thumbn_label.place(x=0,y=0)
             thumbn_label.bind('<Enter>',lambda Event, vid_frame=vid_frame: Extra.highlight(Event,vid_frame))
             thumbn_label.bind('<Leave>',lambda Event, vid_frame=vid_frame: Extra.unhighlight(Event,vid_frame))
+            thumbn_label.bind('<Button-1>',lambda Event, path=path,name=name:Video.play_video(Event,path,name))
 
             vid_name = CTkLabel(vid_frame,text=name,font=("TImes",17),width=200,fg_color="#510723",anchor=W)
             vid_name.place(x=10,y=170)
             vid_name.bind('<Enter>',lambda Event, vid_frame=vid_frame: Extra.highlight(Event,vid_frame))
             vid_name.bind('<Leave>',lambda Event, vid_frame=vid_frame: Extra.unhighlight(Event,vid_frame))
+            vid_name.bind('<Button-1>',lambda Event, path=path, name=name:Video.play_video(Event,path,name))
 
             X = X + 1
 
@@ -96,3 +102,19 @@ class Video():
             Extra.video_thumbnails.append(thumbnail)
             no = no + 1
         
+    def play_video(Event,file_path,name):
+        video_window =CTkToplevel()
+        video_window.state('zoomed')
+        video_window.title(name)
+        App.iconify()
+
+        frame = CTkFrame(video_window,fg_color="black")
+        frame.pack(fill=BOTH,expand=YES)
+
+        media_player = vlc.MediaPlayer() 
+        media = vlc.Media(file_path)
+        media_player.set_media(media)
+        media_player.set_hwnd(frame.winfo_id())
+        media_player.play()
+                
+
