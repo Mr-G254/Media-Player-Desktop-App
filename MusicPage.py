@@ -1,7 +1,7 @@
 from customtkinter import*
 from PIL import Image
 from Extra import*
-from Controls import*
+from Controls import AudioControls
 from pygame import mixer
 from mutagen.mp3 import MP3
 
@@ -62,7 +62,7 @@ class Music():
             msc.grid(column= 0,row= Y,padx= 0,pady= 0)
             msc.bind('<Enter>',lambda Event, msc=msc: Extra.highlight(Event,msc))
             msc.bind('<Leave>',lambda Event, msc=msc: Extra.unhighlight(Event,msc))
-            msc.bind('<Button-1>',lambda Event, path=path, name=name: Controls.select_song(Event,path,name))
+            msc.bind('<Button-1>',lambda Event, path=path, name=name: AudioControls.select_song(Event,path,name))
 
             Extra.song_frames.append(msc)
             
@@ -70,10 +70,10 @@ class Music():
             lb.place(x=15,y=2)
             lb.bind('<Enter>',lambda Event, msc=msc: Extra.highlight(Event,msc))
             lb.bind('<Leave>',lambda Event, msc=msc: Extra.unhighlight(Event,msc))
-            lb.bind('<Button-1>',lambda Event, path=path, name=name: Controls.select_song(Event,path,name))
+            lb.bind('<Button-1>',lambda Event, path=path, name=name: AudioControls.select_song(Event,path,name))
 
             dur = MP3(path).info.length
-            dur_label = CTkLabel(msc,text=Controls.audio_duration(dur),font=("TImes",16),fg_color="#510723")
+            dur_label = CTkLabel(msc,text=AudioControls.audio_duration(dur),font=("TImes",16),fg_color="#510723")
             dur_label.place(x=600,y=2)
 
             if x==1:
@@ -119,13 +119,13 @@ class Music():
             msc2.grid(column= 0,row= Y2,padx= 2,pady= 2)
             msc2.bind('<Enter>',lambda Event, msc2=msc2: Extra.highlight(Event,msc2))
             msc2.bind('<Leave>',lambda Event, msc2=msc2: Extra.unhighlight(Event,msc2))
-            msc2.bind('<Button-1>',lambda Event, path=path, name=name: Controls.select_song(Event,path,name))
+            msc2.bind('<Button-1>',lambda Event, path=path, name=name: AudioControls.select_song(Event,path,name))
             
             lb2 = CTkLabel(msc2,text=name,font=("TImes",16),fg_color="#510723")
             lb2.place(x=15,y=2)
             lb2.bind('<Enter>',lambda Event, msc2=msc2: Extra.highlight(Event,msc2))
             lb2.bind('<Leave>',lambda Event, msc2=msc2: Extra.unhighlight(Event,msc2))
-            lb2.bind('<Button-1>',lambda Event, path=path, name=name: Controls.select_song(Event,path,name))
+            lb2.bind('<Button-1>',lambda Event, path=path, name=name: AudioControls.select_song(Event,path,name))
 
             Y2 = Y2 + 1
 

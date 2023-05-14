@@ -87,7 +87,7 @@ class HomeUI():
         pic = CTkLabel(HomeUI.frame,height= 140,width= 235,fg_color="#510723",text="",font=("TImes",15),image= HomeUI.img10,compound= LEFT,corner_radius= 6)
         pic.place(x= 791,y= 5)
 
-        Controls.controls(HomeUI.frame,app)
+        AudioControls.controls(HomeUI.frame,app)
         HomeUI.menu()
         
     def menu():
