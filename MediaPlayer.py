@@ -7,7 +7,7 @@ from VideoPage import*
 from SettingsPage import*
 from FoldersPage import*
 from MusicPage import*
-from Controls import*
+from AudioControls import*
 
 app = CTk()
 app.title("Media Player")

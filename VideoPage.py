@@ -7,7 +7,7 @@ import tkVideoPlayer
 import vlc
 import os
 from PIL import Image
-from Controls  import VideoControls
+from VideoControls  import*
 
 class Video():
     img0 = CTkImage(Image.open("Icons\\video_bg.png"),size=(64,64))
@@ -112,12 +112,6 @@ class Video():
 
         frame = CTkFrame(video_window,fg_color="black",height=video_window.winfo_height(),width=video_window.winfo_width())
         frame.place(x=0,y=0)
-
-        # media_player = vlc.MediaPlayer() 
-        # media = vlc.Media(file_path)
-        # media_player.set_media(media)
-        # media_player.set_hwnd(frame.winfo_id())
-        # media_player.play()
 
         VideoControls.play_video(file_path,name,frame)
         VideoControls.controls(frame,App,video_window)
