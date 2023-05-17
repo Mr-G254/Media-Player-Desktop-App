@@ -42,7 +42,8 @@ class AudioControls(Control):
         song_name = CTkLabel(song_frame,height= 40,width= 100,text = '',fg_color="#510723",font=("TImes",16),anchor= W)
         song_name.place(x=0,y=0)
 
-        previous_btn = CTkButton(controlframe,text= "",image= AudioControls.img6,height= 35,width=35,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0,command=AudioControls.previous_song)
+        global previous_btn
+        previous_btn = CTkButton(controlframe,text= "",image= AudioControls.img6,height= 35,width=35,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0)
         previous_btn.place(x=415,y=41)
         previous_btn.bind('<Enter>',lambda Event: Extra.highlight(Event,previous_btn))
         previous_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,previous_btn))
@@ -53,7 +54,8 @@ class AudioControls(Control):
         play_btn.bind('<Enter>',lambda Event: Extra.highlight(Event,play_btn))
         play_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,play_btn))
 
-        next_btn = CTkButton(controlframe,text= "",image= AudioControls.img9,height= 35,width=35,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0,command=AudioControls.next_song)
+        global next_btn
+        next_btn = CTkButton(controlframe,text= "",image= AudioControls.img9,height= 35,width=35,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0)
         next_btn.place(x=540,y=41)
         next_btn.bind('<Enter>',lambda Event: Extra.highlight(Event,next_btn))
         next_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,next_btn))
@@ -98,7 +100,9 @@ class AudioControls(Control):
         MUSIC_END = USEREVENT + 1
         mixer.music.set_endevent(MUSIC_END)
 
+        previous_btn.configure(command=AudioControls.previous_song)
         play_btn.configure(command= AudioControls.pause)
+        next_btn.configure(command=AudioControls.next_song)
         AudioControls.update_progress()
 
     def pause():

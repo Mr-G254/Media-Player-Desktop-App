@@ -12,6 +12,12 @@ class Control():
     img7 = CTkImage(Image.open("Icons\play.png"),size=(64,64))
     img8 = CTkImage(Image.open("Icons\pause.png"),size=(62,62))
     img9 = CTkImage(Image.open("Icons\\next-button.png"),size=(32,32))
+    img10 = CTkImage(Image.open("Icons\\fastbackward.png"),size=(25,25))
+    img11 = CTkImage(Image.open("Icons\\fastforward.png"),size=(25,25))
+    img12 = CTkImage(Image.open("Icons\play.png"),size=(52,52))
+    img13 = CTkImage(Image.open("Icons\pause.png"),size=(50,50))
+    img14 = CTkImage(Image.open("Icons\\up.png"),size=(25,25))
+    img15 = CTkImage(Image.open("Icons\down.png"),size=(25,25))
 
     def audio_duration(length):
         hours = int(length // 3600)  

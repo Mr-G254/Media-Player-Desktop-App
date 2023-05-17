@@ -108,7 +108,8 @@ class Video():
         video_window =CTkToplevel()
         video_window.state('zoomed')
         video_window.title(name)
-        video_window.resizable(False,False)
+        video_window.minsize(900,500)
+        # video_window.resizable(False,False)
 
         frame = CTkFrame(video_window,fg_color="black",height=video_window.winfo_height(),width=video_window.winfo_width())
         frame.place(x=0,y=0)
