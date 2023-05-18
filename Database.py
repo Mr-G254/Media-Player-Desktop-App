@@ -22,7 +22,8 @@ class Database():
         db.execute('INSERT INTO Folders(Name,Path) VALUES(?,?)',("Videos",Videos))
 
         db.execute("CREATE TABLE Recent(id integer PRIMARY KEY,Name text,Path text);")
-        db.execute("CREATE TABLE Favourites(id integer,Name text,Path text);")
+        db.execute("CREATE TABLE Favourites(id integer PRIMARY KEY,Name text,Path text);")
+        db.execute("CREATE TABLE Playlist(id integer PRIMARY KEY,Name text,Path text);")
 
         db.execute("CREATE TABLE Storage(id integer PRIMARY KEY,Path text);")
         db.execute('INSERT INTO Storage(Path) VALUES(?)',["Always ask"])
@@ -46,11 +47,26 @@ class Database():
             Extra.Recent.append(value)
 
     def get_favourites():
-        Extra.Recent.clear()
+        Extra.Favourites.clear()
+        Extra.E_favourites.clear()
         favourites = db.execute('SELECT* FROM Favourites;')
         for i in favourites:
             value = str(i[0]) + "=" + str(i[1]) + "=" + str(i[2])
             Extra.Favourites.append(value)
+            Extra.E_favourites.append(f"{str(i[1])}={str(i[2])}")
+            
+
+    def add_favourites(song_name,song_path):
+        db.execute("INSERT INTO Favourites(Name,Path) VALUES(?,?)",(song_name,song_path))
+        db.commit()
+
+        Database.get_favourites()
+
+    def del_favourites(song_name):
+        db.execute(f"DELETE FROM Favourites WHERE Name= '{song_name}'")
+        db.commit()
+
+        Database.get_favourites()
 
     def get_location():
         location = db.execute('SELECT* FROM Storage;')

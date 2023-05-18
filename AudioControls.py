@@ -1,6 +1,7 @@
 from Controls import*
 from customtkinter import*
 from pygame import mixer,USEREVENT,event,init
+# from Database import 
 
 class AudioControls(Control):
     favourite = False
@@ -9,16 +10,20 @@ class AudioControls(Control):
     init()
     mixer.init()
     mixer.music.set_volume(0.5)
-    current_song = ""
+    current_song_path = ""
+    current_song_name = ""
     song_value = ""
 
     duration = 0
     current_time = 0
     added_time = 0
 
-    def controls(frame,app):
+    def controls(frame,app,database):
         global App
         App = app
+
+        global Database
+        Database = database
 
         controlframe = CTkFrame(frame,fg_color="#510723",height= 100,width=1020,corner_radius= 6)
         controlframe.place(x=5,y=495)
@@ -87,13 +92,23 @@ class AudioControls(Control):
 
         song_name.configure(text=file_name)
 
-        AudioControls.current_song = file_path
-        length = mixer.Sound(AudioControls.current_song).get_length()
+        AudioControls.current_song_path = file_path
+        AudioControls.current_song_name = file_name
+        length = mixer.Sound(AudioControls.current_song_path).get_length()
         AudioControls.duration = length
+
+        
+        song = f"{file_name}={file_path}"
+        if song in Extra.E_favourites:
+            fav_btn.configure(image=AudioControls.img2)
+            AudioControls.favourite = True
+        else:
+            fav_btn.configure(image=AudioControls.img1)
+            AudioControls.favourite = False
 
         play_btn.configure(image= AudioControls.img8)
         progressbar.configure(state = 'normal')
-        mixer.music.load(AudioControls.current_song)
+        mixer.music.load(AudioControls.current_song_path)
         mixer.music.play()
 
         global MUSIC_END
@@ -151,7 +166,7 @@ class AudioControls(Control):
                 mixer.music.set_pos(AudioControls.added_time)
 
         except :
-            mixer.music.load(AudioControls.current_song)
+            mixer.music.load(AudioControls.current_song_path)
             mixer.music.play()
             mixer.music.set_pos((AudioControls.current_time + AudioControls.added_time))
 
@@ -193,9 +208,11 @@ class AudioControls(Control):
 
     def fav_song():
         if AudioControls.favourite == True:
+            Database.del_favourites(AudioControls.current_song_name)
             fav_btn.configure(image= AudioControls.img1)
             AudioControls.favourite = False
         else:
+            Database.add_favourites(AudioControls.current_song_name,AudioControls.current_song_path)
             fav_btn.configure(image= AudioControls.img2)
             AudioControls.favourite = True
 

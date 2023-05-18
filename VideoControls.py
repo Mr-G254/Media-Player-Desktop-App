@@ -108,7 +108,6 @@ class VideoControls(Control):
 
         VideoControls.vid_name = name
         VideoControls.playing = True
-        print(VideoControls.video_length)
 
     def resume_or_play():
         if media_player.is_playing():
@@ -215,3 +214,6 @@ class VideoControls(Control):
 
     def left_arrow(Event):
         VideoControls.move_backward()
+    
+    def stop_video():
+        media_player.stop()

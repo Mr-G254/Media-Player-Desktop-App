@@ -11,8 +11,19 @@ from VideoControls  import*
 
 class Video():
     img0 = CTkImage(Image.open("Icons\\video_bg.png"),size=(64,64))
+    search_results = []
+    vid_window = ''
 
     def video(frame,app,a,b,c,search,clear_btn):
+        global Search
+        Search = search
+        Search.unbind('<KeyRelease>')
+        Search.bind('<KeyRelease>',lambda Event: Video.search_video(Event))
+
+        global Clear_btn
+        Clear_btn = clear_btn
+        Clear_btn.configure(command= Video.clear_entry)
+
         global App
         App = app
 
@@ -80,6 +91,9 @@ class Video():
             vid_name.bind('<Button-1>',lambda Event, path=path, name=name:Video.play_video(Event,path,name))
 
             X = X + 1
+        
+        global search_frame
+        search_frame = CTkScrollableFrame(video_page,height=200,width=590,corner_radius= 5,fg_color=['gray86', 'gray17'])
 
     def get_thumbnails():
         Extra.video_thumbnails.clear()
@@ -104,12 +118,16 @@ class Video():
             no = no + 1
         
     def play_video(Event,file_path,name):
+        if Video.vid_window !='':
+            Video.on_closing()
+
         App.iconify()
         video_window =CTkToplevel()
+        Video.vid_window = video_window
         video_window.state('zoomed')
         video_window.title(name)
         video_window.minsize(900,500)
-        # video_window.resizable(False,False)
+        video_window.protocol("WM_DELETE_WINDOW",Video.on_closing)
 
         frame = CTkFrame(video_window,fg_color="black",height=video_window.winfo_height(),width=video_window.winfo_width())
         frame.place(x=0,y=0)
@@ -117,5 +135,50 @@ class Video():
         VideoControls.play_video(file_path,name,frame)
         VideoControls.controls(frame,App,video_window)
         
-                
+    def search_video(Event):    
+        Video.search_results.clear()
 
+        if len(Search.get()) > 0:
+            Clear_btn.place(x = 520,y=2)
+        else:
+            Clear_btn.place_forget()
+
+        if search_frame.winfo_ismapped():
+            for i in search_frame.winfo_children():
+                i.destroy()
+        else:
+            search_frame.place(x=100,y=0)
+
+        Y2 = 0
+        for i in Extra.All_videos:
+            if i.lower().startswith(Search.get().lower()):
+                Video.search_results.append(i)
+           
+            
+        for i in Video.search_results:
+            value = i.split("=")
+            name = value[0].replace('.mp4','')
+            path = value[1]
+            msc2 = CTkFrame(search_frame,height=35,width=588,fg_color="#510723",border_color="#0967CC",border_width=0)
+            msc2.grid(column= 0,row= Y2,padx= 2,pady= 2)
+            msc2.bind('<Enter>',lambda Event, msc2=msc2: Extra.highlight(Event,msc2))
+            msc2.bind('<Leave>',lambda Event, msc2=msc2: Extra.unhighlight(Event,msc2))
+            msc2.bind('<Button-1>',lambda Event, path=path, name=name: Video.play_video(Event,path,name))
+            
+            lb2 = CTkLabel(msc2,text=name,font=("TImes",16),fg_color="#510723")
+            lb2.place(x=15,y=2)
+            lb2.bind('<Enter>',lambda Event, msc2=msc2: Extra.highlight(Event,msc2))
+            lb2.bind('<Leave>',lambda Event, msc2=msc2: Extra.unhighlight(Event,msc2))
+            lb2.bind('<Button-1>',lambda Event, path=path, name=name: Video.play_video(Event,path,name))
+
+            Y2 = Y2 + 1
+   
+    def clear_entry():
+        Search.delete(0,END)
+        search_frame.place_forget()
+        Clear_btn.place_forget()
+
+    def on_closing():
+        VideoControls.stop_video()
+        Video.vid_window.destroy()
+        VideoControls.is_maxsize = True

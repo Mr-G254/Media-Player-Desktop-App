@@ -1,7 +1,7 @@
 from customtkinter import*
 from PIL import Image
 from Extra import*
-from AudioControls import*
+from AudioControls import AudioControls
 from pygame import mixer
 from mutagen.mp3 import MP3
 
