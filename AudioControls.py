@@ -6,8 +6,10 @@ from pygame import mixer,USEREVENT,event,init
 class AudioControls(Control):
     favourite = False
     vol_on = True
+    Id = ""
+    Index = 0
 
-    init()
+    # init()
     mixer.init()
     mixer.music.set_volume(0.5)
     current_song_path = ""
@@ -18,14 +20,17 @@ class AudioControls(Control):
     current_time = 0
     added_time = 0
 
-    def controls(frame,app,database):
+    def controls(home,app,database):
+        global Home
+        Home = home
+
         global App
         App = app
 
         global Database
         Database = database
 
-        controlframe = CTkFrame(frame,fg_color="#510723",height= 100,width=1020,corner_radius= 6)
+        controlframe = CTkFrame(Home.frame,fg_color="#510723",height= 100,width=1020,corner_radius= 6)
         controlframe.place(x=5,y=495)
 
         global progressbar
@@ -79,16 +84,20 @@ class AudioControls(Control):
         fav_btn.place(x=975,y=55)
        
 
-    def select_song(Event,file_path,file_name):
+    def select_song(Event,file_path,file_name,id):
+        AudioControls.Id = id
         AudioControls.play_song(file_path,file_name)
 
     def play_song(file_path,file_name):
         AudioControls.song_value = f"{file_name}.mp3={file_path}"
         AudioControls.current_time = 0
-        AudioControls.added_time = 0
+        AudioControls.added_time = 0    
 
-        index = Extra.All_songs.index(AudioControls.song_value)
-        AudioControls.select_frame(index)
+        try:
+            index = Extra.All_songs.index(AudioControls.song_value)
+            AudioControls.select_frame(index,Extra.song_frames)
+        except:
+            pass
 
         song_name.configure(text=file_name)
 
@@ -100,6 +109,11 @@ class AudioControls(Control):
         
         song = f"{file_name}={file_path}"
         if song in Extra.E_favourites:
+            if AudioControls.Id == "Favourites":
+                index = Extra.E_favourites.index(song)
+                AudioControls.Index = index
+                AudioControls.select_frame(index,Extra.Favourites_frames)
+
             fav_btn.configure(image=AudioControls.img2)
             AudioControls.favourite = True
         else:
@@ -119,6 +133,12 @@ class AudioControls(Control):
         play_btn.configure(command= AudioControls.pause)
         next_btn.configure(command=AudioControls.next_song)
         AudioControls.update_progress()
+    
+    def get_index(song,list):
+        for i in range(len(list)):
+            if i == song:
+                return i
+
 
     def pause():
         mixer.music.pause()
@@ -172,11 +192,29 @@ class AudioControls(Control):
 
     def next_song():
         play_btn.configure(image= AudioControls.img8)
-        index = Extra.All_songs.index(AudioControls.song_value)
-        if index != len(Extra.All_songs)-1:
-            AudioControls.select_frame(index+1)
-           
-            name = Extra.All_songs[index+1]
+
+        if AudioControls.Id == "Songs":
+            index = Extra.All_songs.index(AudioControls.song_value)
+            if index != len(Extra.All_songs)-1:
+                index = index + 1
+            else:
+                index = 0
+            
+            name = Extra.All_songs[index]
+            value = name.split('=')
+            name = value[0].replace('.mp3','')
+            path = value[1]
+
+            AudioControls.play_song(path,name)
+
+        elif AudioControls.Id == "Favourites":
+            
+            if AudioControls.Index != len(Extra.E_favourites)-1:
+                AudioControls.Index = AudioControls.Index + 1
+            else:
+                AudioControls.Index = 0
+            
+            name = Extra.E_favourites[AudioControls.Index]
             value = name.split('=')
             name = value[0].replace('.mp3','')
             path = value[1]
@@ -184,9 +222,26 @@ class AudioControls(Control):
             AudioControls.play_song(path,name)
 
     def previous_song():
-        index = Extra.All_songs.index(AudioControls.song_value)
-        if index != 0:
-            name = Extra.All_songs[index-1]
+        if AudioControls.Id == "Songs":
+            index = Extra.All_songs.index(AudioControls.song_value)
+            if index != 0:
+                index = index - 1
+            else:
+                index = len(Extra.All_songs)-1
+
+            name = Extra.All_songs[index]
+            value = name.split('=')
+            name = value[0].replace('.mp3','')
+            path = value[1]
+
+            AudioControls.play_song(path,name)
+        elif AudioControls.Id == "Favourites":
+            if AudioControls.Index != 0:
+                AudioControls.Index = AudioControls.Index - 1
+            else:
+                AudioControls.Index = len(Extra.E_favourites)-1
+            
+            name = Extra.E_favourites[AudioControls.Index]
             value = name.split('=')
             name = value[0].replace('.mp3','')
             path = value[1]
@@ -197,22 +252,22 @@ class AudioControls(Control):
         play_btn.configure(image= AudioControls.img8)
         AudioControls.next_song()
 
-    def select_frame(index):
-        for i in Extra.song_frames:
+    def select_frame(index,frames):
+        for i in frames:
             for x in i.winfo_children():
                 x.configure(text_color = "white")
 
-        frame = Extra.song_frames[index]
+        frame = frames[index]
         for i in frame.winfo_children():
             i.configure(text_color = "#0967CC")
 
     def fav_song():
         if AudioControls.favourite == True:
-            Database.del_favourites(AudioControls.current_song_name)
+            Database.del_favourites(AudioControls.current_song_name,Home)
             fav_btn.configure(image= AudioControls.img1)
             AudioControls.favourite = False
         else:
-            Database.add_favourites(AudioControls.current_song_name,AudioControls.current_song_path)
+            Database.add_favourites(AudioControls.current_song_name,AudioControls.current_song_path,Home)
             fav_btn.configure(image= AudioControls.img2)
             AudioControls.favourite = True
 

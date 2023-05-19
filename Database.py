@@ -54,19 +54,20 @@ class Database():
             value = str(i[0]) + "=" + str(i[1]) + "=" + str(i[2])
             Extra.Favourites.append(value)
             Extra.E_favourites.append(f"{str(i[1])}={str(i[2])}")
-            
 
-    def add_favourites(song_name,song_path):
+    def add_favourites(song_name,song_path,Home):
         db.execute("INSERT INTO Favourites(Name,Path) VALUES(?,?)",(song_name,song_path))
         db.commit()
 
         Database.get_favourites()
+        Home.configure_fav_page()
 
-    def del_favourites(song_name):
+    def del_favourites(song_name,Home):
         db.execute(f"DELETE FROM Favourites WHERE Name= '{song_name}'")
         db.commit()
 
         Database.get_favourites()
+        Home.configure_fav_page()
 
     def get_location():
         location = db.execute('SELECT* FROM Storage;')

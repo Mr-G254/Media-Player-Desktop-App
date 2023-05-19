@@ -28,16 +28,16 @@ class HomeUI():
     img7 = CTkImage(Image.open("Icons\\recent.png"),size=(20,20))
     img8 = CTkImage(Image.open("Icons\playlist.png"),size=(20,20))
     img9 = CTkImage(Image.open("Icons\heart.png"),size=(20,20))
-    img10 = CTkImage(Image.open("Icons\house.png"),size=(128,128))
+    img10 = CTkImage(Image.open("Icons\house.png"),size=(100,100))
     img11 = CTkImage(Image.open("Icons\close.png"),size=(24,24))
     img12 = CTkImage(Image.open("Icons\search.png"),size=(20,20))
     img13 = CTkImage(Image.open("Icons\\recent_bg.png"),size=(64,64))
     img14 = CTkImage(Image.open("Icons\playlist_bg.png"),size=(64,64))
     img15 = CTkImage(Image.open("Icons\heart_bg.png"),size=(64,64))
     img16 = CTkImage(Image.open("Icons\\reject.png"),size=(21,21))
-    
-    
-    frame = CTkFrame(app,height= 600,width=1030,fg_color="#641E16")
+    #781F15 
+    #641E16
+    frame = CTkFrame(app,height= 600,width=1030,fg_color="#781F15")
     Extra.Home_frame = frame
     frame.place(x= 0,y= 0)
        
@@ -48,25 +48,6 @@ class HomeUI():
 
         global name2
         name2 = CTkLabel(HomeUI.frame,height= 100,width= 135,fg_color="#510723",text="",font=("TImes",15),corner_radius= 6)
-        
-        
-        global topbar
-        topbar = CTkFrame(HomeUI.frame,height= 40,width= 466,corner_radius= 5,border_color="#0967CC",border_width=2)
-        topbar.place(x= 232,y= 15)
-        
-        recent = CTkButton(topbar,text="Recents",image= HomeUI.img7,compound= LEFT,font=("TImes",15),fg_color="#510723",width= 150,height=30,corner_radius= 4,command= lambda: [Extra.configure_buttons(recent, Extra.buttons_c),HomeUI.recent_page()])
-        recent.place(x= 5,y=5)
-        Extra.buttons_c.append(recent)
-        
-        playlist = CTkButton(topbar,text="Playlist",image= HomeUI.img8,compound= LEFT,font=("TImes",15),fg_color="#510723",width= 150,height=30,corner_radius= 4,command= lambda: [Extra.configure_buttons(playlist, Extra.buttons_c),HomeUI.playlist_page()])
-        playlist.place(x= 158,y= 5)
-        Extra.buttons_c.append(playlist)
-        
-        favourites = CTkButton(topbar,text="Favourites",image= HomeUI.img9,compound= LEFT,font=("TImes",15),fg_color="#510723",width= 150,height=30,corner_radius= 4,command= lambda: [Extra.configure_buttons(favourites, Extra.buttons_c),HomeUI.fav_page()])
-        favourites.place(x= 311,y= 5)
-        Extra.buttons_c.append(favourites)
-        
-        recent.invoke()
         
         search_frame = CTkFrame(HomeUI.frame,height= 39,width= 555,fg_color=['gray86', 'gray17'],corner_radius= 5)
         search_frame.place(x=172,y= 60)
@@ -80,14 +61,43 @@ class HomeUI():
         global clear_btn
         clear_btn = CTkButton(search_frame,text= "",image= HomeUI.img16,height= 35,width=25,fg_color=['gray86', 'gray17'],corner_radius= 4,hover=False)
         
-        search_btn = CTkLabel(HomeUI.frame,text= "",image= HomeUI.img12,height= 35,width=35,fg_color="#641E16",corner_radius= 4)
+        search_btn = CTkLabel(HomeUI.frame,text= "",image= HomeUI.img12,height= 38,width=38,fg_color="#641E16",corner_radius= 4)
         search_btn.place(x=730,y= 60)
         
-        global pic
-        pic = CTkLabel(HomeUI.frame,height= 140,width= 235,fg_color="#510723",text="",font=("TImes",15),image= HomeUI.img10,compound= LEFT,corner_radius= 6)
-        pic.place(x= 791,y= 5)
+        global home_tab
+        home_tab = CTkTabview(HomeUI.frame,height=380,width=690,fg_color="#641E16")
+        home_tab.place(x=120,y=105)
 
-        AudioControls.controls(HomeUI.frame,app,Database)
+        home_tab.add("Recent")
+        home_tab.add("Playlist")
+        home_tab.add("Favourites")
+        HomeUI.configure_fav_page()
+
+        home_tab.set("Recent")
+
+        global topbar
+        topbar = CTkFrame(HomeUI.frame,height= 40,width= 466,corner_radius= 5,border_color="#0967CC",border_width=2)
+        topbar.place(x= 232,y= 105)
+        
+        recent = CTkButton(topbar,text="Recents",image= HomeUI.img7,compound= LEFT,font=("TImes",15),fg_color="#510723",width= 150,height=30,corner_radius= 4,command= lambda: [Extra.configure_buttons(recent, Extra.buttons_c),HomeUI.recent_page()])
+        recent.place(x= 5,y=5)
+        Extra.buttons_c.append(recent)
+        
+        playlist = CTkButton(topbar,text="Playlist",image= HomeUI.img8,compound= LEFT,font=("TImes",15),fg_color="#510723",width= 150,height=30,corner_radius= 4,command= lambda: [Extra.configure_buttons(playlist, Extra.buttons_c),HomeUI.playlist_page()])
+        playlist.place(x= 158,y= 5)
+        Extra.buttons_c.append(playlist)
+        
+        favourites = CTkButton(topbar,text="Favourites",image= HomeUI.img9,compound= LEFT,font=("TImes",15),fg_color="#510723",width= 150,height=30,corner_radius= 4,command= lambda: [Extra.configure_buttons(favourites, Extra.buttons_c),HomeUI.fav_page()])
+        favourites.place(x= 311,y= 5)
+        Extra.buttons_c.append(favourites)
+
+        global pic
+        pic = CTkLabel(HomeUI.frame,height= 120,width= 200,fg_color="#510723",text="",font=("TImes",15),image= HomeUI.img10,compound= LEFT,corner_radius= 6)
+        pic.place(x= 826,y= 5)
+        
+        recent.invoke()
+
+        AudioControls.controls(HomeUI,app,Database)
         HomeUI.menu()
         
     def menu():
@@ -99,11 +109,11 @@ class HomeUI():
         menubtn.configure(fg_color= "#0967CC",state= DISABLED)
         Extra.buttons_a.append(menubtn)
         
-        mscbtn = CTkButton(menuframe,height= 35,width= 45,image= HomeUI.img1,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [Extra.configure_buttons(mscbtn, Extra.buttons_a),Music.music(HomeUI.frame,app,topbar,pic,name2,search,clear_btn)])
+        mscbtn = CTkButton(menuframe,height= 35,width= 45,image= HomeUI.img1,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [Extra.configure_buttons(mscbtn, Extra.buttons_a),Music.music(HomeUI.frame,app,pic,name2,search,clear_btn)])
         mscbtn.place(x= 3,y= 48)
         Extra.buttons_a.append(mscbtn)
         
-        vdbtn = CTkButton(menuframe,height= 35,width= 45,image= HomeUI.img2,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [Extra.configure_buttons(vdbtn, Extra.buttons_a),Video.video(HomeUI.frame,app,topbar,pic,name2,search,clear_btn)])
+        vdbtn = CTkButton(menuframe,height= 35,width= 45,image= HomeUI.img2,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [Extra.configure_buttons(vdbtn, Extra.buttons_a),Video.video(HomeUI.frame,app,pic,name2,search,clear_btn)])
         vdbtn.place(x= 3,y= 88)
         Extra.buttons_a.append(vdbtn)
         
@@ -133,19 +143,45 @@ class HomeUI():
         for i in Extra.frames_a:
             i.place_forget()
 
-        pic.place(x= 791,y= 5)
+        pic.place(x= 826,y= 5)
         name2.place_forget()
-        topbar.place(x= 217,y= 15)
         search.unbind('<KeyRelease>')
         
     def recent_page():
         name.configure(image= HomeUI.img13)
+        home_tab.set("Recent")
         
     def playlist_page():
         name.configure(image= HomeUI.img14)
+        home_tab.set("Playlist")
         
     def fav_page():
         name.configure(image= HomeUI.img15)
+        home_tab.set("Favourites")
+
+    def configure_fav_page():
+        fav_frame = CTkScrollableFrame(home_tab.tab("Favourites"),height=355,width=655,fg_color="#641E16")
+        fav_frame.place(x=0,y=0)
+
+        Y3=0
+        for i in Extra.E_favourites:
+            value = i.split("=")
+            name = value[0].replace('.mp3','')
+            path = value[1]
+            msc3 = CTkFrame(fav_frame,height=35,width=655,fg_color="#510723",border_color="#0967CC",border_width=0)
+            msc3.grid(column= 0,row= Y3,padx= 2,pady= 2)
+            msc3.bind('<Enter>',lambda Event, msc3=msc3: Extra.highlight(Event,msc3))
+            msc3.bind('<Leave>',lambda Event, msc3=msc3: Extra.unhighlight(Event,msc3))
+            msc3.bind('<Button-1>',lambda Event, path=path, name=name: AudioControls.select_song(Event,path,name,"Favourites"))
+            Extra.Favourites_frames.append(msc3)
+            
+            lb3 = CTkLabel(msc3,text=name,font=("TImes",16),fg_color="#510723")
+            lb3.place(x=15,y=2)
+            lb3.bind('<Enter>',lambda Event, msc3=msc3: Extra.highlight(Event,msc3))
+            lb3.bind('<Leave>',lambda Event, msc3=msc3: Extra.unhighlight(Event,msc3))
+            lb3.bind('<Button-1>',lambda Event, path=path, name=name: AudioControls.select_song(Event,path,name,"Favourites"))
+
+            Y3 = Y3 + 1
               
 HomeUI.home()
 

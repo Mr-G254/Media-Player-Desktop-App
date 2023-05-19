@@ -10,7 +10,7 @@ class Music():
 
     search_results = []
 
-    def music(frame,app,a,b,c,search,clear_btn):
+    def music(frame,app,b,c,search,clear_btn):
         global Search
         Search = search
         Search.unbind('<KeyRelease>')
@@ -21,7 +21,6 @@ class Music():
         Clear_btn.configure(command= Music.clear_entry)
 
         Extra.close_small_frames()
-        a.place_forget()
         b.place_forget()
         c.configure(image=Music.img0)
         c.place(x= 5,y= 5)
@@ -32,7 +31,7 @@ class Music():
             Extra.Music_frame.place(x= 60,y= 105)
         else:
             global music_page
-            music_page = CTkFrame(frame,height= 385,width= 965,fg_color="#641E16",corner_radius= 6)
+            music_page = CTkFrame(frame,height= 385,width= 965,fg_color="#781F15",corner_radius= 6)
             Extra.Music_frame = music_page
             
             if music_page in Extra.frames_a:
@@ -47,7 +46,7 @@ class Music():
             Music.show_all_songs()
 
     def show_all_songs():
-        music_frame = CTkScrollableFrame(music_page,height= 380,width= 945,fg_color="#641E16",corner_radius= 6)
+        music_frame = CTkScrollableFrame(music_page,height= 380,width= 945,fg_color="#781F15",corner_radius= 6)
         music_frame.place(x=0,y=0)
 
         Extra.song_frames.clear()
@@ -62,7 +61,7 @@ class Music():
             msc.grid(column= 0,row= Y,padx= 0,pady= 0)
             msc.bind('<Enter>',lambda Event, msc=msc: Extra.highlight(Event,msc))
             msc.bind('<Leave>',lambda Event, msc=msc: Extra.unhighlight(Event,msc))
-            msc.bind('<Button-1>',lambda Event, path=path, name=name: AudioControls.select_song(Event,path,name))
+            msc.bind('<Button-1>',lambda Event, path=path, name=name: AudioControls.select_song(Event,path,name,"Songs"))
 
             Extra.song_frames.append(msc)
             
@@ -70,7 +69,7 @@ class Music():
             lb.place(x=15,y=2)
             lb.bind('<Enter>',lambda Event, msc=msc: Extra.highlight(Event,msc))
             lb.bind('<Leave>',lambda Event, msc=msc: Extra.unhighlight(Event,msc))
-            lb.bind('<Button-1>',lambda Event, path=path, name=name: AudioControls.select_song(Event,path,name))
+            lb.bind('<Button-1>',lambda Event, path=path, name=name: AudioControls.select_song(Event,path,name,"Songs"))
 
             dur = MP3(path).info.length
             dur_label = CTkLabel(msc,text=AudioControls.audio_duration(dur),font=("TImes",16),fg_color="#510723")
@@ -94,23 +93,26 @@ class Music():
     def search_song(Event):
         Music.search_results.clear()
 
+        Y2 = 0
+        for i in Extra.All_songs:
+            if i.lower().startswith(Search.get().lower()) and Search.get() != "":
+                Music.search_results.append(i)
+        
         if len(Search.get()) > 0:
+            if search_frame.winfo_ismapped():
+                for i in search_frame.winfo_children():
+                    i.destroy()
+            
+            if len(Music.search_results) < 1:
+                search_frame.place_forget()
+            else:
+                search_frame.place(x=100,y=0)
+
             Clear_btn.place(x = 520,y=2)
         else:
             Clear_btn.place_forget()
+            search_frame.place_forget()
 
-        if search_frame.winfo_ismapped():
-            for i in search_frame.winfo_children():
-                i.destroy()
-        else:
-            search_frame.place(x=100,y=0)
-
-        Y2 = 0
-        for i in Extra.All_songs:
-            if i.lower().startswith(Search.get().lower()):
-                Music.search_results.append(i)
-           
-            
         for i in Music.search_results:
             value = i.split("=")
             name = value[0].replace('.mp3','')

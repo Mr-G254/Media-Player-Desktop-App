@@ -14,7 +14,7 @@ class Video():
     search_results = []
     vid_window = ''
 
-    def video(frame,app,a,b,c,search,clear_btn):
+    def video(frame,app,b,c,search,clear_btn):
         global Search
         Search = search
         Search.unbind('<KeyRelease>')
@@ -28,7 +28,6 @@ class Video():
         App = app
 
         Extra.close_small_frames()
-        a.place_forget()
         b.place_forget()
         c.configure(image=Video.img0)
         c.place(x= 5,y= 5)
@@ -40,7 +39,7 @@ class Video():
         else:
 
             global video_page
-            video_page = CTkFrame(frame,height= 385,width= 965,fg_color="#641E16",corner_radius= 6)
+            video_page = CTkFrame(frame,height= 385,width= 965,fg_color="#781F15",corner_radius= 6)
             Extra.Video_frame = video_page
             
             if video_page in Extra.frames_a:
@@ -54,7 +53,7 @@ class Video():
             Video.show_all_videos()
 
     def show_all_videos():
-        video_frame = CTkScrollableFrame(video_page,height= 380,width= 945,fg_color="#641E16",corner_radius= 6)
+        video_frame = CTkScrollableFrame(video_page,height= 380,width= 945,fg_color="#781F15",corner_radius= 6)
         video_frame.place(x=0,y=0)
 
         X= 0
@@ -138,21 +137,25 @@ class Video():
     def search_video(Event):    
         Video.search_results.clear()
 
+        Y2 = 0
+        for i in Extra.All_videos:
+            if i.lower().startswith(Search.get().lower()) and Search.get() != "":
+                Video.search_results.append(i)
+        
         if len(Search.get()) > 0:
+            if search_frame.winfo_ismapped():
+                for i in search_frame.winfo_children():
+                    i.destroy()
+            
+            if len(Video.search_results) < 1:
+                search_frame.place_forget()
+            else:
+                search_frame.place(x=100,y=0)
+
             Clear_btn.place(x = 520,y=2)
         else:
             Clear_btn.place_forget()
-
-        if search_frame.winfo_ismapped():
-            for i in search_frame.winfo_children():
-                i.destroy()
-        else:
-            search_frame.place(x=100,y=0)
-
-        Y2 = 0
-        for i in Extra.All_videos:
-            if i.lower().startswith(Search.get().lower()):
-                Video.search_results.append(i)
+            search_frame.place_forget()
            
             
         for i in Video.search_results:

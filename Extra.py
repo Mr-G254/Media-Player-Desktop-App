@@ -12,10 +12,12 @@ class Extra():
 
     Folders = []
     Recent = []
-    Favourites = []
-    E_favourites = []
     Playlist = []
 
+    Favourites = []
+    E_favourites = []
+    Favourites_frames = []
+    
     All_songs = []
     song_frames = []
 

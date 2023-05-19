@@ -164,6 +164,7 @@ class VideoControls(Control):
         VideoControls.is_maxsize = False
 
     def maximize():
+        App.update()
         controlframe.place(x=0,y=Height-80)
         resize.configure(image=VideoControls.img15,command=VideoControls.minimize)
         VideoControls.is_maxsize = True
@@ -174,6 +175,7 @@ class VideoControls(Control):
             media_player.set_position(position)
 
     def reconfigure_widgets(Event):
+        App.update()
         Height = Window.winfo_height()
         Width = Window.winfo_width()
         frame_width = Width - 10
