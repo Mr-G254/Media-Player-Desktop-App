@@ -1,7 +1,6 @@
 from Controls import*
 from customtkinter import*
-from pygame import mixer,USEREVENT,event,init
-# from Database import 
+from pygame import mixer,USEREVENT,event
 
 class AudioControls(Control):
     favourite = False
@@ -108,9 +107,12 @@ class AudioControls(Control):
 
         
         song = f"{file_name}={file_path}"
-        if song in Extra.E_favourites:
+        if AudioControls.Id != "Recent":
+            AudioControls.add_to_recent(song)
+
+        if song in Extra.Favourites:
             if AudioControls.Id == "Favourites":
-                index = Extra.E_favourites.index(song)
+                index = Extra.Favourites.index(song)
                 AudioControls.Index = index
                 AudioControls.select_frame(index,Extra.Favourites_frames)
 
@@ -119,6 +121,11 @@ class AudioControls(Control):
         else:
             fav_btn.configure(image=AudioControls.img1)
             AudioControls.favourite = False
+
+        if AudioControls.Id == "Recent":
+            index = Extra.Recent.index(song)
+            AudioControls.Index = index
+            AudioControls.select_frame(index,Extra.Recent_frames)
 
         play_btn.configure(image= AudioControls.img8)
         progressbar.configure(state = 'normal')
@@ -208,18 +215,24 @@ class AudioControls(Control):
             AudioControls.play_song(path,name)
 
         elif AudioControls.Id == "Favourites":
+            AudioControls.select_next_song(Extra.Favourites)
             
-            if AudioControls.Index != len(Extra.E_favourites)-1:
+        elif AudioControls.Id == "Recent":
+            AudioControls.select_next_song(Extra.Recent)
+            
+    def select_next_song(song_list):
+        if AudioControls.Index != len(song_list)-1:
                 AudioControls.Index = AudioControls.Index + 1
-            else:
-                AudioControls.Index = 0
-            
-            name = Extra.E_favourites[AudioControls.Index]
-            value = name.split('=')
-            name = value[0].replace('.mp3','')
-            path = value[1]
+        else:
+            AudioControls.Index = 0
+        
+        name = song_list[AudioControls.Index]
+        value = name.split('=')
+        name = value[0].replace('.mp3','')
+        path = value[1]
 
-            AudioControls.play_song(path,name)
+        AudioControls.play_song(path,name)
+
 
     def previous_song():
         if AudioControls.Id == "Songs":
@@ -236,17 +249,23 @@ class AudioControls(Control):
 
             AudioControls.play_song(path,name)
         elif AudioControls.Id == "Favourites":
-            if AudioControls.Index != 0:
-                AudioControls.Index = AudioControls.Index - 1
-            else:
-                AudioControls.Index = len(Extra.E_favourites)-1
-            
-            name = Extra.E_favourites[AudioControls.Index]
-            value = name.split('=')
-            name = value[0].replace('.mp3','')
-            path = value[1]
+            AudioControls.select_previous_song(Extra.Favourites)
+           
+        elif AudioControls.Id == "Recent":
+            AudioControls.select_previous_song(Extra.Recent)
 
-            AudioControls.play_song(path,name)
+    def select_previous_song(song_list):
+        if AudioControls.Index != 0:
+                AudioControls.Index = AudioControls.Index - 1
+        else:
+            AudioControls.Index = len(song_list)-1
+        
+        name = song_list[AudioControls.Index]
+        value = name.split('=')
+        name = value[0].replace('.mp3','')
+        path = value[1]
+
+        AudioControls.play_song(path,name)
 
     def end_song():
         play_btn.configure(image= AudioControls.img8)
@@ -285,3 +304,17 @@ class AudioControls(Control):
     def set_vol(value):
         if AudioControls.vol_on:
             mixer.music.set_volume((value/100))
+
+    def add_to_recent(song):
+        if song in Extra.Recent:
+            index = Extra.Recent.index(song)
+            Extra.Recent.pop(index)
+
+        if len(Extra.Recent) > 9:
+            Extra.Recent.pop(9)
+        
+        Extra.Recent.insert(0,song)
+        Home.configure_rec_page()
+    
+    def stop():
+        mixer.music.stop()

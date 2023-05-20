@@ -185,3 +185,4 @@ class Video():
         VideoControls.stop_video()
         Video.vid_window.destroy()
         VideoControls.is_maxsize = True
+        App.deiconify()

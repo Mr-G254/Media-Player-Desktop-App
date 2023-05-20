@@ -43,31 +43,51 @@ class Database():
         Extra.Recent.clear()
         recent = db.execute('SELECT* FROM Recent;')
         for i in recent:
-            value = str(i[0]) + "=" + str(i[1]) + "=" + str(i[2])
+            value = str(i[1]) + "=" + str(i[2])
             Extra.Recent.append(value)
 
-    def get_favourites():
-        Extra.Favourites.clear()
-        Extra.E_favourites.clear()
-        favourites = db.execute('SELECT* FROM Favourites;')
-        for i in favourites:
-            value = str(i[0]) + "=" + str(i[1]) + "=" + str(i[2])
-            Extra.Favourites.append(value)
-            Extra.E_favourites.append(f"{str(i[1])}={str(i[2])}")
+    def upload_recent():
+        db.execute("DROP TABLE Recent;")
+        db.execute("CREATE TABLE Recent(id integer PRIMARY KEY,Name text,Path text);")
 
-    def add_favourites(song_name,song_path,Home):
+        for i in Extra.Recent:
+            value = i.split("=")
+            name = value[0]
+            path = value[1]
+            db.execute('INSERT INTO Recent(Name,Path) VALUES(?,?)',(name,path))
+        
+        db.commit()
+
+    def add_favourites(song_name,song_path,home):
+        global Home
+        Home = home
+
         db.execute("INSERT INTO Favourites(Name,Path) VALUES(?,?)",(song_name,song_path))
         db.commit()
 
         Database.get_favourites()
-        Home.configure_fav_page()
 
-    def del_favourites(song_name,Home):
+    def del_favourites(song_name,home):
+        global Home
+        Home = home
+
         db.execute(f"DELETE FROM Favourites WHERE Name= '{song_name}'")
         db.commit()
 
         Database.get_favourites()
-        Home.configure_fav_page()
+
+    def get_favourites():
+        Extra.Favourites.clear()
+        favourites = db.execute('SELECT* FROM Favourites;')
+        for i in favourites:
+            value = str(i[1]) + "=" + str(i[2])
+            Extra.Favourites.append(value)
+        
+        try:
+            Home.configure_fav_page()
+        except:
+            pass
+
 
     def get_location():
         location = db.execute('SELECT* FROM Storage;')

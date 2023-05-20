@@ -35,8 +35,6 @@ class HomeUI():
     img14 = CTkImage(Image.open("Icons\playlist_bg.png"),size=(64,64))
     img15 = CTkImage(Image.open("Icons\heart_bg.png"),size=(64,64))
     img16 = CTkImage(Image.open("Icons\\reject.png"),size=(21,21))
-    #781F15 
-    #641E16
     frame = CTkFrame(app,height= 600,width=1030,fg_color="#781F15")
     Extra.Home_frame = frame
     frame.place(x= 0,y= 0)
@@ -71,9 +69,9 @@ class HomeUI():
         home_tab.add("Recent")
         home_tab.add("Playlist")
         home_tab.add("Favourites")
-        HomeUI.configure_fav_page()
 
-        home_tab.set("Recent")
+        HomeUI.configure_fav_page()
+        HomeUI.configure_rec_page()
 
         global topbar
         topbar = CTkFrame(HomeUI.frame,height= 40,width= 466,corner_radius= 5,border_color="#0967CC",border_width=2)
@@ -134,7 +132,7 @@ class HomeUI():
         stbtn.place(x= 3,y= 213)
         Extra.buttons_b.append(stbtn)  
         
-        ext = CTkButton(HomeUI.frame,text= "",image= HomeUI.img11,height= 40,width=50,fg_color="#510723",corner_radius= 5,border_color="#0967CC",border_width=0,command= lambda:[(Database.close(),app.destroy())])
+        ext = CTkButton(HomeUI.frame,text= "",image= HomeUI.img11,height= 40,width=50,fg_color="#510723",corner_radius= 5,border_color="#0967CC",border_width=0,command= HomeUI.on_closing_app)
         ext.place(x=5,y=405)
         ext.bind('<Enter>',lambda Event: Extra.highlight(Event,ext))
         ext.bind('<Leave>',lambda Event: Extra.unhighlight(Event,ext))  
@@ -160,11 +158,12 @@ class HomeUI():
         home_tab.set("Favourites")
 
     def configure_fav_page():
-        fav_frame = CTkScrollableFrame(home_tab.tab("Favourites"),height=355,width=655,fg_color="#641E16")
+        fav_frame = CTkScrollableFrame(home_tab.tab("Favourites"),height=330,width=655,fg_color="#641E16")
         fav_frame.place(x=0,y=0)
 
         Y3=0
-        for i in Extra.E_favourites:
+        Extra.Favourites_frames.clear()
+        for i in Extra.Favourites:
             value = i.split("=")
             name = value[0].replace('.mp3','')
             path = value[1]
@@ -182,7 +181,38 @@ class HomeUI():
             lb3.bind('<Button-1>',lambda Event, path=path, name=name: AudioControls.select_song(Event,path,name,"Favourites"))
 
             Y3 = Y3 + 1
+
+    def configure_rec_page():
+        rec_frame = CTkScrollableFrame(home_tab.tab("Recent"),height=330,width=655,fg_color="#641E16")
+        rec_frame.place(x=0,y=0)
+
+        Y4=0
+        Extra.Recent_frames.clear()
+        for i in Extra.Recent:
+            value = i.split("=")
+            name = value[0].replace('.mp3','')
+            path = value[1]
+            msc4 = CTkFrame(rec_frame,height=35,width=655,fg_color="#510723",border_color="#0967CC",border_width=0)
+            msc4.grid(column= 0,row= Y4,padx= 2,pady= 2)
+            msc4.bind('<Enter>',lambda Event, msc4=msc4: Extra.highlight(Event,msc4))
+            msc4.bind('<Leave>',lambda Event, msc4=msc4: Extra.unhighlight(Event,msc4))
+            msc4.bind('<Button-1>',lambda Event, path=path, name=name: AudioControls.select_song(Event,path,name,"Recent"))
+            Extra.Recent_frames.append(msc4)
+            
+            lb4 = CTkLabel(msc4,text=name,font=("TImes",16),fg_color="#510723")
+            lb4.place(x=15,y=2)
+            lb4.bind('<Enter>',lambda Event, msc4=msc4: Extra.highlight(Event,msc4))
+            lb4.bind('<Leave>',lambda Event, msc4=msc4: Extra.unhighlight(Event,msc4))
+            lb4.bind('<Button-1>',lambda Event, path=path, name=name: AudioControls.select_song(Event,path,name,"Recent"))
+
+            Y4 = Y4 + 1
+    
+    def on_closing_app():
+        Database.upload_recent()
+        Database.close()
+        AudioControls.stop()
+        app.destroy()
               
 HomeUI.home()
-
+app.protocol("WM_DELETE_WINDOW", HomeUI.on_closing_app)
 app.mainloop()
