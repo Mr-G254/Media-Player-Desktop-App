@@ -8,6 +8,7 @@ import vlc
 import os
 from PIL import Image
 from VideoControls  import*
+from AudioControls import AudioControls
 
 class Video():
     img0 = CTkImage(Image.open("Icons\\video_bg.png"),size=(64,64))
@@ -15,6 +16,8 @@ class Video():
     vid_window = ''
 
     def video(frame,app,b,c,search,clear_btn):
+        AudioControls.Normal_mode()
+        
         global Search
         Search = search
         Search.unbind('<KeyRelease>')

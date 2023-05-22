@@ -1,12 +1,13 @@
-from tkinter import ttk,Button
+from tkinter import ttk
 from customtkinter import*
-from PIL import ImageTk,Image
+from PIL import Image
 from Extra import*
 from Database import*
 from VideoPage import*
 from SettingsPage import*
 from FoldersPage import*
 from MusicPage import*
+from YouTubePage import*
 from AudioControls import*
 
 app = CTk()
@@ -51,7 +52,7 @@ class HomeUI():
         search_frame.place(x=172,y= 60)
 
         global search
-        search = CTkEntry(search_frame,height= 35,width= 550,font=("TImes",14),corner_radius= 5,border_color="#0967CC",fg_color=['gray86', 'gray17'],border_width=0)
+        search = CTkEntry(search_frame,height= 35,width= 550,font=("TImes",16),corner_radius= 5,border_color="#0967CC",fg_color=['gray86', 'gray17'],border_width=0)
         search.place(x= 2,y= 2)
         search.bind('<FocusIn>',lambda Event: Extra.highlight(Event,search))
         search.bind('<FocusOut>',lambda Event: Extra.unhighlight(Event,search))
@@ -115,7 +116,7 @@ class HomeUI():
         vdbtn.place(x= 3,y= 88)
         Extra.buttons_a.append(vdbtn)
         
-        ytbtn = CTkButton(menuframe,height= 35,width= 45,image= HomeUI.img4,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [Extra.configure_buttons(ytbtn, Extra.buttons_a)])
+        ytbtn = CTkButton(menuframe,height= 35,width= 45,image= HomeUI.img4,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [Extra.configure_buttons(ytbtn, Extra.buttons_a),You_Tube.youtube(HomeUI.frame,app,pic,name2,search,clear_btn)])
         ytbtn.place(x= 3,y= 128)
         Extra.buttons_a.append(ytbtn)
         

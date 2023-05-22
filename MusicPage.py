@@ -11,6 +11,8 @@ class Music():
     search_results = []
 
     def music(frame,app,b,c,search,clear_btn):
+        AudioControls.Normal_mode()
+        
         global Search
         Search = search
         Search.unbind('<KeyRelease>')

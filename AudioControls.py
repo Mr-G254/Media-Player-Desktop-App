@@ -29,6 +29,7 @@ class AudioControls(Control):
         global Database
         Database = database
 
+        global controlframe
         controlframe = CTkFrame(Home.frame,fg_color="#510723",height= 100,width=1020,corner_radius= 6)
         controlframe.place(x=5,y=495)
 
@@ -318,3 +319,9 @@ class AudioControls(Control):
     
     def stop():
         mixer.music.stop()
+
+    def Youtube_mode():
+        controlframe.place_forget()
+
+    def Normal_mode():
+        controlframe.place(x=5,y=495)

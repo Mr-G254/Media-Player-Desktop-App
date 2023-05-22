@@ -28,6 +28,7 @@ class Extra():
     Music_frame = ''
     Music_scrollframe = ''
     Video_frame = ''
+    Youtube_frame = ''
     
     def highlight(Event,widget):
         widget.configure(border_width=2)
@@ -40,7 +41,7 @@ class Extra():
         X= 515 - (H/2)
         
         global toast
-        toast = CTkLabel(Extra.Home_frame,text= information,font=("TImes",16),height= 35,width=H,fg_color="#770B33",corner_radius= 4)
+        toast = CTkLabel(Extra.Home_frame,text= information,font=("TImes",16),height= 35,width=H,fg_color="#641E16",corner_radius= 4)
         toast.place(x=X,y=20)
 
     def undo_noyify():
