@@ -36,6 +36,9 @@ class HomeUI():
     img14 = CTkImage(Image.open("Icons\playlist_bg.png"),size=(64,64))
     img15 = CTkImage(Image.open("Icons\heart_bg.png"),size=(64,64))
     img16 = CTkImage(Image.open("Icons\\reject.png"),size=(21,21))
+    # img17 = CTkImage(Image.open("Icons\\recent.png"),size=(25,25))
+    # img18 = CTkImage(Image.open("Icons\download.png"),size=(25,25))
+
     frame = CTkFrame(app,height= 600,width=1030,fg_color="#781F15")
     Extra.Home_frame = frame
     frame.place(x= 0,y= 0)
@@ -52,7 +55,7 @@ class HomeUI():
         search_frame.place(x=172,y= 60)
 
         global search
-        search = CTkEntry(search_frame,height= 35,width= 550,font=("TImes",16),corner_radius= 5,border_color="#0967CC",fg_color=['gray86', 'gray17'],border_width=0)
+        search = CTkEntry(search_frame,height= 35,width= 550,font=("TImes",17),corner_radius= 5,border_color="#0967CC",fg_color=['gray86', 'gray17'],border_width=0)
         search.place(x= 2,y= 2)
         search.bind('<FocusIn>',lambda Event: Extra.highlight(Event,search))
         search.bind('<FocusOut>',lambda Event: Extra.unhighlight(Event,search))
@@ -60,8 +63,31 @@ class HomeUI():
         global clear_btn
         clear_btn = CTkButton(search_frame,text= "",image= HomeUI.img16,height= 35,width=25,fg_color=['gray86', 'gray17'],corner_radius= 4,hover=False)
         
-        search_btn = CTkLabel(HomeUI.frame,text= "",image= HomeUI.img12,height= 38,width=38,fg_color="#641E16",corner_radius= 4)
+        search_btn = CTkLabel(HomeUI.frame,text= "",image= HomeUI.img12,height= 38,width=38,fg_color="#641E16",corner_radius= 5)
         search_btn.place(x=730,y= 60)
+
+        # global dndbtn
+        # dndbtn = CTkFrame(HomeUI.frame,height= 35,width= 320,fg_color="#641E16",corner_radius= 5,border_color="#0967CC",border_width=0)
+        # dndbtn.place(x= 5,y= 562)
+        # dndbtn.bind('<Enter>',lambda Event: Extra.highlight(Event,dndbtn))
+        # dndbtn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,dndbtn))
+
+        # dndlabel = CTkLabel(dndbtn,height=25,width=25,image= HomeUI.img18,text = '',fg_color="#641E16")
+        # dndlabel.place(x=6,y=6)
+        # dndlabel.bind('<Enter>',lambda Event: Extra.highlight(Event,dndbtn))
+        # dndlabel.bind('<Leave>',lambda Event: Extra.unhighlight(Event,dndbtn))
+        
+        # txt_frame = CTkFrame(dndbtn,width=240,height=20,fg_color="#510723",corner_radius= 4)
+        # txt_frame.place(x=35,y=4)
+
+        # dndtext = CTkLabel(txt_frame,text="ArrDee, Cat Burns - Home For My Heart",fg_color="#510723",font=("TImes",13),corner_radius= 4,anchor=W,height=20,width=250)
+        # dndtext.place(x=3,y=0)
+
+        # prog_text = CTkLabel(dndbtn,text="100%",fg_color="#510723",font=("TImes",13),corner_radius= 4,height=20)
+        # prog_text.place(x=280,y=4)
+
+        # progress = CTkFrame(dndbtn,fg_color="#0967CC",corner_radius=4,height=3,width=280)
+        # progress.place(x=35,y=27)
         
         global home_tab
         home_tab = CTkTabview(HomeUI.frame,height=380,width=690,fg_color="#641E16")
@@ -96,12 +122,12 @@ class HomeUI():
         
         recent.invoke()
 
-        AudioControls.controls(HomeUI,app,Database)
         HomeUI.menu()
+        AudioControls.controls(HomeUI,app,Database)
         
     def menu():
         menuframe = CTkFrame(HomeUI.frame,height= 250,width=50,fg_color="#510723",corner_radius= 6)
-        menuframe.place(x=5,y=150)
+        menuframe.place(x=8,y=150)
         
         menubtn = CTkButton(menuframe,height= 35,width= 45,image= HomeUI.img0,text = '',corner_radius= 4,fg_color="#510723",anchor= CENTER,command= lambda: [Extra.configure_buttons(menubtn, Extra.buttons_a),HomeUI.home_action()])
         menubtn.place(x= 3,y= 3)
@@ -134,9 +160,9 @@ class HomeUI():
         Extra.buttons_b.append(stbtn)  
         
         ext = CTkButton(HomeUI.frame,text= "",image= HomeUI.img11,height= 40,width=50,fg_color="#510723",corner_radius= 5,border_color="#0967CC",border_width=0,command= HomeUI.on_closing_app)
-        ext.place(x=5,y=405)
+        ext.place(x=8,y=405)
         ext.bind('<Enter>',lambda Event: Extra.highlight(Event,ext))
-        ext.bind('<Leave>',lambda Event: Extra.unhighlight(Event,ext))  
+        ext.bind('<Leave>',lambda Event: Extra.unhighlight(Event,ext)) 
 
     def home_action():
         for i in Extra.frames_a:

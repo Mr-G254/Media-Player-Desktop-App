@@ -38,7 +38,7 @@ class Video():
 
         if Extra.Video_frame != '':
             Extra.configure_frames(Extra.Video_frame, Extra.frames_a)
-            Extra.Video_frame.place(x= 55,y= 105)
+            Extra.Video_frame.place(x= 60,y= 105)
         else:
 
             global video_page
@@ -51,7 +51,7 @@ class Video():
                 Extra.frames_a.append(video_page)
                 
             Extra.configure_frames(video_page, Extra.frames_a)
-            video_page.place(x= 55,y= 105)
+            video_page.place(x= 60,y= 105)
 
             Video.show_all_videos()
 

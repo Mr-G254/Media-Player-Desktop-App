@@ -42,7 +42,7 @@ class Extra():
         
         global toast
         toast = CTkLabel(Extra.Home_frame,text= information,font=("TImes",16),height= 35,width=H,fg_color="#641E16",corner_radius= 4)
-        toast.place(x=X,y=20)
+        toast.place(x=X,y=10)
 
     def undo_noyify():
         try:

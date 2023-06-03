@@ -1,11 +1,16 @@
 from customtkinter import*
+from tkinter import messagebox
 from Extra import*
 from PIL import Image
 from AudioControls import AudioControls
+from VideoControls import VideoControls
 from youtube_search import YoutubeSearch
 import urllib.request
+import webbrowser
 
 class You_Tube():
+    Keywords = ''
+    vid_window=''
     img0 = CTkImage(Image.open("Icons\\youtube_bg.png"),size=(64,64))
 
     def youtube(frame,app,b,c,search,clear_btn):
@@ -15,23 +20,24 @@ class You_Tube():
         Search = search
         Search.unbind('<KeyRelease>')
         Search.bind('<KeyRelease>',lambda Event: You_Tube.check_search(Event))
-        Search.bind('<Return>',lambda Event: You_Tube.search_youtube_video(Event))
+        Search.bind('<Return>',lambda Event: You_Tube.search_youtube_video(Event,Search.get()))
 
         global Clear_btn
         Clear_btn = clear_btn
-        Clear_btn.configure(command= Search.delete(0,END))
+        Clear_btn.configure(command=lambda: [Search.delete(0,END),Clear_btn.place_forget()])
 
         global App
         App = app
-
+        
         Extra.close_small_frames()
         b.place_forget()
         c.configure(image=You_Tube.img0)
         c.place(x= 5,y= 5)
+        App.update()
 
         if Extra.Youtube_frame != '':
             Extra.configure_frames(Extra.Youtube_frame, Extra.frames_a)
-            Extra.Youtube_frame.place(x= 55,y= 105)
+            Extra.Youtube_frame.place(x= 60,y= 105)
         else:
 
             global Youtube_page
@@ -44,13 +50,14 @@ class You_Tube():
                 Extra.frames_a.append(Youtube_page)
                 
             Extra.configure_frames(Youtube_page, Extra.frames_a)
-            Youtube_page.place(x= 55,y= 105)
+            Youtube_page.place(x= 60,y= 105)
             Extra.notify("Press Enter to search")
-# "#641E16"
+
             global Yt_frame
-            Yt_frame = CTkScrollableFrame(Youtube_page,height=480,width=950,fg_color="#781F15")
+            Yt_frame = CTkScrollableFrame(Youtube_page,height=490,width=945,fg_color="#781F15")
             Yt_frame.place(x=0,y=0)
 
+            You_Tube.search_yt_video("Technology")    
 
     def check_search(Event):
         if len(Search.get()) > 0:
@@ -58,50 +65,75 @@ class You_Tube():
         else:
             Clear_btn.place_forget()
 
-    def search_youtube_video(Event):
-        if len(Search.get()) > 0:
-            video_search = YoutubeSearch(Search.get(), max_results=20).to_dict()
+    def search_youtube_video(Event,keywords):
+        You_Tube.search_yt_video(keywords)
 
-            X = 0
-            Y = 0
-            for i in video_search:
-                imgurl = i['thumbnails'][0]
-                urllib.request.urlretrieve(imgurl,"image.png")
+    def search_yt_video(keywords):
+        You_Tube.Keywords = keywords
+        try:
+            if len(keywords) > 0:
+                video_search = YoutubeSearch(keywords, max_results=20).to_dict()
+                X = 0
+                Y = 0
+                for i in video_search:
+                    imgurl = i['thumbnails'][0]
+                    urllib.request.urlretrieve(imgurl,"image.png")
 
-                img = CTkImage(Image.open("image.png"),size=(370,200))
+                    img = CTkImage(Image.open("image.png"),size=(370,200))
 
-                # if X == 2:
-                #     X = 0
-                #     Y = Y + 1
+                    vid_frame = CTkFrame(Yt_frame,height=200,width=940,corner_radius=6,fg_color="#510723",border_color="#0967CC",border_width=0)
+                    vid_frame.grid(column= 0,row= Y,pady=5,padx=1)
+                    vid_frame.bind('<Enter>',lambda Event, vid_frame=vid_frame: Extra.highlight(Event,vid_frame))
+                    vid_frame.bind('<Leave>',lambda Event, vid_frame=vid_frame: Extra.unhighlight(Event,vid_frame))
 
-                vid_frame = CTkFrame(Yt_frame,height=200,width=940,corner_radius=6,fg_color="#510723",border_color="#0967CC",border_width=0)
-                vid_frame.grid(column= 0,row= Y,pady=5,padx=5)
-                vid_frame.bind('<Enter>',lambda Event, vid_frame=vid_frame: Extra.highlight(Event,vid_frame))
-                vid_frame.bind('<Leave>',lambda Event, vid_frame=vid_frame: Extra.unhighlight(Event,vid_frame))
-                # vid_frame.bind('<Button-1>',lambda Event, path=path, name=name:Video.play_video(Event,path,name))
+                    thumbn_label = CTkLabel(vid_frame,text='',image=img)
+                    thumbn_label.place(x=0,y=0)
+                    thumbn_label.bind('<Enter>',lambda Event, vid_frame=vid_frame: Extra.highlight(Event,vid_frame))
+                    thumbn_label.bind('<Leave>',lambda Event, vid_frame=vid_frame: Extra.unhighlight(Event,vid_frame))
 
-                thumbn_label = CTkLabel(vid_frame,text='',image=img)
-                thumbn_label.place(x=0,y=0)
-                thumbn_label.bind('<Enter>',lambda Event, vid_frame=vid_frame: Extra.highlight(Event,vid_frame))
-                thumbn_label.bind('<Leave>',lambda Event, vid_frame=vid_frame: Extra.unhighlight(Event,vid_frame))
-                # thumbn_label.bind('<Button-1>',lambda Event, path=path,name=name:Video.play_video(Event,path,name))
+                    vid_name = CTkLabel(vid_frame,text=str(i['title']),font=("TImes",19),width=200,height=40,fg_color="#510723",anchor=W,justify='left',wraplength=550)
+                    vid_name.place(x=375,y=10)
+                    vid_name.bind('<Enter>',lambda Event, vid_frame=vid_frame: Extra.highlight(Event,vid_frame))
+                    vid_name.bind('<Leave>',lambda Event, vid_frame=vid_frame: Extra.unhighlight(Event,vid_frame))
 
-                vid_name = CTkLabel(vid_frame,text=str(i['title']),font=("TImes bold",18),width=200,height=40,fg_color="#510723",anchor=W,wraplength=550)
-                vid_name.place(x=375,y=10)
-                vid_name.bind('<Enter>',lambda Event, vid_frame=vid_frame: Extra.highlight(Event,vid_frame))
-                vid_name.bind('<Leave>',lambda Event, vid_frame=vid_frame: Extra.unhighlight(Event,vid_frame))
-                # vid_name.bind('<Button-1>',lambda Event, path=path, name=name:Video.play_video(Event,path,name))
+                    views = CTkLabel(vid_frame,text=str(i['views']),font=("TImes",16),height=22,fg_color="#770B33",corner_radius= 4,anchor=W)
+                    views.place(x=375,y=170)
+                    App.update()
 
-                views = CTkLabel(vid_frame,text=str(i['views']),font=("TImes",17),width=100,fg_color="#510723",anchor=W)
-                views.place(x=375,y=50)
+                    time = CTkLabel(vid_frame,text=str(i['publish_time']),font=("TImes",16),height=22,fg_color="#770B33",corner_radius= 4,anchor=W)
+                    time.place(x=(views.winfo_width()+380),y=170)
+                    App.update()
 
-                time = CTkLabel(vid_frame,text=str(i['publish_time']),font=("TImes",16),width=50,fg_color="#510723",anchor=W)
-                time.place(x=375,y=70)
+                    dur = CTkLabel(vid_frame,text=str(i['duration']),font=("TImes",16),height=22,fg_color="#770B33",corner_radius= 4,anchor=W)
+                    dur.place(x=(views.winfo_width()+time.winfo_width()+385),y=170)
 
-                dur = CTkLabel(vid_frame,text=str(i['duration']),font=("TImes",16),width=50,fg_color="#510723",anchor=W)
-                dur.place(x=375,y=170)
+                    id = i['id']
+                    play_vid = CTkButton(vid_frame,height=30,width=150,text="  Play video",font=("Times",17),fg_color="#641E16",border_color="#0967CC",border_width=0,corner_radius= 4,anchor=W,command=lambda id=id: You_Tube.play_video(id))
+                    play_vid.place(x=780,y=90)
+                    play_vid.bind('<Enter>',lambda Event, play_vid=play_vid: Extra.highlight(Event,play_vid))
+                    play_vid.bind('<Leave>',lambda Event, play_vid=play_vid: Extra.unhighlight(Event,play_vid))
 
-                # X = X + 1
-                Y = Y + 1
-                App.update()
+                    download_vid = CTkButton(vid_frame,height=30,width=150,text="  Download video",font=("Times",17),fg_color="#641E16",border_color="#0967CC",border_width=0,corner_radius= 4,anchor=W)
+                    download_vid.place(x=780,y=125)
+                    download_vid.bind('<Enter>',lambda Event, download_vid=download_vid: Extra.highlight(Event,download_vid))
+                    download_vid.bind('<Leave>',lambda Event, download_vid=download_vid: Extra.unhighlight(Event,download_vid))
 
+                    download_aud = CTkButton(vid_frame,height=30,width=150,text="  Download audio",font=("Times",17),fg_color="#641E16",border_color="#0967CC",border_width=0,corner_radius= 4,anchor=W)
+                    download_aud.place(x=780,y=160)
+                    download_aud.bind('<Enter>',lambda Event, download_aud=download_aud: Extra.highlight(Event,download_aud))
+                    download_aud.bind('<Leave>',lambda Event, download_aud=download_aud: Extra.unhighlight(Event,download_aud))
+            
+
+                    Y = Y + 1
+                    App.update()
+        except Exception as e:
+            messagebox.showerror("An error occurred",e)
+
+    def play_video(id):
+       webbrowser.open(f"https://www.youtube.com/watch?v={id}")
+
+    def on_closing():
+        VideoControls.stop_video()
+        You_Tube.vid_window.destroy()
+        VideoControls.is_maxsize = True
+        App.deiconify()

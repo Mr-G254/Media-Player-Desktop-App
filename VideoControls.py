@@ -1,6 +1,7 @@
 from Controls import*
 from customtkinter import*
 import vlc
+import pafy
 
 class VideoControls(Control):
     vid_name = ''
@@ -92,6 +93,8 @@ class VideoControls(Control):
         else:
             play_btn.configure(image = VideoControls.img12)
 
+        App.update()
+
         Window.bind('<Configure>',lambda Event: VideoControls.reconfigure_widgets(Event))
         Window.bind('<space>',VideoControls.spacebar)
         Window.bind('<Right>',VideoControls.right_arrow)
@@ -100,9 +103,11 @@ class VideoControls(Control):
 
     def play_video(file_path,name,frame):
         global media_player
+
         media_player = vlc.MediaPlayer() 
         media = vlc.Media(file_path)
         media_player.set_media(media)
+            
         media_player.set_hwnd(frame.winfo_id())
         media_player.play()
 
