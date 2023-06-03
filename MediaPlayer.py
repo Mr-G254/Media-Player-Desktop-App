@@ -36,8 +36,6 @@ class HomeUI():
     img14 = CTkImage(Image.open("Icons\playlist_bg.png"),size=(64,64))
     img15 = CTkImage(Image.open("Icons\heart_bg.png"),size=(64,64))
     img16 = CTkImage(Image.open("Icons\\reject.png"),size=(21,21))
-    # img17 = CTkImage(Image.open("Icons\\recent.png"),size=(25,25))
-    # img18 = CTkImage(Image.open("Icons\download.png"),size=(25,25))
 
     frame = CTkFrame(app,height= 600,width=1030,fg_color="#781F15")
     Extra.Home_frame = frame
@@ -65,29 +63,6 @@ class HomeUI():
         
         search_btn = CTkLabel(HomeUI.frame,text= "",image= HomeUI.img12,height= 38,width=38,fg_color="#641E16",corner_radius= 5)
         search_btn.place(x=730,y= 60)
-
-        # global dndbtn
-        # dndbtn = CTkFrame(HomeUI.frame,height= 35,width= 320,fg_color="#641E16",corner_radius= 5,border_color="#0967CC",border_width=0)
-        # dndbtn.place(x= 5,y= 562)
-        # dndbtn.bind('<Enter>',lambda Event: Extra.highlight(Event,dndbtn))
-        # dndbtn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,dndbtn))
-
-        # dndlabel = CTkLabel(dndbtn,height=25,width=25,image= HomeUI.img18,text = '',fg_color="#641E16")
-        # dndlabel.place(x=6,y=6)
-        # dndlabel.bind('<Enter>',lambda Event: Extra.highlight(Event,dndbtn))
-        # dndlabel.bind('<Leave>',lambda Event: Extra.unhighlight(Event,dndbtn))
-        
-        # txt_frame = CTkFrame(dndbtn,width=240,height=20,fg_color="#510723",corner_radius= 4)
-        # txt_frame.place(x=35,y=4)
-
-        # dndtext = CTkLabel(txt_frame,text="ArrDee, Cat Burns - Home For My Heart",fg_color="#510723",font=("TImes",13),corner_radius= 4,anchor=W,height=20,width=250)
-        # dndtext.place(x=3,y=0)
-
-        # prog_text = CTkLabel(dndbtn,text="100%",fg_color="#510723",font=("TImes",13),corner_radius= 4,height=20)
-        # prog_text.place(x=280,y=4)
-
-        # progress = CTkFrame(dndbtn,fg_color="#0967CC",corner_radius=4,height=3,width=280)
-        # progress.place(x=35,y=27)
         
         global home_tab
         home_tab = CTkTabview(HomeUI.frame,height=380,width=690,fg_color="#641E16")

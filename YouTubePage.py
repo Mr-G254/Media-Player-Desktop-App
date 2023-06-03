@@ -7,6 +7,7 @@ from VideoControls import VideoControls
 from youtube_search import YoutubeSearch
 import urllib.request
 import webbrowser
+from Downloader import *
 
 class You_Tube():
     Keywords = ''
@@ -28,6 +29,9 @@ class You_Tube():
 
         global App
         App = app
+
+        global Frame
+        Frame = frame
         
         Extra.close_small_frames()
         b.place_forget()
@@ -41,7 +45,7 @@ class You_Tube():
         else:
 
             global Youtube_page
-            Youtube_page = CTkFrame(frame,height= 500,width= 970,fg_color="#781F15",corner_radius= 6)
+            Youtube_page = CTkFrame(Frame,height= 500,width= 970,fg_color="#781F15",corner_radius= 6)
             Extra.Youtube_frame = Youtube_page
             
             if Youtube_page in Extra.frames_a:
@@ -91,7 +95,8 @@ class You_Tube():
                     thumbn_label.bind('<Enter>',lambda Event, vid_frame=vid_frame: Extra.highlight(Event,vid_frame))
                     thumbn_label.bind('<Leave>',lambda Event, vid_frame=vid_frame: Extra.unhighlight(Event,vid_frame))
 
-                    vid_name = CTkLabel(vid_frame,text=str(i['title']),font=("TImes",19),width=200,height=40,fg_color="#510723",anchor=W,justify='left',wraplength=550)
+                    title = str(i['title'])
+                    vid_name = CTkLabel(vid_frame,text=title,font=("TImes",19),width=200,height=40,fg_color="#510723",anchor=W,justify='left',wraplength=550)
                     vid_name.place(x=375,y=10)
                     vid_name.bind('<Enter>',lambda Event, vid_frame=vid_frame: Extra.highlight(Event,vid_frame))
                     vid_name.bind('<Leave>',lambda Event, vid_frame=vid_frame: Extra.unhighlight(Event,vid_frame))
@@ -112,16 +117,22 @@ class You_Tube():
                     play_vid.place(x=780,y=90)
                     play_vid.bind('<Enter>',lambda Event, play_vid=play_vid: Extra.highlight(Event,play_vid))
                     play_vid.bind('<Leave>',lambda Event, play_vid=play_vid: Extra.unhighlight(Event,play_vid))
+                    play_vid.bind('<Enter>',lambda Event, vid_frame=vid_frame: Extra.highlight(Event,vid_frame))
+                    play_vid.bind('<Leave>',lambda Event, vid_frame=vid_frame: Extra.unhighlight(Event,vid_frame))
 
-                    download_vid = CTkButton(vid_frame,height=30,width=150,text="  Download video",font=("Times",17),fg_color="#641E16",border_color="#0967CC",border_width=0,corner_radius= 4,anchor=W)
+                    download_vid = CTkButton(vid_frame,height=30,width=150,text="  Download video",font=("Times",17),fg_color="#641E16",border_color="#0967CC",border_width=0,corner_radius= 4,anchor=W,command= lambda title=title, id=id:[Downloader.download_video(Frame,title,f"https://www.youtube.com/watch?v={id}"),You_Tube.show_downloads()])
                     download_vid.place(x=780,y=125)
                     download_vid.bind('<Enter>',lambda Event, download_vid=download_vid: Extra.highlight(Event,download_vid))
                     download_vid.bind('<Leave>',lambda Event, download_vid=download_vid: Extra.unhighlight(Event,download_vid))
+                    download_vid.bind('<Enter>',lambda Event, vid_frame=vid_frame: Extra.highlight(Event,vid_frame))
+                    download_vid.bind('<Leave>',lambda Event, vid_frame=vid_frame: Extra.unhighlight(Event,vid_frame))
 
-                    download_aud = CTkButton(vid_frame,height=30,width=150,text="  Download audio",font=("Times",17),fg_color="#641E16",border_color="#0967CC",border_width=0,corner_radius= 4,anchor=W)
+                    download_aud = CTkButton(vid_frame,height=30,width=150,text="  Download audio",font=("Times",17),fg_color="#641E16",border_color="#0967CC",border_width=0,corner_radius= 4,anchor=W,command= lambda title=title, id=id:[Downloader.download_audio(Frame,title,f"https://www.youtube.com/watch?v={id}"),You_Tube.show_downloads()])
                     download_aud.place(x=780,y=160)
                     download_aud.bind('<Enter>',lambda Event, download_aud=download_aud: Extra.highlight(Event,download_aud))
                     download_aud.bind('<Leave>',lambda Event, download_aud=download_aud: Extra.unhighlight(Event,download_aud))
+                    download_aud.bind('<Enter>',lambda Event, vid_frame=vid_frame: Extra.highlight(Event,vid_frame))
+                    download_aud.bind('<Leave>',lambda Event, vid_frame=vid_frame: Extra.unhighlight(Event,vid_frame))
             
 
                     Y = Y + 1
@@ -137,3 +148,6 @@ class You_Tube():
         You_Tube.vid_window.destroy()
         VideoControls.is_maxsize = True
         App.deiconify()
+
+    def show_downloads():
+        Yt_frame.configure(height=445)
