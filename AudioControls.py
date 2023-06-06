@@ -1,5 +1,6 @@
 from Controls import*
 from customtkinter import*
+from tkinter import messagebox
 from pygame import mixer,USEREVENT,event
 
 class AudioControls(Control):
@@ -86,7 +87,11 @@ class AudioControls(Control):
 
     def select_song(Event,file_path,file_name,id):
         AudioControls.Id = id
-        AudioControls.play_song(file_path,file_name)
+ 
+        try:
+            AudioControls.play_song(file_path,file_name)
+        except Exception as e:
+            messagebox.showerror("Error",e)
 
     def play_song(file_path,file_name):
         AudioControls.song_value = f"{file_name}.mp3={file_path}"

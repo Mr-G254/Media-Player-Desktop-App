@@ -1,18 +1,24 @@
 from customtkinter import *
-from tkinter import messagebox
+from tkinter import messagebox,filedialog
 from PIL import Image
 from Extra import *
+from Database import *
 from pytube import YouTube,request
 import threading
 
 class Downloader():
     img0 = CTkImage(Image.open("Icons\download.png"),size=(25,25))
-    img1 = CTkImage(Image.open("Icons\check-mark.png"),size=(20,20))
+    img1 = CTkImage(Image.open("Icons\check-mark.png"),size=(19,19))
 
     is_downloading = False
     pending = 0
 
     def show_status(frame,title,url,id):
+        try:
+            Downloader.hide_status()
+        except:
+            pass
+
         Downloader.is_downloading = True
 
         global dndbtn
@@ -45,38 +51,50 @@ class Downloader():
         progress_bar = CTkFrame(dndbtn,fg_color="#0967CC",corner_radius=4,height=3,width=0)#280
         progress_bar.place(x=35,y=27)
 
-        thread = threading.Thread(target= Downloader.download,args=(id,url,title),daemon=True)
+        thread = threading.Thread(target= Downloader.download,args=(id,url,title,Database.get_location()),daemon=True)
         thread.start()
 
     def hide_status():
         dndbtn.destroy()
 
     def download_audio(frame,title,url):
-        Downloader.show_status(frame,title,url,251)
+        if not Downloader.is_downloading:
+            Downloader.show_status(frame,title,url,251)
         # Downloader.pending = Downloader.pending + 1
 
     def download_video(frame,title,url):
-        Downloader.show_status(frame,title,url,22)
+        if not Downloader.is_downloading:
+            Downloader.show_status(frame,title,url,22)
         # Downloader.pending = Downloader.pending + 1
 
-    def download(id,url,title):
+    def download(id,url,title,location):
         request.default_range_size=1024000
         yt = YouTube(url)
         yt.register_on_progress_callback(Downloader.show_progress)
         yt.register_on_complete_callback(Downloader.download_commplete)
+        print(yt.streams)
         stream = yt.streams.get_by_itag(id)
         global file_size
         file_size = stream.filesize
 
-        try:
-            if id == 251:
-                stream.download(output_path="C:/Users/user/Downloads",filename=f"{str(title)}.mp3",max_retries=3)
-            else:
-                stream.download(output_path="C:/",filename=f"{title}.mp4",max_retries=3)
-        except Exception as e:
-            messagebox.showerror("Error",e)
-            Downloader.is_downloading = False
-            Downloader.hide_status()
+        if location == "Always ask":
+            storage_location = filedialog.askdirectory(title="Choose where we should save downloads")
+
+        else:
+            storage_location = location
+
+        if storage_location:
+            title = title.replace("|","")
+            title = title.replace("*"," ")
+            try:
+                if id == 251:
+                    stream.download(output_path=storage_location,filename=f"{str(title)}.mp3",max_retries=3)
+                else:
+                    stream.download(output_path=storage_location,filename=f"{title}.mp4",max_retries=3)
+            except Exception as e:
+                messagebox.showerror("Error",e)
+                Downloader.is_downloading = False
+                Downloader.hide_status()
 
     def show_progress(stream,chunk,bytes_remaining):
         percent = 100-((bytes_remaining/file_size)*100)
@@ -85,6 +103,7 @@ class Downloader():
     
     def download_commplete(stream,file_path):
         Downloader.is_downloading = False
+        prog_text.place(x=285,y=4)
         prog_text.configure(text="",image=Downloader.img1)
 
 

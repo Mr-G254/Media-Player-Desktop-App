@@ -93,6 +93,7 @@ class Video():
             vid_name.bind('<Button-1>',lambda Event, path=path, name=name:Video.play_video(Event,path,name))
 
             X = X + 1
+            App.update()
         
         global search_frame
         search_frame = CTkScrollableFrame(video_page,height=200,width=590,corner_radius= 5,fg_color=['gray86', 'gray17'])
@@ -185,7 +186,10 @@ class Video():
         Clear_btn.place_forget()
 
     def on_closing():
-        VideoControls.stop_video()
-        Video.vid_window.destroy()
-        VideoControls.is_maxsize = True
-        App.deiconify()
+        try:
+            VideoControls.stop_video()
+            Video.vid_window.destroy()
+            VideoControls.is_maxsize = True
+            App.deiconify()
+        except:
+            pass

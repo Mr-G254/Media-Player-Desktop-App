@@ -121,9 +121,6 @@ class Database():
         Database.load_songs()
         Extra.undo_noyify()
 
-    def close():
-        db.close()
-
     def load_songs():
         Extra.All_songs.clear()
         Extra.All_videos.clear()
@@ -150,9 +147,19 @@ class Database():
             Video.show_all_videos()
         except:
                 pass
+        
+    def get_playlist():
+        for i in db.execute("SELECT name FROM sqlite_master WHERE type='table'"):
+            tables = i[0].split("=")
+            if len(tables) > 1:
+                Extra.Playlist.append(i[0])
+
+    def close():
+        db.close()
 
 Database.get_folder()
 Database.get_recent()
 Database.get_favourites()
+Database.get_playlist()
 Database.load_songs()
     
