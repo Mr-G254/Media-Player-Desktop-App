@@ -3,12 +3,10 @@ from tkinter import*
 from PIL import Image
 from Extra import*
 from moviepy.editor import VideoFileClip
-import tkVideoPlayer
-import vlc
-import os
 from PIL import Image
 from VideoControls  import*
 from AudioControls import AudioControls
+import threading
 
 class Video():
     img0 = CTkImage(Image.open("Icons\\video_bg.png"),size=(64,64))
@@ -186,10 +184,9 @@ class Video():
         Clear_btn.place_forget()
 
     def on_closing():
-        try:
-            VideoControls.stop_video()
-            Video.vid_window.destroy()
-            VideoControls.is_maxsize = True
-            App.deiconify()
-        except:
-            pass
+        print("ye")
+        VideoControls.stop_video()
+        Video.vid_window.destroy()
+        VideoControls.is_maxsize = True
+        App.deiconify()
+        

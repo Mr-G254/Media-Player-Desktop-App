@@ -111,7 +111,6 @@ class AudioControls(Control):
         length = mixer.Sound(AudioControls.current_song_path).get_length()
         AudioControls.duration = length
 
-        
         song = f"{file_name}={file_path}"
         if AudioControls.Id != "Recent":
             AudioControls.add_to_recent(song)

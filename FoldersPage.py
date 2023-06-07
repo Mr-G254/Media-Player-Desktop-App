@@ -70,11 +70,9 @@ class Folders():
     
     def hover_in(Event,frame,button):
         frame.configure(border_width = 2)
-        # button.grid(column= 1,row= Y)
 
     def hover_out(Event,frame,button):
         frame.configure(border_width = 0)
-        # button.grid_forget()
 
     def new_folder():
         lc = filedialog.askdirectory()

@@ -2,16 +2,20 @@ from customtkinter import*
 from PIL import Image
 from Extra import*
 from AudioControls import AudioControls
-from pygame import mixer
 from mutagen.mp3 import MP3
+from Playlist import*
 
 class Music():
     img0 = CTkImage(Image.open("Icons\music_bg.png"),size=(64,64))
+    img1 = CTkImage(Image.open("Icons\playlist.png"),size=(18,18))
 
     search_results = []
 
     def music(frame,app,b,c,search,clear_btn):
         AudioControls.Normal_mode()
+
+        global App
+        App = app
         
         global Search
         Search = search
@@ -26,7 +30,7 @@ class Music():
         b.place_forget()
         c.configure(image=Music.img0)
         c.place(x= 5,y= 5)
-        app.update()
+        App.update()
 
         if Extra.Music_frame != '':
             Extra.configure_frames(Extra.Music_frame, Extra.frames_a)
@@ -76,17 +80,27 @@ class Music():
             dur = MP3(path).info.length
             dur_label = CTkLabel(msc,text=AudioControls.audio_duration(dur),font=("TImes",16),fg_color="#510723")
             dur_label.place(x=600,y=2)
+            dur_label.bind('<Enter>',lambda Event, msc=msc: Extra.highlight(Event,msc))
+            dur_label.bind('<Leave>',lambda Event, msc=msc: Extra.unhighlight(Event,msc))
+            dur_label.bind('<Button-1>',lambda Event, path=path, name=name: AudioControls.select_song(Event,path,name,"Songs"))
+
+            playlist = CTkButton(msc,fg_color="#510723",hover_color="#510723",width=19,height=19,text="",image=Music.img1,command=lambda name=name: Playlist.add_song_to_playlist(name,App.winfo_x(),App.winfo_y()))
+            playlist.place(x=900,y=6)
+            playlist.bind('<Enter>',lambda Event, msc=msc: Extra.highlight(Event,msc))
+            playlist.bind('<Leave>',lambda Event, msc=msc: Extra.unhighlight(Event,msc))
 
             if x==1:
                 msc.configure(fg_color="#641E16")
                 lb.configure(fg_color="#641E16")
                 dur_label.configure(fg_color="#641E16")
+                playlist.configure(fg_color="#641E16",hover_color="#641E16")
 
                 x = 0
             else:
                 x = 1
 
             Y = Y + 1
+            App.update()
 
         global search_frame
         search_frame = CTkScrollableFrame(music_page,height=200,width=590,corner_radius= 5,fg_color=['gray86', 'gray17'])

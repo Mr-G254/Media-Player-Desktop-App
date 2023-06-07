@@ -9,6 +9,7 @@ from FoldersPage import*
 from MusicPage import*
 from YouTubePage import*
 from AudioControls import*
+from Playlist import*
 
 app = CTk()
 app.title("Media Player")
@@ -36,9 +37,6 @@ class HomeUI():
     img14 = CTkImage(Image.open("Icons\playlist_bg.png"),size=(64,64))
     img15 = CTkImage(Image.open("Icons\heart_bg.png"),size=(64,64))
     img16 = CTkImage(Image.open("Icons\\reject.png"),size=(21,21))
-    img17 = CTkImage(Image.open("Icons\playlist_thumbnail.png"),size=(100,100))
-    img18 = CTkImage(Image.open("Icons\plus.png"),size=(20,20))
-    img19 = CTkImage(Image.open("Icons\playlist_thumbnail.png"),size=(22,22))
 
     frame = CTkFrame(app,height= 600,width=1030,fg_color="#781F15")
     Extra.Home_frame = frame
@@ -77,7 +75,7 @@ class HomeUI():
 
         HomeUI.configure_fav_page()
         HomeUI.configure_rec_page()
-        HomeUI.configure_playlist_page()
+        Playlist.configure_playlist_page(home_tab.tab("Playlist"))
 
         global topbar
         topbar = CTkFrame(HomeUI.frame,height= 40,width= 466,corner_radius= 5,border_color="#0967CC",border_width=2)
@@ -212,31 +210,6 @@ class HomeUI():
             lb4.bind('<Button-1>',lambda Event, path=path, name=name: AudioControls.select_song(Event,path,name,"Recent"))
 
             Y4 = Y4 + 1
-
-    def configure_playlist_page():
-        add = CTkButton(home_tab.tab("Playlist"),image=HomeUI.img18,compound=LEFT,text='New Playlist',font=('Times',14),width=120,height=26,corner_radius=4,fg_color="#770B33",border_color="#0967CC",border_width=0)
-        add.place(x=20,y=2)
-        add.bind('<Enter>',lambda Event: Extra.highlight(Event,add))
-        add.bind('<Leave>',lambda Event: Extra.unhighlight(Event,add))
-
-        play_frame = CTkScrollableFrame(home_tab.tab("Playlist"),height=295,width=155,fg_color="#641E16")
-        play_frame.place(x=0,y=35)
-
-        playlist = CTkFrame(play_frame,width=150,height=150,corner_radius=8,fg_color="#510723",border_color="#0967CC",border_width=0)
-        playlist.grid(column=0,row=0)
-        playlist.bind('<Enter>',lambda Event: Extra.highlight(Event,playlist))
-        playlist.bind('<Leave>',lambda Event: Extra.unhighlight(Event,playlist))
-
-        img_label = CTkLabel(playlist,text='',image=HomeUI.img17,width=146,height=120,corner_radius=8,fg_color="#770B33")
-        img_label.place(x=2,y=2)
-        img_label.bind('<Enter>',lambda Event: Extra.highlight(Event,playlist))
-        img_label.bind('<Leave>',lambda Event: Extra.unhighlight(Event,playlist))
-
-        play_label = CTkLabel(home_tab.tab("Playlist"),text='  My Playlist',image=HomeUI.img19,compound=LEFT,font=('Times',15),width=250,height=28,corner_radius=4,fg_color="#770B33",anchor=CENTER,)
-        play_label.place(x=295,y=2)
-
-        song_frame = CTkScrollableFrame(home_tab.tab("Playlist"),height=295,width=480,fg_color="#641E16")
-        song_frame.place(x=175,y=35)
     
     def on_closing_app():
         Database.upload_recent()

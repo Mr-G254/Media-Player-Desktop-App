@@ -1,7 +1,7 @@
 from Controls import*
 from customtkinter import*
 import vlc
-import pafy
+from tkinter import messagebox
 
 class VideoControls(Control):
     vid_name = ''
@@ -117,13 +117,21 @@ class VideoControls(Control):
     def resume_or_play():
         if media_player.is_playing():
             play_btn.configure(image = VideoControls.img12)
-            media_player.set_pause(1)
+            try:
+                media_player.set_pause(1)
+            except Exception as e:
+                messagebox.showerror("Error",e)
+
             VideoControls.playing = False
         else:
             play_btn.configure(image = VideoControls.img13)
-            media_player.set_pause(0)
+            try:
+                media_player.set_pause(0)
+            except Exception as e:
+                messagebox.showerror("Error",e)
+
             VideoControls.playing = True
-            VideoControls.update_progress()
+            # VideoControls.update_progress()
 
     def set_volume(value):
         if VideoControls.vol_on:
@@ -153,8 +161,8 @@ class VideoControls(Control):
                 remtime_label.configure(text = VideoControls.audio_duration((rem/1000)))
             App.update()
 
-        # if not media_player.is_playing():
-        #     App.after(500,VideoControls.update_progress)
+        if not media_player.is_playing():
+            App.after(500,VideoControls.update_progress)
 
     def move_forward():
         time = media_player.get_time() + 15000
@@ -225,5 +233,4 @@ class VideoControls(Control):
         VideoControls.move_backward()
     
     def stop_video():
-        Window.unbind_all()
         media_player.stop()
