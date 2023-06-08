@@ -75,6 +75,8 @@ class HomeUI():
 
         HomeUI.configure_fav_page()
         HomeUI.configure_rec_page()
+
+        Playlist.get_database(Database,app)
         Playlist.configure_playlist_page(home_tab.tab("Playlist"))
 
         global topbar

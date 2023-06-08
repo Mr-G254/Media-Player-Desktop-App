@@ -149,10 +149,23 @@ class Database():
                 pass
         
     def get_playlist():
+        Extra.Playlist.clear()
         for i in db.execute("SELECT name FROM sqlite_master WHERE type='table'"):
             tables = i[0].split("=")
             if len(tables) > 1:
-                Extra.Playlist.append(i[0])
+                Extra.Playlist.append(tables[0])
+
+        Extra.Playlist.sort()
+
+    def create_playlist(playlist_name):
+        name = f"{str(playlist_name).capitalize()}=playlist"
+        db.execute(f"CREATE TABLE '{name}'(id integer PRIMARY KEY,Name text,Path text);")
+        db.commit()
+        Database.get_playlist()
+
+    def add_song_to_playlist(name,path,playlist):
+        db.execute(f"INSERT INTO '{playlist}=playlist'(Name,Path) VALUES(?,?)",(name,path))
+        db.commit()
 
     def close():
         db.close()

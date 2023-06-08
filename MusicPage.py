@@ -84,7 +84,7 @@ class Music():
             dur_label.bind('<Leave>',lambda Event, msc=msc: Extra.unhighlight(Event,msc))
             dur_label.bind('<Button-1>',lambda Event, path=path, name=name: AudioControls.select_song(Event,path,name,"Songs"))
 
-            playlist = CTkButton(msc,fg_color="#510723",hover_color="#510723",width=19,height=19,text="",image=Music.img1,command=lambda name=name: Playlist.add_song_to_playlist(name,App.winfo_x(),App.winfo_y()))
+            playlist = CTkButton(msc,fg_color="#510723",hover_color="#510723",width=19,height=19,text="",image=Music.img1,command=lambda name=name, path=path: Playlist.add_song_to_playlist_window(name,App.winfo_x(),App.winfo_y(),path))
             playlist.place(x=900,y=6)
             playlist.bind('<Enter>',lambda Event, msc=msc: Extra.highlight(Event,msc))
             playlist.bind('<Leave>',lambda Event, msc=msc: Extra.unhighlight(Event,msc))

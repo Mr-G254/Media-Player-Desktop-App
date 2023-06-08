@@ -95,7 +95,8 @@ class VideoControls(Control):
 
         App.update()
 
-        Window.bind('<Configure>',lambda Event: VideoControls.reconfigure_widgets(Event))
+        # Window.bind('<Configure>',lambda Event: VideoControls.reconfigure_widgets(Event))
+        Window.resizable(False,False)
         Window.bind('<space>',VideoControls.spacebar)
         Window.bind('<Right>',VideoControls.right_arrow)
         Window.bind('<Left>',VideoControls.left_arrow)

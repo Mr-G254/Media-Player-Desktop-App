@@ -6,7 +6,6 @@ from moviepy.editor import VideoFileClip
 from PIL import Image
 from VideoControls  import*
 from AudioControls import AudioControls
-import threading
 
 class Video():
     img0 = CTkImage(Image.open("Icons\\video_bg.png"),size=(64,64))
@@ -84,8 +83,11 @@ class Video():
             thumbn_label.bind('<Leave>',lambda Event, vid_frame=vid_frame: Extra.unhighlight(Event,vid_frame))
             thumbn_label.bind('<Button-1>',lambda Event, path=path,name=name:Video.play_video(Event,path,name))
 
-            vid_name = CTkLabel(vid_frame,text=name,font=("TImes",17),width=200,fg_color="#510723",anchor=W)
-            vid_name.place(x=10,y=170)
+            frame = CTkFrame(vid_frame,width=290,height=27,fg_color="#510723")
+            frame.place(x=10,y=170)
+
+            vid_name = CTkLabel(frame,text=name,font=("TImes",17),width=300,fg_color="#510723",anchor=W)
+            vid_name.place(x=0,y=0)
             vid_name.bind('<Enter>',lambda Event, vid_frame=vid_frame: Extra.highlight(Event,vid_frame))
             vid_name.bind('<Leave>',lambda Event, vid_frame=vid_frame: Extra.unhighlight(Event,vid_frame))
             vid_name.bind('<Button-1>',lambda Event, path=path, name=name:Video.play_video(Event,path,name))
