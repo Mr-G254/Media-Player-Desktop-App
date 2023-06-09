@@ -123,6 +123,7 @@ class Database():
 
     def load_songs():
         Extra.All_songs.clear()
+        Extra.All_songs.clear()
         Extra.All_videos.clear()
 
         for i in Extra.Folders:
@@ -167,6 +168,25 @@ class Database():
         db.execute(f"INSERT INTO '{playlist}=playlist'(Name,Path) VALUES(?,?)",(name,path))
         db.commit()
 
+    def get_playlist_songs(playlist_name):
+        Extra.current_playlist_songs.clear()
+        for i in db.execute(f"SELECT * from '{playlist_name}=playlist';"):
+            Extra.current_playlist_songs.append(f"{i[1]}={i[2]}")
+            Extra.current_playlist_songs_edit.append(f"{i[1]}.mp3")
+
+    def check_if_song_exist(name,playlist):
+        exist = False
+        for i in db.execute(f"SELECT Name FROM '{playlist}=playlist' WHERE Name='{name}'"):
+            exist = True
+
+        return exist
+    
+    def delete_playlist(playlist_name):
+        db.execute(f"DROP TABLE '{playlist_name}=playlist'")
+        db.commit
+
+        Database.get_playlist()
+    
     def close():
         db.close()
 

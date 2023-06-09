@@ -173,7 +173,7 @@ class HomeUI():
             value = i.split("=")
             name = value[0].replace('.mp3','')
             path = value[1]
-            msc3 = CTkFrame(fav_frame,height=35,width=655,fg_color="#510723",border_color="#0967CC",border_width=0)
+            msc3 = CTkFrame(fav_frame,height=35,width=650,fg_color="#510723",border_color="#0967CC",border_width=0)
             msc3.grid(column= 0,row= Y3,padx= 2,pady= 2)
             msc3.bind('<Enter>',lambda Event, msc3=msc3: Extra.highlight(Event,msc3))
             msc3.bind('<Leave>',lambda Event, msc3=msc3: Extra.unhighlight(Event,msc3))
@@ -198,7 +198,7 @@ class HomeUI():
             value = i.split("=")
             name = value[0].replace('.mp3','')
             path = value[1]
-            msc4 = CTkFrame(rec_frame,height=35,width=655,fg_color="#510723",border_color="#0967CC",border_width=0)
+            msc4 = CTkFrame(rec_frame,height=35,width=650,fg_color="#510723",border_color="#0967CC",border_width=0)
             msc4.grid(column= 0,row= Y4,padx= 2,pady= 2)
             msc4.bind('<Enter>',lambda Event, msc4=msc4: Extra.highlight(Event,msc4))
             msc4.bind('<Leave>',lambda Event, msc4=msc4: Extra.unhighlight(Event,msc4))

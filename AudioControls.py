@@ -131,6 +131,11 @@ class AudioControls(Control):
             index = Extra.Recent.index(song)
             AudioControls.Index = index
             AudioControls.select_frame(index,Extra.Recent_frames)
+        
+        elif AudioControls.Id == "Playlist":
+            index = Extra.current_playlist_songs.index(song)
+            AudioControls.Index = index
+            AudioControls.select_frame(index,Extra.playlist_frames)
 
         play_btn.configure(image= AudioControls.img8)
         progressbar.configure(state = 'normal')
@@ -224,6 +229,9 @@ class AudioControls(Control):
             
         elif AudioControls.Id == "Recent":
             AudioControls.select_next_song(Extra.Recent)
+        
+        elif AudioControls.Id == "Playlist":
+            AudioControls.select_next_song(Extra.current_playlist_songs)
             
     def select_next_song(song_list):
         if AudioControls.Index != len(song_list)-1:
@@ -258,6 +266,9 @@ class AudioControls(Control):
            
         elif AudioControls.Id == "Recent":
             AudioControls.select_previous_song(Extra.Recent)
+
+        elif AudioControls.Id == "Playlist":
+            AudioControls.select_previous_song(Extra.current_playlist_songs)
 
     def select_previous_song(song_list):
         if AudioControls.Index != 0:

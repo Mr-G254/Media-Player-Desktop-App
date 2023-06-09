@@ -11,7 +11,12 @@ class Extra():
     frames_b = [] #Folder and Settings frame
 
     Folders = []
+
     Playlist = []
+    current_playlist_songs = []
+    current_playlist_songs_edit = []
+    playlist_frames = []
+    songs_added = []
 
     Recent = []
     Recent_frames = []
