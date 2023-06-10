@@ -33,8 +33,6 @@ class Playlist():
         play_frame = CTkScrollableFrame(master,height=295,width=155,fg_color="#641E16")
         play_frame.place(x=0,y=35)
 
-        Playlist.show_playlists()
-
         global add_songs
         add_songs = CTkButton(Playlist.frame,image=Playlist.img0,compound=LEFT,text='',width=26,height=26,corner_radius=4,fg_color="#770B33",hover_color="#770B33",border_color="#0967CC",border_width=0)
         add_songs.place(x=258,y=2)
@@ -54,6 +52,8 @@ class Playlist():
         global song_frame
         song_frame = CTkScrollableFrame(Playlist.frame,height=295,width=480,fg_color="#641E16")
         song_frame.place(x=175,y=35)
+
+        Playlist.show_playlists()
 
     def show_playlists():
         Playlist.playlist_labels.clear()
@@ -85,6 +85,10 @@ class Playlist():
             play_name.bind('<Leave>',lambda Event, playlist=playlist: Extra.unhighlight(Event,playlist))
             play_name.bind('<Button-1>',lambda Event, name=name, Y=Y: [Playlist.select_playlist(Y),Playlist.fetch_current_playlist_songs(Event,name)])
             Playlist.playlist_labels.append(play_name)
+
+            if Y == 0:
+                Playlist.select_playlist(Y)
+                Playlist.fetch_current_playlist(name)
 
             Y = Y + 1
 
@@ -216,46 +220,57 @@ class Playlist():
             Playlist.show_playlists()
         
     def fetch_current_playlist_songs(Event,playlist_name):
-        if Playlist.current_playlist != playlist_name:
-            Playlist.current_playlist = playlist_name
-            for i in song_frame.winfo_children():
-                i.destroy()
+        Playlist.fetch_current_playlist(playlist_name)
 
-            add_songs.configure(command=lambda: Playlist.add_songs_to_playlist(playlist_name))
-            play_label.configure(text=f"  {playlist_name}")
-            del_playlist.configure(command=lambda: Playlist.delete_playlist(playlist_name))
-            Database.get_playlist_songs(playlist_name)
+    def fetch_current_playlist(playlist_name):
+        # if Playlist.current_playlist != playlist_name:
+        Playlist.current_playlist = playlist_name
+        for i in song_frame.winfo_children():
+            i.destroy()
 
-            Y5=0
-            Extra.playlist_frames.clear()
-            for i in Extra.current_playlist_songs:
-                value = i.split("=")
-                name = value[0].replace('.mp3','')
-                path = value[1]
-                msc4 = CTkFrame(song_frame,height=35,width=475,fg_color="#510723",border_color="#0967CC",border_width=0)
-                msc4.grid(column= 0,row= Y5,padx= 2,pady= 2)
-                msc4.bind('<Enter>',lambda Event, msc4=msc4: Extra.highlight(Event,msc4))
-                msc4.bind('<Leave>',lambda Event, msc4=msc4: Extra.unhighlight(Event,msc4))
-                msc4.bind('<Button-1>',lambda Event, path=path, name=name: AudioControls.select_song(Event,path,name,"Playlist"))
-                Extra.playlist_frames.append(msc4)
-                
-                lb4 = CTkLabel(msc4,text=name,font=("TImes",15),fg_color="#510723")
-                lb4.place(x=15,y=2)
-                lb4.bind('<Enter>',lambda Event, msc4=msc4: Extra.highlight(Event,msc4))
-                lb4.bind('<Leave>',lambda Event, msc4=msc4: Extra.unhighlight(Event,msc4))
-                lb4.bind('<Button-1>',lambda Event, path=path, name=name: AudioControls.select_song(Event,path,name,"Playlist"))
+        add_songs.configure(command=lambda: Playlist.add_songs_to_playlist(playlist_name))
+        play_label.configure(text=f"  {playlist_name}")
+        del_playlist.configure(command=lambda: Playlist.delete_playlist(playlist_name))
+        Database.get_playlist_songs(playlist_name)
 
-                Y5 = Y5 + 1
+        Y5=0
+        Extra.playlist_frames.clear()
+        for i in Extra.current_playlist_songs:
+            value = i.split("=")
+            name = value[0].replace('.mp3','')
+            path = value[1]
+            msc4 = CTkFrame(song_frame,height=35,width=475,fg_color="#510723",border_color="#0967CC",border_width=0)
+            msc4.grid(column= 0,row= Y5,padx= 2,pady= 2)
+            msc4.bind('<Enter>',lambda Event, msc4=msc4: Extra.highlight(Event,msc4))
+            msc4.bind('<Leave>',lambda Event, msc4=msc4: Extra.unhighlight(Event,msc4))
+            msc4.bind('<Button-1>',lambda Event, path=path, name=name: AudioControls.select_song(Event,path,name,"Playlist"))
+            Extra.playlist_frames.append(msc4)
+            
+            lb4 = CTkLabel(msc4,text=name,font=("TImes",15),fg_color="#510723")
+            lb4.place(x=15,y=2)
+            lb4.bind('<Enter>',lambda Event, msc4=msc4: Extra.highlight(Event,msc4))
+            lb4.bind('<Leave>',lambda Event, msc4=msc4: Extra.unhighlight(Event,msc4))
+            lb4.bind('<Button-1>',lambda Event, path=path, name=name: AudioControls.select_song(Event,path,name,"Playlist"))
+
+            del_song = CTkButton(msc4,image=Playlist.img4,compound=LEFT,text='',width=26,height=28,corner_radius=4,fg_color="#510723",hover_color="#510723",command=lambda name=name: Playlist.del_song_from_playlist(name,playlist_name))
+            del_song.place(x=440,y=2)
+
+            Y5 = Y5 + 1
 
     def add_songs_to_playlist(playlist_name):
+        global frame
         frame = CTkFrame(Playlist.frame,height=330,width=680,fg_color="#641E16")
         frame.place(x=0,y=2)
 
+        global done_btn
+        done_btn = CTkButton(frame,text="Done (0)",font=("Times",15),width=75,height=28,corner_radius=4,fg_color="#510723",command=lambda: Playlist.done(playlist_name))
+        done_btn.place(x=555,y=10)
+
         cancel_btn = CTkButton(frame,text="",image=Playlist.img3,width=26,height=26,corner_radius=4,fg_color="#510723",command=lambda: frame.destroy())
-        cancel_btn.place(x=635,y=0)
+        cancel_btn.place(x=635,y=10)
 
         label = CTkLabel(frame,text=f"  Add songs to '{playlist_name}' playlist  ",height=30,font=("Times",16),fg_color="#770B33",corner_radius=5)
-        label.place(x=5,y=0)
+        label.place(x=5,y=10)
 
         song_frame2 = CTkScrollableFrame(frame,height=280,width=655,fg_color="#641E16")
         song_frame2.place(x=0,y=45)
@@ -278,9 +293,29 @@ class Playlist():
 
                 check = CTkCheckBox(msc4,text="",fg_color="#510723",width=25,height=25)
                 check.place(x=616,y=5)
+                check.configure(command=lambda check=check, name=name, path=path: Playlist.checkbox(check,name,path))
 
                 Y6 = Y6 + 1
 
+    def del_song_from_playlist(name,playlist_name):
+        ask = messagebox.askyesno("Delete song from playlist",f"Are you sure you want to delete '{name}' from '{playlist_name}' playlist")
+        if ask:
+            Database.del_song_from_playlist(f"{name}.mp3",playlist_name)
+            Playlist.fetch_current_playlist(playlist_name)
+
+    def checkbox(checkbox,name,path):
+        if checkbox.get():
+            Extra.songs_added.append(f"{name}.mp3={path}")
+        else:
+            index = Extra.songs_added.index(f"{name}.mp3={path}")
+            Extra.songs_added.pop(index)
+
+        done_btn.configure(text=f"Done ({str(len(Extra.songs_added))})")
+
+    def done(playlist_name):
+        Database.add_songs_to_playlist(playlist_name)
+        frame.destroy()
+        Playlist.fetch_current_playlist(playlist_name)
 
     def delete_playlist(playlist_name):
         if messagebox.askyesno("Deleting playlist",f"Are you sure you want to delete '{playlist_name}' playlist"):

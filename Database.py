@@ -168,11 +168,28 @@ class Database():
         db.execute(f"INSERT INTO '{playlist}=playlist'(Name,Path) VALUES(?,?)",(name,path))
         db.commit()
 
+    def add_songs_to_playlist(playlist_name):
+        for i in Extra.songs_added:
+            value = i.split("=")
+            name = value[0]
+            path = value[1]
+            db.execute(f"INSERT INTO '{playlist_name}=playlist'(Name,Path) VALUES(?,?)",(name,path))
+        
+        db.commit()
+        Extra.songs_added.clear()
+        Database.get_playlist_songs(playlist_name)
+    
+    def del_song_from_playlist(name,playlist_name):
+        db.execute(f"DELETE FROM '{playlist_name}=playlist' WHERE Name='{name}'")
+        db.commit()
+        Database.get_playlist_songs(playlist_name)
+
     def get_playlist_songs(playlist_name):
         Extra.current_playlist_songs.clear()
+        Extra.current_playlist_songs_edit.clear()
         for i in db.execute(f"SELECT * from '{playlist_name}=playlist';"):
             Extra.current_playlist_songs.append(f"{i[1]}={i[2]}")
-            Extra.current_playlist_songs_edit.append(f"{i[1]}.mp3")
+            Extra.current_playlist_songs_edit.append(f"{i[1]}")
 
     def check_if_song_exist(name,playlist):
         exist = False

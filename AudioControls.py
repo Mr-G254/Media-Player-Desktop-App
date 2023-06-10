@@ -88,10 +88,10 @@ class AudioControls(Control):
     def select_song(Event,file_path,file_name,id):
         AudioControls.Id = id
  
-        try:
-            AudioControls.play_song(file_path,file_name)
-        except Exception as e:
-            messagebox.showerror("Error",e)
+        # try:
+        AudioControls.play_song(file_path,file_name)
+        # except Exception as e:
+        #     messagebox.showerror("Error",e)
 
     def play_song(file_path,file_name):
         AudioControls.song_value = f"{file_name}.mp3={file_path}"
@@ -133,7 +133,7 @@ class AudioControls(Control):
             AudioControls.select_frame(index,Extra.Recent_frames)
         
         elif AudioControls.Id == "Playlist":
-            index = Extra.current_playlist_songs.index(song)
+            index = Extra.current_playlist_songs_edit.index(f"{song.split('=')[0]}.mp3")
             AudioControls.Index = index
             AudioControls.select_frame(index,Extra.playlist_frames)
 
