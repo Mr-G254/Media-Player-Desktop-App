@@ -1,7 +1,7 @@
 # **Media-Player-Desktop-App**
 Through this project we see how Python has been used in software development. Feel free to try it out and leave a star on the project if you like what you see.
 
-## Overview
+## **Overview**
 ![Home](Screenshots/playlist.PNG)
 
 ![Music](Screenshots/songs.PNG)
@@ -10,7 +10,7 @@ Through this project we see how Python has been used in software development. Fe
 
 ![You Tube](Screenshots/youtube.PNG)
 
-## Features
+## **Features**
 - Plays audio and video
 - Playlist functionalities
 - Downloads audio and video from You Tube
@@ -20,7 +20,7 @@ Through this project we see how Python has been used in software development. Fe
 - ` Right arrow ` - fast forward the video 
 - ` Left arrow ` - rewind the video
 
-## Installation
+## **Installation**
 **Note:** This program has only been tested in Windows.
 - Install **[Python](https://www.python.org/downloads/release/python-31012/) 3.10.12**
 - Install **[vlc](https://get.videolan.org/vlc/3.0.18/win64/vlc-3.0.18-win64.exe)**
