@@ -6,7 +6,7 @@ Through this project we see how Python has been used in software development. Fe
 - Install [Python](https://www.python.org/downloads/release/python-31012/) 3.10.12
 - Install [vlc](https://get.videolan.org/vlc/3.0.18/win64/vlc-3.0.18-win64.exe)
 - Open the command prompt and run the following commands:
-- '''pip3 install customtkinter'''
+'''pip3 install customtkinter'''
 - '''pip install pygame'''
 - '''pip install Pillow'''
 - '''pip install db-sqlite3'''
