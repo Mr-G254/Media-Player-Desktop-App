@@ -16,9 +16,9 @@ Through this project we see how Python has been used in software development. Fe
 - Downloads audio and video from You Tube
 
 ### Keyboard shortcuts
-''' Spacebar ''' - play or pause video
-''' Right arrow ''' - fast forward the video 
-''' Left arrow ''' - rewind the video
+- ` Spacebar ` - play or pause video
+- ` Right arrow ` - fast forward the video 
+- ` Left arrow ` - rewind the video
 
 ## Installation
 **Note:** This program has only been tested in Windows.
