@@ -2,13 +2,13 @@
 Through this project we see how Python has been used in software development. Feel free to try it out and leave a star on the project if you like what you see.
 
 ## Overview
-![Home](screenshots/playlist.png)
+![Home](Screenshots/playlist.png)
 
-![Music](screenshots/songs.png)
+![Music](Screenshots/songs.png)
 
-![Video](screenshots/videos.png)
+![Video](Screenshots/videos.png)
 
-![You Tube](screenshots/you tube.png)
+![You Tube](Screenshots/youtube.png)
 
 ## Features
 - Plays audio and video
