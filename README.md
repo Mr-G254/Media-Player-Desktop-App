@@ -14,9 +14,9 @@ Through this project we see how Python has been used in software development. Fe
 - Plays audio and video
 - Playlist functionalities
 - Keyboard shortcuts when playing video
-'''Spacebar''' - play or pause video
-'''Right arrow''' - fast forward the video 
-'''Left arrow''' - rewind the video
+''' Spacebar ''' - play or pause video
+''' Right arrow ''' - fast forward the video 
+''' Left arrow ''' - rewind the video
 - Downloads audio and video from You Tube
 
 ## Installation
