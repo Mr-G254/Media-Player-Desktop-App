@@ -3,6 +3,7 @@ from PIL import Image
 from Extra import*
 from AudioControls import AudioControls
 from mutagen.mp3 import MP3
+from mutagen.mp4 import MP4
 from Playlist import*
 
 class Music():
@@ -77,7 +78,11 @@ class Music():
             lb.bind('<Leave>',lambda Event, msc=msc: Extra.unhighlight(Event,msc))
             lb.bind('<Button-1>',lambda Event, path=path, name=name: AudioControls.select_song(Event,path,name,"Songs"))
 
-            dur = MP3(path).info.length
+            try:
+                dur = MP3(path).info.length
+            except:
+                dur = MP4(path).info.length
+
             dur_label = CTkLabel(msc,text=AudioControls.audio_duration(dur),font=("TImes",16),fg_color="#510723")
             dur_label.place(x=600,y=2)
             dur_label.bind('<Enter>',lambda Event, msc=msc: Extra.highlight(Event,msc))

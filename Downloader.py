@@ -25,9 +25,6 @@ class Downloader():
         dndbtn = CTkFrame(frame,height= 35,width= 320,fg_color="#641E16",corner_radius= 5,border_color="#0967CC",border_width=0)
         if Downloader.pending == 0:
             dndbtn.place(x= 5,y= 562)
-        # else:
-        #     X = (Downloader.pending * 325) + 5
-        #     dndbtn.place(x= X,y= 562)
 
         dndbtn.bind('<Enter>',lambda Event: Extra.highlight(Event,dndbtn))
         dndbtn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,dndbtn))
@@ -59,20 +56,17 @@ class Downloader():
 
     def download_audio(frame,title,url):
         if not Downloader.is_downloading:
-            Downloader.show_status(frame,title,url,251)
-        # Downloader.pending = Downloader.pending + 1
+            Downloader.show_status(frame,title,url,140)
 
     def download_video(frame,title,url):
         if not Downloader.is_downloading:
             Downloader.show_status(frame,title,url,22)
-        # Downloader.pending = Downloader.pending + 1
 
     def download(id,url,title,location):
         request.default_range_size=1024000
         yt = YouTube(url)
         yt.register_on_progress_callback(Downloader.show_progress)
         yt.register_on_complete_callback(Downloader.download_commplete)
-        print(yt.streams)
         stream = yt.streams.get_by_itag(id)
         global file_size
         file_size = stream.filesize
@@ -87,7 +81,7 @@ class Downloader():
             title = title.replace("|","")
             title = title.replace("*"," ")
             try:
-                if id == 251:
+                if id == 140:
                     stream.download(output_path=storage_location,filename=f"{str(title)}.mp3",max_retries=3)
                 else:
                     stream.download(output_path=storage_location,filename=f"{title}.mp4",max_retries=3)
