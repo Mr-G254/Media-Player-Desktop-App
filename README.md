@@ -1,27 +1,28 @@
 # **Media-Player-Desktop-App**
 Through this project we see how Python has been used in software development. Feel free to try it out and leave a star on the project if you like what you see.
 
-## Overview
-![Home](screenshots/playlist.png)
+## **Overview**
+![Home](Screenshots/playlist.PNG)
 
-![Music](screenshots/songs.png)
+![Music](Screenshots/songs.PNG)
 
-![Video](screenshots/videos.png)
+![Video](Screenshots/videos.PNG)
 
-![You Tube](screenshots/you tube.png)
+![You Tube](Screenshots/youtube.PNG)
 
-## Features
+## **Features**
 - Plays audio and video
 - Playlist functionalities
-- Keyboard shortcuts when playing video
-  '''Spacebar''' - play or pause video
-  '''Right arrow''' - fast forward the video 
-  '''Left arrow''' - rewind the video
 - Downloads audio and video from You Tube
 
-## Installation
+### Keyboard shortcuts
+- ` Spacebar ` - play or pause video
+- ` Right arrow ` - fast forward the video 
+- ` Left arrow ` - rewind the video
+
+## **Installation**
 **Note:** This program has only been tested in Windows.
-- Install **[Python](https://www.python.org/downloads/release/python-31012/) 3.10.12**
+- Install **[Python 3.10.12](https://www.python.org/downloads/release/python-31012/)**
 - Install **[vlc](https://get.videolan.org/vlc/3.0.18/win64/vlc-3.0.18-win64.exe)**
 - Open the command prompt and run the following commands:
  ``` 
