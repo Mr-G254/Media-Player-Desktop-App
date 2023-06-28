@@ -1,0 +1,11 @@
+customtkinter
+pygame
+Pillow
+db-sqlite3
+pathlib
+pytube
+mutagen
+pyperclip
+python-vlc
+moviepy
+youtube-search-python
