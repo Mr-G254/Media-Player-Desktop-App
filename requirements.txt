@@ -9,3 +9,4 @@ pyperclip
 python-vlc
 moviepy
 youtube-search-python
+youtube-search

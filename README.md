@@ -3,7 +3,7 @@ In this project Python has been used to create an application that not only play
 **Email:** Gikuhiezekiel@gmail.com
 
 ## **Installation**
-**Note:** This program has only been tested in Windows.
+**Note:** This program has only been tested in Windows and also ensure that you download the vlc 64 bit version using the link provided below.
 - Install **[Python 3.10.12](https://www.python.org/downloads/release/python-31012/)**
 - Install **[vlc](https://get.videolan.org/vlc/3.0.18/win64/vlc-3.0.18-win64.exe)**
 - Open the command prompt and run the following command:
