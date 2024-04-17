@@ -1,38 +1,45 @@
 from customtkinter import *
 from tkinter import messagebox,filedialog
 from PIL import Image
-from Extra import *
-from Database import *
+from Extra import Extra
+from Database import Database
 from pytube import YouTube,request
 import threading
+from pydub import AudioSegment
+from time import sleep
 
 class Downloader():
-    img0 = CTkImage(Image.open("Icons\download.png"),size=(25,25))
-    img1 = CTkImage(Image.open("Icons\check-mark.png"),size=(19,19))
+    def __init__(self,extra: Extra,db: Database):
+        
+        self.img0 = CTkImage(Image.open("Icons\download.png"),size=(25,25))
+        self.img1 = CTkImage(Image.open("Icons\check-mark.png"),size=(19,19))
 
-    is_downloading = False
-    pending = 0
+        self.is_downloading = False
+        self.pending = 0
 
-    def show_status(frame,title,url,id):
+        self.Database = db
+        self.Extra = extra
+
+    def show_status(self,frame,title,url,id):
         try:
-            Downloader.hide_status()
+            self.hide_status()
         except:
             pass
 
-        Downloader.is_downloading = True
+        self.is_downloading = True
 
         global dndbtn
         dndbtn = CTkFrame(frame,height= 35,width= 320,fg_color="#641E16",corner_radius= 5,border_color="#0967CC",border_width=0)
-        if Downloader.pending == 0:
+        if self.pending == 0:
             dndbtn.place(x= 5,y= 562)
 
-        dndbtn.bind('<Enter>',lambda Event: Extra.highlight(Event,dndbtn))
-        dndbtn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,dndbtn))
+        dndbtn.bind('<Enter>',lambda Event: self.Extra.highlight(Event,dndbtn))
+        dndbtn.bind('<Leave>',lambda Event: self.Extra.unhighlight(Event,dndbtn))
 
-        dndlabel = CTkLabel(dndbtn,height=25,width=25,image= Downloader.img0,text = '',fg_color="#641E16")
+        dndlabel = CTkLabel(dndbtn,height=25,width=25,image= self.img0,text = '',fg_color="#641E16")
         dndlabel.place(x=6,y=6)
-        dndlabel.bind('<Enter>',lambda Event: Extra.highlight(Event,dndbtn))
-        dndlabel.bind('<Leave>',lambda Event: Extra.unhighlight(Event,dndbtn))
+        dndlabel.bind('<Enter>',lambda Event: self.Extra.highlight(Event,dndbtn))
+        dndlabel.bind('<Leave>',lambda Event: self.Extra.unhighlight(Event,dndbtn))
         
         txt_frame = CTkFrame(dndbtn,width=240,height=20,fg_color="#510723",corner_radius= 4)
         txt_frame.place(x=35,y=4)
@@ -48,25 +55,25 @@ class Downloader():
         progress_bar = CTkFrame(dndbtn,fg_color="#0967CC",corner_radius=4,height=3,width=0)#280
         progress_bar.place(x=35,y=27)
 
-        thread = threading.Thread(target= Downloader.download,args=(id,url,title,Database.get_location()),daemon=True)
+        thread = threading.Thread(target= self.download,args=(id,url,title, self.Database.get_location()),daemon=True)
         thread.start()
 
-    def hide_status():
+    def hide_status(self):
         dndbtn.destroy()
 
-    def download_audio(frame,title,url):
-        if not Downloader.is_downloading:
-            Downloader.show_status(frame,title,url,140)
+    def download_audio(self,frame,title,url):
+        if not self.is_downloading:
+            self.show_status(frame,title,url,140)
 
-    def download_video(frame,title,url):
-        if not Downloader.is_downloading:
-            Downloader.show_status(frame,title,url,22)
+    def download_video(self,frame,title,url):
+        if not self.is_downloading:
+            self.show_status(frame,title,url,22)
 
-    def download(id,url,title,location):
+    def download(self,id,url,title,location):
         request.default_range_size=1024000
         yt = YouTube(url)
-        yt.register_on_progress_callback(Downloader.show_progress)
-        yt.register_on_complete_callback(Downloader.download_commplete)
+        yt.register_on_progress_callback(self.show_progress)
+        yt.register_on_complete_callback(self.download_commplete)
         stream = yt.streams.get_by_itag(id)
         global file_size
         file_size = stream.filesize
@@ -82,23 +89,27 @@ class Downloader():
             title = title.replace("*"," ")
             try:
                 if id == 140:
-                    stream.download(output_path=storage_location,filename=f"{str(title)}.mp3",max_retries=3)
+                    print(f"{storage_location}/{str(title)}.m4a")
+                    stream.download(output_path=storage_location,filename=f"{str(title)}.m4a",max_retries=3)
                 else:
                     stream.download(output_path=storage_location,filename=f"{title}.mp4",max_retries=3)
+                
+                song = AudioSegment.from_file(f"{storage_location}/{str(title)}.m4a", format="m4a")
+                song.export(f"{storage_location}/{str(title)}.mp3",format="mp3")
             except Exception as e:
                 messagebox.showerror("Error",e)
-                Downloader.is_downloading = False
-                Downloader.hide_status()
+                self.is_downloading = False
+                self.hide_status()
 
-    def show_progress(stream,chunk,bytes_remaining):
+    def show_progress(self,stream,chunk,bytes_remaining):
         percent = 100-((bytes_remaining/file_size)*100)
         prog_text.configure(text = f"{int(percent)}%")
         progress_bar.configure(width = ((percent/100)*280))
     
-    def download_commplete(stream,file_path):
-        Downloader.is_downloading = False
+    def download_commplete(self,stream,file_path):
+        self.is_downloading = False
         prog_text.place(x=285,y=4)
-        prog_text.configure(text="",image=Downloader.img1)
+        prog_text.configure(text="",image=self.img1)
 
 
 

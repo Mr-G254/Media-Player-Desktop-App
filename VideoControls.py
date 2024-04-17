@@ -2,239 +2,223 @@ from Controls import*
 from customtkinter import*
 import vlc
 from tkinter import messagebox
+from Extra import Extra
 
 class VideoControls(Control):
-    vid_name = ''
-    playing = True
-    vol_on = True
-    video_length = 0
-    is_maxsize = True
+    def __init__(self,extra: Extra):
+        self.vid_name = ''
+        self.playing = True
+        self.vol_on = True
+        self.video_length = 0
+        self.is_maxsize = True
 
-    def controls(frame,app,window):
-        global App
-        App = app
+        self.Extra = extra
 
-        global Frame
-        Frame = frame
+    def controls(self,frame,app,window):
+        self.App = app
 
-        global Window
-        Window = window
+        self.Frame = frame
+
+        self.Window = window
         
-        global Height
-        Height = window.winfo_height()
+        self.Height = window.winfo_height()
 
-        global Width
-        Width = window.winfo_width()
+        self.Width = window.winfo_width()
 
-        global frame_width
-        frame_width = Width - 10
+        self.frame_width = self.Width - 10
 
-        global prog_width
-        prog_width = frame_width-20
+        self.prog_width = self.frame_width-20
 
-        global controlframe
-        controlframe = CTkFrame(window,fg_color="#510723",height= 80,width=Width,corner_radius= 6)
-        controlframe.place(x=0,y=Height-80)
+        self.controlframe = CTkFrame(window,fg_color="#510723",height= 80,width=self.Width,corner_radius= 6)
+        self.controlframe.place(x=0,y=self.Height-80)
 
-        global progressbar
-        progressbar = CTkSlider(controlframe,from_=0,to=frame_width-20,progress_color="#770B33",fg_color=['gray86', 'gray17'], orientation="horizontal",width=Width-30,command=VideoControls.move_video_progress)
-        progressbar.set(Width-30)
-        progressbar.place(x= 5,y= 5)
+        self.progressbar = CTkSlider(self.controlframe,from_=0,to=self.frame_width-20,progress_color="#770B33",fg_color=['gray86', 'gray17'], orientation="horizontal",width=self.Width-30,command=self.move_video_progress)
+        self.progressbar.set(self.Width-30)
+        self.progressbar.place(x= 5,y= 5)
 
-        global resize
-        resize = CTkButton(controlframe,text='',image=VideoControls.img15,height=25,width=25,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0,command=VideoControls.minimize)
-        resize.place(x=Width-30,y=0)
+        self.resize = CTkButton(self.controlframe,text='',image=self.img15,height=25,width=25,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0,command=self.minimize)
+        self.resize.place(x=self.Width-30,y=0)
 
-        global currtime_label
-        currtime_label = CTkLabel(controlframe,text="00:00:00",fg_color="#510723",height=20,width=60,anchor=W)
-        currtime_label.place(x=5,y=25)
+        self.currtime_label = CTkLabel(self.controlframe,text="00:00:00",fg_color="#510723",height=20,width=60,anchor=W)
+        self.currtime_label.place(x=5,y=25)
 
-        global remtime_label
-        remtime_label = CTkLabel(controlframe,text="00:00:00",fg_color="#510723",height=20,width=60,anchor=E)
-        remtime_label.place(x=Width-90,y=25)
+        self.remtime_label = CTkLabel(self.controlframe,text="00:00:00",fg_color="#510723",height=20,width=60,anchor=E)
+        self.remtime_label.place(x=self.Width-90,y=25)
 
-        global video_frame
-        video_frame = CTkFrame(controlframe,height= 40,width= 0.25*Width,fg_color="#510723")
-        video_frame.place(x=5,y=40)
+        self.video_frame = CTkFrame(self.controlframe,height= 40,width= 0.25*self.Width,fg_color="#510723")
+        self.video_frame.place(x=5,y=40)
 
-        global video_name
-        video_name = CTkLabel(video_frame,height= 50,width= 0.25*Width,text = VideoControls.vid_name,fg_color="#510723",font=("TImes",22),anchor= W)
-        video_name.place(x=0,y=0)
+        self.video_name = CTkLabel(self.video_frame,height= 50,width= 0.25*self.Width,text = self.vid_name,fg_color="#510723",font=("TImes",22),anchor= W)
+        self.video_name.place(x=0,y=0)
 
-        global backward_btn
-        backward_btn = CTkButton(controlframe,text= "",image= VideoControls.img10,height= 35,width=35,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0,command=VideoControls.move_backward)
-        backward_btn.place(x=(0.5*frame_width)-75,y=36)
-        backward_btn.bind('<Enter>',lambda Event: Extra.highlight(Event,backward_btn))
-        backward_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,backward_btn))
+        self.backward_btn = CTkButton(self.controlframe,text= "",image= self.img10,height= 35,width=35,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0,command=self.move_backward)
+        self.backward_btn.place(x=(0.5*self.frame_width)-75,y=36)
+        # self.bind('<Enter>',lambda Event: self.Extra.highlight(Event,self.backward_btn))
+        self.backward_btn.bind('<Leave>',lambda Event: self.Extra.unhighlight(Event,self.backward_btn))
 
-        global play_btn
-        play_btn = CTkButton(controlframe,text= "",image= VideoControls.img12,height= 64,width=64,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0,command=VideoControls.resume_or_play)
-        play_btn.place(x=(0.5*frame_width)-38,y=20)
-        play_btn.bind('<Enter>',lambda Event: Extra.highlight(Event,play_btn))
-        play_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,play_btn))
+        self.play_btn = CTkButton(self.controlframe,text= "",image= self.img12,height= 64,width=64,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0,command=self.resume_or_play)
+        self.play_btn.place(x=(0.5*self.frame_width)-38,y=20)
+        self.play_btn.bind('<Enter>',lambda Event: self.Extra.highlight(Event,self.play_btn))
+        self.play_btn.bind('<Leave>',lambda Event: self.Extra.unhighlight(Event,self.play_btn))
 
-        global forward_btn
-        forward_btn = CTkButton(controlframe,text= "",image= VideoControls.img11,height= 35,width=35,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0,command=VideoControls.move_forward)
-        forward_btn.place(x=(0.5*frame_width)+26,y=36)
-        forward_btn.bind('<Enter>',lambda Event: Extra.highlight(Event,forward_btn))
-        forward_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,forward_btn))
+        self.forward_btn = CTkButton(self.controlframe,text= "",image= self.img11,height= 35,width=35,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0,command=self.move_forward)
+        self.forward_btn.place(x=(0.5*self.frame_width)+26,y=36)
+        self.forward_btn.bind('<Enter>',lambda Event: self.Extra.highlight(Event,self.forward_btn))
+        self.forward_btn.bind('<Leave>',lambda Event: self.Extra.unhighlight(Event,self.forward_btn))
 
-        global vol_btn
-        vol_btn = CTkButton(controlframe,text= "",image= VideoControls.img3,height= 30,width=30,fg_color="#510723",corner_radius= 4,border_color="#510723",hover_color="#510723",border_width=0,command=VideoControls.switch_vol)
-        vol_btn.place(x=Width-145,y=40)
+        self.vol_btn = CTkButton(self.controlframe,text= "",image= self.img3,height= 30,width=30,fg_color="#510723",corner_radius= 4,border_color="#510723",hover_color="#510723",border_width=0,command=self.switch_vol)
+        self.vol_btn.place(x=self.Width-145,y=40)
 
-        global vol_bar
-        vol_bar = CTkSlider(controlframe,from_=0,to=100,progress_color="#770B33",fg_color=['gray86', 'gray17'], orientation="horizontal",width=100,command=VideoControls.set_volume)
-        vol_bar.set(50)
-        vol_bar.place(x= Width-115,y= 50)
+        self.vol_bar = CTkSlider(self.controlframe,from_=0,to=100,progress_color="#770B33",fg_color=['gray86', 'gray17'], orientation="horizontal",width=100,command=self.set_volume)
+        self.vol_bar.set(50)
+        self.vol_bar.place(x= self.Width-115,y= 50)
 
-        if VideoControls.playing:
-            play_btn.configure(image = VideoControls.img13)
+        if self.playing:
+            self.play_btn.configure(image = self.img13)
         else:
-            play_btn.configure(image = VideoControls.img12)
+            self.play_btn.configure(image = self.img12)
 
-        App.update()
+        self.App.update()
 
-        # Window.bind('<Configure>',lambda Event: VideoControls.reconfigure_widgets(Event))
-        Window.resizable(False,False)
-        Window.bind('<space>',VideoControls.spacebar)
-        Window.bind('<Right>',VideoControls.right_arrow)
-        Window.bind('<Left>',VideoControls.left_arrow)
-        VideoControls.update_progress()
+        # Window.bind('<Configure>',lambda Event: self.reconfigure_widgets(Event))
+        self.Window.resizable(False,False)
+        self.Window.bind('<space>',self.spacebar)
+        self.Window.bind('<Right>',self.right_arrow)
+        self.Window.bind('<Left>',self.left_arrow)
+        self.update_progress()
 
-    def play_video(file_path,name,frame):
-        global media_player
+    def play_video(self,file_path,name,frame):
 
-        media_player = vlc.MediaPlayer() 
-        media = vlc.Media(file_path)
-        media_player.set_media(media)
+        self.media_player = vlc.MediaPlayer() 
+        self.media = vlc.Media(file_path)
+        self.media_player.set_media(self.media)
             
-        media_player.set_hwnd(frame.winfo_id())
-        media_player.play()
+        self.media_player.set_hwnd(frame.winfo_id())
+        self.media_player.play()
 
-        VideoControls.vid_name = name
-        VideoControls.playing = True
+        self.vid_name = name
+        self.playing = True
 
-    def resume_or_play():
-        if media_player.is_playing():
-            play_btn.configure(image = VideoControls.img12)
+    def resume_or_play(self):
+        if self.media_player.is_playing():
+            self.play_btn.configure(image = self.img12)
             try:
-                media_player.set_pause(1)
+                self.media_player.set_pause(1)
             except Exception as e:
                 messagebox.showerror("Error",e)
 
-            VideoControls.playing = False
+            self.playing = False
         else:
-            play_btn.configure(image = VideoControls.img13)
+            self.play_btn.configure(image = self.img13)
             try:
-                media_player.set_pause(0)
+                self.media_player.set_pause(0)
             except Exception as e:
                 messagebox.showerror("Error",e)
 
-            VideoControls.playing = True
-            # VideoControls.update_progress()
+            self.playing = True
+            # self.update_progress()
 
-    def set_volume(value):
-        if VideoControls.vol_on:
-            media_player.audio_set_volume(int(value))
+    def set_volume(self,value):
+        if self.vol_on:
+            self.media_player.audio_set_volume(int(value))
 
-    def switch_vol():
-        if VideoControls.vol_on == True:
-            vol_btn.configure(image= VideoControls.img4)
-            VideoControls.vol_on = False
-            media_player.audio_set_volume(0)
+    def switch_vol(self):
+        if self.vol_on == True:
+            self.vol_btn.configure(image= self.img4)
+            self.vol_on = False
+            self.media_player.audio_set_volume(0)
         else:
-            vol_btn.configure(image= VideoControls.img3)
-            VideoControls.vol_on = True
-            value = vol_bar.get()
-            media_player.audio_set_volume(int(value))
+            self.vol_btn.configure(image= self.img3)
+            self.vol_on = True
+            value = self.vol_bar.get()
+            self.media_player.audio_set_volume(int(value))
 
-    def update_progress():
-        while media_player.is_playing():
-            if VideoControls.video_length == 0:
-                VideoControls.video_length = media_player.get_length()
+    def update_progress(self):
+        while self.media_player.is_playing():
+            if self.video_length == 0:
+                self.video_length = self.media_player.get_length()
             
-            value = media_player.get_position()*prog_width
-            progressbar.set(value)
-            currtime_label.configure(text = VideoControls.audio_duration((media_player.get_time()/1000)))
-            rem = VideoControls.video_length - media_player.get_time()
+            value = self.media_player.get_position()*self.prog_width
+            self.progressbar.set(value)
+            self.currtime_label.configure(text = self.audio_duration((self.media_player.get_time()/1000)))
+            rem = self.video_length - self.media_player.get_time()
             if rem > -1:
-                remtime_label.configure(text = VideoControls.audio_duration((rem/1000)))
-            App.update()
+                self.remtime_label.configure(text = self.audio_duration((rem/1000)))
+            self.App.update()
 
-        if not media_player.is_playing():
-            App.after(500,VideoControls.update_progress)
+        if not self.media_player.is_playing():
+            self.App.after(500,self.update_progress)
 
-    def move_forward():
-        time = media_player.get_time() + 15000
-        media_player.set_time(time)
+    def move_forward(self):
+        time = self.media_player.get_time() + 15000
+        self.media_player.set_time(time)
 
-    def move_backward():
-        time = media_player.get_time() - 15000
-        media_player.set_time(time)
+    def move_backward(self):
+        time = self.media_player.get_time() - 15000
+        self.media_player.set_time(time)
 
-    def minimize():
-        controlframe.place(x=0,y=Height-25)
-        resize.configure(image=VideoControls.img14,command=VideoControls.maximize)
-        VideoControls.is_maxsize = False
+    def minimize(self):
+        self.controlframe.place(x=0,y=self.Height-25)
+        self.resize.configure(image=self.img14,command=self.maximize)
+        self.is_maxsize = False
 
-    def maximize():
-        App.update()
-        controlframe.place(x=0,y=Height-80)
-        resize.configure(image=VideoControls.img15,command=VideoControls.minimize)
-        VideoControls.is_maxsize = True
+    def maximize(self):
+        self.App.update()
+        self.controlframe.place(x=0,y=self.Height-80)
+        self.resize.configure(image=self.img15,command=self.minimize)
+        self.is_maxsize = True
 
-    def move_video_progress(value):
-        if VideoControls.video_length > 0:
-            position = (value/prog_width)
-            media_player.set_position(position)
+    def move_video_progress(self,value):
+        if self.video_length > 0:
+            position = (value/self.prog_width)
+            self.media_player.set_position(position)
 
-    def reconfigure_widgets(Event):
-        App.update()
-        Height = Window.winfo_height()
-        Width = Window.winfo_width()
+    def reconfigure_widgets(self,Event):
+        self.App.update()
+        Height = self.Window.winfo_height()
+        Width = self.Window.winfo_width()
         frame_width = Width - 10
-        prog_width = frame_width-20
+        self.prog_width = frame_width-20
 
-        Frame.configure(height=Height,width=Width)
+        self.Frame.configure(height=Height,width=Width)
 
-        controlframe.configure(width=Width)
-        if VideoControls.is_maxsize:
-            controlframe.place(x=0,y=Height-80)
+        self.controlframe.configure(width=Width)
+        if self.is_maxsize:
+            self.controlframe.place(x=0,y=Height-80)
         else:
-            controlframe.place(x=0,y=Height-25)
+            self.controlframe.place(x=0,y=Height-25)
 
-        progressbar.configure(from_=0,to=Width-30,width=Width-30)
+        self.progressbar.configure(from_=0,to=Width-30,width=Width-30)
 
-        resize.place(x=Width-30,y=0)
+        self.resize.place(x=Width-30,y=0)
 
-        remtime_label.place(x=Width-90,y=25)
+        self.remtime_label.place(x=Width-90,y=25)
 
-        video_frame.configure(width= 0.25*Width)
-        video_name.configure(width= 0.25*Width)
+        self.video_frame.configure(width= 0.25*Width)
+        self.video_name.configure(width= 0.25*Width)
 
-        backward_btn.place(x=(0.5*frame_width)-75,y=36)     
-        play_btn.place(x=(0.5*frame_width)-38,y=20)
-        forward_btn.place(x=(0.5*frame_width)+26,y=36)
+        self.backward_btn.place(x=(0.5*frame_width)-75,y=36)     
+        self.play_btn.place(x=(0.5*frame_width)-38,y=20)
+        self.forward_btn.place(x=(0.5*frame_width)+26,y=36)
 
-        vol_btn.place(x=Width-145,y=40)
-        vol_bar.place(x= Width-115,y= 50)
-        App.update()
+        self.vol_btn.place(x=Width-145,y=40)
+        self.vol_bar.place(x= Width-115,y= 50)
+        self.App.update()
 
-    def spacebar(Event):
+    def spacebar(self,Event):
         try:
-            VideoControls.resume_or_play()
+            self.resume_or_play()
         except:
             pass
 
-    def right_arrow(Event):
-        VideoControls.move_forward()
+    def right_arrow(self,Event):
+        self.move_forward()
 
-    def left_arrow(Event):
-        VideoControls.move_backward()
+    def left_arrow(self,Event):
+        self.move_backward()
     
-    def stop_video():
-        media_player.stop()
+    def stop_video(self):
+        self.media_player.stop()
 
 
 

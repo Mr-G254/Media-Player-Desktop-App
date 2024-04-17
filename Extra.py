@@ -1,83 +1,83 @@
 from customtkinter import*
 
 class Extra():  
-    Home_frame = ''
+    def __init__(self):
+        self.Home_frame = ''
 
-    buttons_a = [] #Buttons in the menu except Folder and settings button
-    buttons_b = [] #Folder and settings button
-    buttons_c = [] #Buttons in the home page(playlist, recent and favourites)
+        self.buttons_a = [] #Buttons in the menu except Folder and settings button
+        self.buttons_b = [] #Folder and settings button
+        self.buttons_c = [] #Buttons in the home page(playlist, recent and favourites)
+        
+        self.frames_a = []
+        self.frames_b = [] #Folder and Settings frame
+
+        self.Folders = []
+
+        self.Playlist = []
+        self.current_playlist_songs = []
+        self.current_playlist_songs_edit = []
+        self.playlist_frames = []
+        self.songs_added = []
+
+        self.Recent = []
+        self.Recent_frames = []
+
+        self.Favourites = []
+        self.Favourites_frames = []
+        
+        self.All_songs = []
+        self.song_frames = []
+
+        self.All_videos = []
+        self.video_thumbnails = []
+
+        self.Music_frame = ''
+        self.Music_scrollframe = ''
+        self.Video_frame = ''
+        self.Youtube_frame = ''
     
-    frames_a = []
-    frames_b = [] #Folder and Settings frame
-
-    Folders = []
-
-    Playlist = []
-    current_playlist_songs = []
-    current_playlist_songs_edit = []
-    playlist_frames = []
-    songs_added = []
-
-    Recent = []
-    Recent_frames = []
-
-    Favourites = []
-    Favourites_frames = []
-    
-    All_songs = []
-    song_frames = []
-
-    All_videos = []
-    video_thumbnails = []
-
-    Music_frame = ''
-    Music_scrollframe = ''
-    Video_frame = ''
-    Youtube_frame = ''
-    
-    def highlight(Event,widget):
+    def highlight(self,Event,widget):
         widget.configure(border_width=2)
         
-    def unhighlight(Event,widget):
+    def unhighlight(self,Event,widget):
         widget.configure(border_width=0)
         
-    def notify(information):
+    def notify(self,information):
         H= len(information)*10
         X= 515 - (H/2)
         
-        global toast
-        toast = CTkLabel(Extra.Home_frame,text= information,font=("TImes",16),height= 35,width=H,fg_color="#641E16",corner_radius= 4)
-        toast.place(x=X,y=10)
+        self.toast = CTkLabel(self.Home_frame,text= information,font=("TImes",16),height= 35,width=H,fg_color="#641E16",corner_radius= 4)
+        self.toast.place(x=X,y=10)
 
-    def undo_noyify():
+    def undo_noyify(self):
         try:
-            toast.destroy()
+            self.toast.destroy()
         except:
             pass
         
-    def configure_buttons(button,list):
+    def configure_buttons(self,button,list):
         button.configure(fg_color= "#0967CC",state= DISABLED)
         for i in list:
             if i != button:
                 i.configure(state= NORMAL,fg_color="#510723")
             
-    def configure_frames(frame,list):
+    def configure_frames(self,frame,list):
         for i in list:
             if i != frame:
                 i.place_forget()
                 
-    def back(frame,button):
+    def back(self,frame,button):
         frame.place_forget()
         button.configure(state= NORMAL,fg_color="#510723")
 
-    def close_small_frames():
-        for i in Extra.frames_b:
+    def close_small_frames(self):
+        for i in self.frames_b:
             i.place_forget()
 
-        for i in Extra.buttons_b:
+        for i in self.buttons_b:
             i.configure(state= NORMAL,fg_color="#510723")
 
-    def destroy(frame):
+    def destroy(self,frame):
         frame.destroy()
         
 

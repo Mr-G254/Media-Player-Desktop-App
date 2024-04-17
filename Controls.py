@@ -1,8 +1,10 @@
 from customtkinter import CTkImage
 from PIL import Image
-from Extra import*
 
 class Control():
+    def __init__(self):
+        pass
+        
     img1 = CTkImage(Image.open("Icons\hearta.png"),size=(24,24))
     img2 = CTkImage(Image.open("Icons\heartb.png"),size=(24,24))
     img3 = CTkImage(Image.open("Icons\\volume.png"),size=(26,26))
@@ -19,7 +21,7 @@ class Control():
     img14 = CTkImage(Image.open("Icons\\up.png"),size=(25,25))
     img15 = CTkImage(Image.open("Icons\down.png"),size=(25,25))
 
-    def audio_duration(length):
+    def audio_duration(self,length):
         hours = int(length // 3600)  
         length %= 3600
         mins = int(length // 60)  

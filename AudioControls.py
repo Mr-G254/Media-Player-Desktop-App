@@ -1,292 +1,287 @@
 from Controls import*
 from customtkinter import*
 from pygame import mixer,USEREVENT,event
+from Extra import Extra
+from mutagen.mp4 import MP4
 
 class AudioControls(Control):
-    favourite = False
-    vol_on = True
-    Id = ""
-    Index = 0
+    def __init__(self,extra: Extra):
+        self.favourite = False
+        self.vol_on = True
+        self.Id = ""
+        self.Index = 0
 
-    # init()
-    mixer.init()
-    mixer.music.set_volume(0.5)
-    current_song_path = ""
-    current_song_name = ""
-    song_value = ""
+        # init()
+        mixer.init()
+        mixer.music.set_volume(0.5)
+        self.current_song_path = ""
+        self.current_song_name = ""
+        self.song_value = ""
 
-    duration = 0
-    current_time = 0
-    added_time = 0
+        self.duration = 0
+        self.current_time = 0
+        self.added_time = 0
 
-    def controls(home,app,database):
-        global Home
-        Home = home
+        self.Extra = extra
 
-        global App
-        App = app
+    def controls(self,home,app,database):
+        self.Home = home
 
-        global Database
-        Database = database
+        self.App = app
 
-        global controlframe
-        controlframe = CTkFrame(Home.frame,fg_color="#510723",height= 100,width=1020,corner_radius= 6)
-        controlframe.place(x=5,y=495)
+        self.Database = database
 
-        global progressbar
-        progressbar = CTkSlider(controlframe,from_=0,to=1000,progress_color="#770B33",fg_color=['gray86', 'gray17'], orientation="horizontal",width=1000,state = 'disabled',command=AudioControls.move_progress)
-        progressbar.set(1000)
-        progressbar.place(x= 10,y= 5)
+        self.controlframe = CTkFrame(self.Home.frame,fg_color="#510723",height= 100,width=1020,corner_radius= 6)
+        self.controlframe.place(x=5,y=495)
 
-        global r_label
-        r_label = CTkLabel(controlframe,text="00:00",fg_color="#510723",height=20,width=40,anchor=CENTER)
-        r_label.place(x=970,y=25)
+        self.progressbar = CTkSlider(self.controlframe,from_=0,to=1000,progress_color="#770B33",fg_color=['gray86', 'gray17'], orientation="horizontal",width=1000,state = 'disabled',command=self.move_progress)
+        self.progressbar.set(1000)
+        self.progressbar.place(x= 10,y= 5)
 
-        msclabel = CTkLabel(controlframe,height= 70,width= 70,image= AudioControls.img5,text = '',fg_color=['gray86', 'gray17'],corner_radius= 4,anchor= CENTER)
-        msclabel.place(x= 5,y= 25)
+        self.r_label = CTkLabel(self.controlframe,text="00:00",fg_color="#510723",height=20,width=40,anchor=CENTER)
+        self.r_label.place(x=970,y=25)
 
-        song_frame = CTkFrame(controlframe,height= 40,width= 300,fg_color="#510723")
-        song_frame.place(x=85,y=25)
+        self.msclabel = CTkLabel(self.controlframe,height= 70,width= 70,image= self.img5,text = '',fg_color=['gray86', 'gray17'],corner_radius= 4,anchor= CENTER)
+        self.msclabel.place(x= 5,y= 25)
 
-        global song_name
-        song_name = CTkLabel(song_frame,height= 40,width= 100,text = '',fg_color="#510723",font=("TImes",16),anchor= W)
-        song_name.place(x=0,y=0)
+        self.song_frame = CTkFrame(self.controlframe,height= 40,width= 300,fg_color="#510723")
+        self.song_frame.place(x=85,y=25)
 
-        global previous_btn
-        previous_btn = CTkButton(controlframe,text= "",image= AudioControls.img6,height= 35,width=35,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0)
-        previous_btn.place(x=415,y=41)
-        previous_btn.bind('<Enter>',lambda Event: Extra.highlight(Event,previous_btn))
-        previous_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,previous_btn))
+        self.song_name = CTkLabel(self.song_frame,height= 40,width= 100,text = '',fg_color="#510723",font=("TImes",16),anchor= W)
+        self.song_name.place(x=0,y=0)
 
-        global play_btn
-        play_btn = CTkButton(controlframe,text= "",image= AudioControls.img7,height= 64,width=64,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0)
-        play_btn.place(x=462,y=25)
-        play_btn.bind('<Enter>',lambda Event: Extra.highlight(Event,play_btn))
-        play_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,play_btn))
+        self.previous_btn = CTkButton(self.controlframe,text= "",image= self.img6,height= 35,width=35,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0)
+        self.previous_btn.place(x=415,y=41)
+        self.previous_btn.bind('<Enter>',lambda Event: self.Extra.highlight(Event,self.previous_btn))
+        self.previous_btn.bind('<Leave>',lambda Event: self.Extra.unhighlight(Event,self.previous_btn))
 
-        global next_btn
-        next_btn = CTkButton(controlframe,text= "",image= AudioControls.img9,height= 35,width=35,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0)
-        next_btn.place(x=540,y=41)
-        next_btn.bind('<Enter>',lambda Event: Extra.highlight(Event,next_btn))
-        next_btn.bind('<Leave>',lambda Event: Extra.unhighlight(Event,next_btn))
+        self.play_btn = CTkButton(self.controlframe,text= "",image= self.img7,height= 64,width=64,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0)
+        self.play_btn.place(x=462,y=25)
+        self.play_btn.bind('<Enter>',lambda Event: self.Extra.highlight(Event,self.play_btn))
+        self.play_btn.bind('<Leave>',lambda Event: self.Extra.unhighlight(Event,self.play_btn))
 
-        global vol_btn
-        vol_btn = CTkButton(controlframe,text= "",image= AudioControls.img3,height= 30,width=30,fg_color="#510723",corner_radius= 4,border_color="#510723",hover_color="#510723",border_width=0,command=AudioControls.switch_vol)
-        vol_btn.place(x=830,y=55)
+        self.next_btn = CTkButton(self.controlframe,text= "",image= self.img9,height= 35,width=35,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0)
+        self.next_btn.place(x=540,y=41)
+        self.next_btn.bind('<Enter>',lambda Event: self.Extra.highlight(Event,self.next_btn))
+        self.next_btn.bind('<Leave>',lambda Event: self.Extra.unhighlight(Event,self.next_btn))
 
-        global vol_bar
-        vol_bar = CTkSlider(controlframe,from_=0,to=100,progress_color="#770B33",fg_color=['gray86', 'gray17'], orientation="horizontal",width=100,command=AudioControls.set_vol)
-        vol_bar.set(50)
-        vol_bar.place(x= 860,y= 65)
+        self.vol_btn = CTkButton(self.controlframe,text= "",image= self.img3,height= 30,width=30,fg_color="#510723",corner_radius= 4,border_color="#510723",hover_color="#510723",border_width=0,command=self.switch_vol)
+        self.vol_btn.place(x=830,y=55)
 
-        global fav_btn
-        fav_btn = CTkButton(controlframe,text= "",image= AudioControls.img1,height= 30,width=30,fg_color="#510723",corner_radius= 4,border_color="#510723",hover_color="#510723",border_width=0,command=AudioControls.fav_song)
-        fav_btn.place(x=975,y=55)
+        self.vol_bar = CTkSlider(self.controlframe,from_=0,to=100,progress_color="#770B33",fg_color=['gray86', 'gray17'], orientation="horizontal",width=100,command=self.set_vol)
+        self.vol_bar.set(50)
+        self.vol_bar.place(x= 860,y= 65)
+
+        self.fav_btn = CTkButton(self.controlframe,text= "",image= self.img1,height= 30,width=30,fg_color="#510723",corner_radius= 4,border_color="#510723",hover_color="#510723",border_width=0,command=self.fav_song)
+        self.fav_btn.place(x=975,y=55)
        
 
-    def select_song(Event,file_path,file_name,id):
-        AudioControls.Id = id
+    def select_song(self,Event,file_path,file_name,id):
+        self.Id = id
  
         # try:
-        AudioControls.play_song(file_path,file_name)
+        self.play_song(file_path,file_name)
         # except Exception as e:
         #     messagebox.showerror("Error",e)
 
-    def play_song(file_path,file_name):
-        AudioControls.song_value = f"{file_name}.mp3={file_path}"
-        AudioControls.current_time = 0
-        AudioControls.added_time = 0    
+    def play_song(self,file_path,file_name):
+        self.song_value = f"{file_name}.mp3={file_path}"
+        self.current_time = 0
+        self.added_time = 0    
 
         try:
-            index = Extra.All_songs.index(AudioControls.song_value)
-            AudioControls.select_frame(index,Extra.song_frames)
+            index = self.Extra.All_songs.index(self.song_value)
+            self.select_frame(index,self.Extra.song_frames)
         except:
             pass
 
-        song_name.configure(text=file_name)
+        self.song_name.configure(text=file_name)
 
-        AudioControls.current_song_path = file_path
-        AudioControls.current_song_name = file_name
-        length = mixer.Sound(AudioControls.current_song_path).get_length()
-        AudioControls.duration = length
+        self.current_song_path = file_path
+        self.current_song_name = file_name
+        try:
+            length = mixer.Sound(self.current_song_path).get_length()
+        except:
+            length = MP4(self.current_song_path).info.length
+
+        self.duration = length
 
         song = f"{file_name}={file_path}"
-        if AudioControls.Id != "Recent":
-            AudioControls.add_to_recent(song)
+        if self.Id != "Recent":
+            self.add_to_recent(song)
 
-        if song in Extra.Favourites:
-            if AudioControls.Id == "Favourites":
-                index = Extra.Favourites.index(song)
-                AudioControls.Index = index
-                AudioControls.select_frame(index,Extra.Favourites_frames)
+        if song in self.Extra.Favourites:
+            if self.Id == "Favourites":
+                index = self.Extra.Favourites.index(song)
+                self.Index = index
+                self.select_frame(index,self.Extra.Favourites_frames)
 
-            fav_btn.configure(image=AudioControls.img2)
-            AudioControls.favourite = True
+            self.fav_btn.configure(image=self.img2)
+            self.favourite = True
         else:
-            fav_btn.configure(image=AudioControls.img1)
-            AudioControls.favourite = False
+            self.fav_btn.configure(image=self.img1)
+            self.favourite = False
 
-        if AudioControls.Id == "Recent":
-            index = Extra.Recent.index(song)
-            AudioControls.Index = index
-            AudioControls.select_frame(index,Extra.Recent_frames)
+        if self.Id == "Recent":
+            index = self.Extra.Recent.index(song)
+            self.Index = index
+            self.select_frame(index,self.Extra.Recent_frames)
         
-        elif AudioControls.Id == "Playlist":
-            index = Extra.current_playlist_songs_edit.index(f"{song.split('=')[0]}.mp3")
-            AudioControls.Index = index
-            AudioControls.select_frame(index,Extra.playlist_frames)
+        elif self.Id == "Playlist":
+            index = self.Extra.current_playlist_songs_edit.index(f"{song.split('=')[0]}.mp3")
+            self.Index = index
+            self.select_frame(index,self.Extra.playlist_frames)
 
-        play_btn.configure(image= AudioControls.img8)
-        progressbar.configure(state = 'normal')
-        mixer.music.load(AudioControls.current_song_path)
+        self.play_btn.configure(image= self.img8)
+        self.progressbar.configure(state = 'normal')
+        mixer.music.load(self.current_song_path)
         mixer.music.play()
 
-        global MUSIC_END
-        MUSIC_END = USEREVENT + 1
-        mixer.music.set_endevent(MUSIC_END)
+        self.MUSIC_END = USEREVENT + 1
+        mixer.music.set_endevent(self.MUSIC_END)
 
-        previous_btn.configure(command=AudioControls.previous_song)
-        play_btn.configure(command= AudioControls.pause)
-        next_btn.configure(command=AudioControls.next_song)
-        AudioControls.update_progress()
+        self.previous_btn.configure(command=self.previous_song)
+        self.play_btn.configure(command= self.pause)
+        self.next_btn.configure(command=self.next_song)
+        self.update_progress()
     
-    def get_index(song,list):
+    def get_index(self,song,list):
         for i in range(len(list)):
             if i == song:
                 return i
 
 
-    def pause():
+    def pause(self):
         mixer.music.pause()
 
-        play_btn.configure(command= AudioControls.resume)
-        play_btn.configure(image= AudioControls.img7)
+        self.play_btn.configure(command= self.resume)
+        self.play_btn.configure(image= self.img7)
 
-    def resume():
+    def resume(self):
         mixer.music.unpause()
 
-        play_btn.configure(command= AudioControls.pause)
-        play_btn.configure(image= AudioControls.img8)
+        self.play_btn.configure(command= self.pause)
+        self.play_btn.configure(image= self.img8)
     
-    def update_progress():
+    def update_progress(self):
         while mixer.music.get_busy():
-            AudioControls.current_time = mixer.music.get_pos()/1000
-            time = AudioControls.current_time + AudioControls.added_time
+            self.current_time = mixer.music.get_pos()/1000
+            time = self.current_time + self.added_time
             if time < 0:
                 time = 0
-                AudioControls.current_time = 0
-                AudioControls.added_time = 0
+                self.current_time = 0
+                self.added_time = 0
 
-            r_label.configure(text = AudioControls.audio_duration(time))
-            progressbar.set(int(((time/AudioControls.duration)*1000)))
-            App.update()
+            self.r_label.configure(text = self.audio_duration(time))
+            self.progressbar.set(int(((time/self.duration)*1000)))
+            self.App.update()
 
         if mixer.music.get_busy() == False:
-            App.after(500,AudioControls.update_progress)
+            self.App.after(500,self.update_progress)
 
         for i in event.get():
-            if i.type == MUSIC_END:
-                AudioControls.end_song()
+            if i.type == self.MUSIC_END:
+                self.end_song()
 
-    def move_progress(value):
-        AudioControls.current_time = mixer.music.get_pos()/1000
-        x = (AudioControls.current_time/AudioControls.duration)* 1000
-        AudioControls.added_time = (value - x)*(AudioControls.duration/1000)
+    def move_progress(self,value):
+        self.current_time = mixer.music.get_pos()/1000
+        x = (self.current_time/self.duration)* 1000
+        self.added_time = (value - x)*(self.duration/1000)
         
         try:
-            if AudioControls.added_time < 0:
+            if self.added_time < 0:
                 mixer.music.play()
-                mixer.music.set_pos((AudioControls.current_time + AudioControls.added_time))
+                mixer.music.set_pos((self.current_time + self.added_time))
 
             else:
-                mixer.music.set_pos(AudioControls.added_time)
+                mixer.music.set_pos(self.added_time)
 
         except :
-            mixer.music.load(AudioControls.current_song_path)
+            mixer.music.load(self.current_song_path)
             mixer.music.play()
-            mixer.music.set_pos((AudioControls.current_time + AudioControls.added_time))
+            mixer.music.set_pos((self.current_time + self.added_time))
 
-    def next_song():
-        play_btn.configure(image= AudioControls.img8)
+    def next_song(self):
+        self.play_btn.configure(image= self.img8)
 
-        if AudioControls.Id == "Songs":
-            index = Extra.All_songs.index(AudioControls.song_value)
-            if index != len(Extra.All_songs)-1:
+        if self.Id == "Songs":
+            index = self.Extra.All_songs.index(self.song_value)
+            if index != len(self.Extra.All_songs)-1:
                 index = index + 1
             else:
                 index = 0
             
-            name = Extra.All_songs[index]
+            name = self.Extra.All_songs[index]
             value = name.split('=')
             name = value[0].replace('.mp3','')
             path = value[1]
 
-            AudioControls.play_song(path,name)
+            self.play_song(path,name)
 
-        elif AudioControls.Id == "Favourites":
-            AudioControls.select_next_song(Extra.Favourites)
+        elif self.Id == "Favourites":
+            self.select_next_song(self.Extra.Favourites)
             
-        elif AudioControls.Id == "Recent":
-            AudioControls.select_next_song(Extra.Recent)
+        elif self.Id == "Recent":
+            self.select_next_song(self.Extra.Recent)
         
-        elif AudioControls.Id == "Playlist":
-            AudioControls.select_next_song(Extra.current_playlist_songs)
+        elif self.Id == "Playlist":
+            self.select_next_song(self.Extra.current_playlist_songs)
             
-    def select_next_song(song_list):
-        if AudioControls.Index != len(song_list)-1:
-                AudioControls.Index = AudioControls.Index + 1
+    def select_next_song(self,song_list):
+        if self.Index != len(song_list)-1:
+                self.Index = self.Index + 1
         else:
-            AudioControls.Index = 0
+            self.Index = 0
         
-        name = song_list[AudioControls.Index]
+        name = song_list[self.Index]
         value = name.split('=')
         name = value[0].replace('.mp3','')
         path = value[1]
 
-        AudioControls.play_song(path,name)
+        self.play_song(path,name)
 
 
-    def previous_song():
-        if AudioControls.Id == "Songs":
-            index = Extra.All_songs.index(AudioControls.song_value)
+    def previous_song(self):
+        if self.Id == "Songs":
+            index = self.Extra.All_songs.index(self.song_value)
             if index != 0:
                 index = index - 1
             else:
-                index = len(Extra.All_songs)-1
+                index = len(self.Extra.All_songs)-1
 
-            name = Extra.All_songs[index]
+            name = self.Extra.All_songs[index]
             value = name.split('=')
             name = value[0].replace('.mp3','')
             path = value[1]
 
-            AudioControls.play_song(path,name)
-        elif AudioControls.Id == "Favourites":
-            AudioControls.select_previous_song(Extra.Favourites)
+            self.play_song(path,name)
+        elif self.Id == "Favourites":
+            self.select_previous_song(self.Extra.Favourites)
            
-        elif AudioControls.Id == "Recent":
-            AudioControls.select_previous_song(Extra.Recent)
+        elif self.Id == "Recent":
+            self.select_previous_song(self.Extra.Recent)
 
-        elif AudioControls.Id == "Playlist":
-            AudioControls.select_previous_song(Extra.current_playlist_songs)
+        elif self.Id == "Playlist":
+            self.select_previous_song(self.Extra.current_playlist_songs)
 
-    def select_previous_song(song_list):
-        if AudioControls.Index != 0:
-                AudioControls.Index = AudioControls.Index - 1
+    def select_previous_song(self,song_list):
+        if self.Index != 0:
+                self.Index = self.Index - 1
         else:
-            AudioControls.Index = len(song_list)-1
+            self.Index = len(song_list)-1
         
-        name = song_list[AudioControls.Index]
+        name = song_list[self.Index]
         value = name.split('=')
         name = value[0].replace('.mp3','')
         path = value[1]
 
-        AudioControls.play_song(path,name)
+        self.play_song(path,name)
 
-    def end_song():
-        play_btn.configure(image= AudioControls.img8)
-        AudioControls.next_song()
+    def end_song(self):
+        self.play_btn.configure(image= self.img8)
+        self.next_song()
 
-    def select_frame(index,frames):
+    def select_frame(self,index,frames):
         for i in frames:
             for x in i.winfo_children():
                 x.configure(text_color = "white")
@@ -295,50 +290,50 @@ class AudioControls(Control):
         for i in frame.winfo_children():
             i.configure(text_color = "#0967CC")
 
-    def fav_song():
-        if AudioControls.favourite == True:
-            Database.del_favourites(AudioControls.current_song_name,Home)
-            fav_btn.configure(image= AudioControls.img1)
-            AudioControls.favourite = False
+    def fav_song(self):
+        if self.favourite == True:
+            self.Database.del_favourites(self.current_song_name,self.Home)
+            self.fav_btn.configure(image= self.img1)
+            self.favourite = False
         else:
-            Database.add_favourites(AudioControls.current_song_name,AudioControls.current_song_path,Home)
-            fav_btn.configure(image= AudioControls.img2)
-            AudioControls.favourite = True
+            self.Database.add_favourites(self.current_song_name,self.current_song_path,self.Home)
+            self.fav_btn.configure(image= self.img2)
+            self.favourite = True
 
-    def switch_vol():
-        if AudioControls.vol_on == True:
-            vol_btn.configure(image= AudioControls.img4)
-            AudioControls.vol_on = False
+    def switch_vol(self):
+        if self.vol_on == True:
+            self.configure(image= self.img4)
+            self.vol_on = False
             mixer.music.set_volume(0)
         else:
-            vol_btn.configure(image= AudioControls.img3)
-            AudioControls.vol_on = True
-            value = vol_bar.get()
+            self.vol_btn.configure(image= self.img3)
+            self.vol_on = True
+            value = self.vol_bar.get()
             mixer.music.set_volume((value/100))
 
-    def set_vol(value):
-        if AudioControls.vol_on:
+    def set_vol(self,value):
+        if self.vol_on:
             mixer.music.set_volume((value/100))
 
-    def add_to_recent(song):
-        if song in Extra.Recent:
-            index = Extra.Recent.index(song)
-            Extra.Recent.pop(index)
+    def add_to_recent(self,song):
+        if song in self.Extra.Recent:
+            index = self.Extra.Recent.index(song)
+            self.Extra.Recent.pop(index)
 
-        if len(Extra.Recent) > 9:
-            Extra.Recent.pop(9)
+        if len(self.Extra.Recent) > 9:
+            self.Extra.Recent.pop(9)
         
-        Extra.Recent.insert(0,song)
-        Home.configure_rec_page()
+        self.Extra.Recent.insert(0,song)
+        self.Home.configure_rec_page()
     
-    def stop():
+    def stop(self):
         mixer.music.stop()
 
-    def Youtube_mode():
-        controlframe.place_forget()
+    def Youtube_mode(self):
+        self.controlframe.place_forget()
 
-    def Normal_mode():
-        controlframe.place(x=5,y=495)
+    def Normal_mode(self):
+        self.controlframe.place(x=5,y=495)
 
 
 
