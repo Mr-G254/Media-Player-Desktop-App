@@ -144,7 +144,7 @@ class Video():
 
         Y2 = 0
         for i in self.Extra.All_videos:
-            if i.lower().startswith(self.Search.get().lower()) and self.Search.get() != "":
+            if self.Search.get().lower() in i.split(".")[0].lower() and self.Search.get() != "":
                 self.search_results.append(i)
         
         if len(self.Search.get()) > 0:

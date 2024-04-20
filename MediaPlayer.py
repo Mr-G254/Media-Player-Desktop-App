@@ -36,7 +36,7 @@ class HomeUI():
         self.Downloader = Downloader(self.Extra,self.Database)
         self.You_Tube = You_Tube(self.Extra,self.Audioctrl,self.Downloader)        
         
-        self.img0 = CTkImage(Image.open("Icons\\menu.png"),size=(32,32))
+        self.img0 = CTkImage(Image.open("Icons\\menu.png"),size=(28,28))
         self.img1 = CTkImage(Image.open("Icons\\music.png"),size=(24,24))
         self.img2 = CTkImage(Image.open('Icons\\video.png'),size=(24,24))
         self.img3 = CTkImage(Image.open("Icons\\setting.png"),size=(24,24))
@@ -119,7 +119,7 @@ class HomeUI():
         self.Audioctrl.controls(self,self.app,self.Database)
         
     def menu(self):
-        menuframe = CTkFrame(self.frame,height= 250,width=50,fg_color="#510723",corner_radius= 6)
+        menuframe = CTkFrame(self.frame,height= 250,width=51,fg_color="#510723",corner_radius= 6)
         menuframe.place(x=8,y=150)
         
         menubtn = CTkButton(menuframe,height= 35,width= 45,image= self.img0,text = '',corner_radius= 4,fg_color="#510723",anchor= CENTER,command= lambda: [self.Extra.configure_buttons(menubtn, self.Extra.buttons_a),self.home_action()])
@@ -138,9 +138,6 @@ class HomeUI():
         ytbtn = CTkButton(menuframe,height= 35,width= 45,image= self.img4,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [self.Extra.configure_buttons(ytbtn, self.Extra.buttons_a),self.You_Tube.youtube(self.frame,self.app,self.pic,self.name2,self.search,self.clear_btn)])
         ytbtn.place(x= 3,y= 128)
         self.Extra.buttons_a.append(ytbtn)
-        
-        sep = ttk.Separator(menuframe,orient= HORIZONTAL)
-        sep.place(x= 10,y= 166,height=1,width=30)
         
         self.fdbtn = CTkButton(menuframe,height= 35,width= 45,image= self.img5,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [self.Extra.configure_buttons(self.fdbtn, self.Extra.buttons_b),self.Folders.folders(self.frame,self.fdbtn,self.app)])
         self.fdbtn.place(x= 3,y= 173)
@@ -176,7 +173,7 @@ class HomeUI():
         self.home_tab.set("Favourites")
 
     def configure_fav_page(self):
-        fav_frame = CTkScrollableFrame(self.home_tab.tab("Favourites"),height=330,width=655,fg_color="#641E16")
+        fav_frame = CTkScrollableFrame(self.home_tab.tab("Favourites"),height=320,width=650,fg_color="#641E16")
         fav_frame.place(x=0,y=0)
 
         Y3=0
@@ -185,7 +182,7 @@ class HomeUI():
             value = i.split("=")
             name = value[0].replace('.mp3','')
             path = value[1]
-            msc3 = CTkFrame(fav_frame,height=35,width=650,fg_color="#510723",border_color="#0967CC",border_width=0)
+            msc3 = CTkFrame(fav_frame,height=35,width=645,fg_color="#510723",border_color="#0967CC",border_width=0)
             msc3.grid(column= 0,row= Y3,padx= 2,pady= 2)
             msc3.bind('<Enter>',lambda Event, msc3=msc3: self.Extra.highlight(Event,msc3))
             msc3.bind('<Leave>',lambda Event, msc3=msc3: self.Extra.unhighlight(Event,msc3))
@@ -201,7 +198,7 @@ class HomeUI():
             Y3 = Y3 + 1
 
     def configure_rec_page(self):
-        rec_frame = CTkScrollableFrame(self.home_tab.tab("Recent"),height=330,width=655,fg_color="#641E16")
+        rec_frame = CTkScrollableFrame(self.home_tab.tab("Recent"),height=320,width=650,fg_color="#641E16")
         rec_frame.place(x=0,y=0)
 
         Y4=0
@@ -210,7 +207,7 @@ class HomeUI():
             value = i.split("=")
             name = value[0].replace('.mp3','')
             path = value[1]
-            msc4 = CTkFrame(rec_frame,height=35,width=650,fg_color="#510723",border_color="#0967CC",border_width=0)
+            msc4 = CTkFrame(rec_frame,height=35,width=645,fg_color="#510723",border_color="#0967CC",border_width=0)
             msc4.grid(column= 0,row= Y4,padx= 2,pady= 2)
             msc4.bind('<Enter>',lambda Event, msc4=msc4: self.Extra.highlight(Event,msc4))
             msc4.bind('<Leave>',lambda Event, msc4=msc4: self.Extra.unhighlight(Event,msc4))

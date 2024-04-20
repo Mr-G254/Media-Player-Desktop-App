@@ -41,6 +41,12 @@ class Extra():
         
     def unhighlight(self,Event,widget):
         widget.configure(border_width=0)
+
+    def highlightControls(self,Event,widget,icon):
+        widget.configure(image = icon)
+        
+    def unhighlightControls(self,Event,widget,icon):
+        widget.configure(image = icon)
         
     def notify(self,information):
         H= len(information)*10

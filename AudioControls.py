@@ -11,18 +11,22 @@ class AudioControls(Control):
         self.Id = ""
         self.Index = 0
 
-        # init()
         mixer.init()
         mixer.music.set_volume(0.5)
         self.current_song_path = ""
         self.current_song_name = ""
         self.song_value = ""
+        # self.current_song_list = []
 
         self.duration = 0
         self.current_time = 0
         self.added_time = 0
 
         self.Extra = extra
+
+        self.loop = False
+        self.shuffle = False
+        self.loop_end = False
 
     def controls(self,home,app,database):
         self.Home = home
@@ -44,26 +48,35 @@ class AudioControls(Control):
         self.msclabel = CTkLabel(self.controlframe,height= 70,width= 70,image= self.img5,text = '',fg_color=['gray86', 'gray17'],corner_radius= 4,anchor= CENTER)
         self.msclabel.place(x= 5,y= 25)
 
-        self.song_frame = CTkFrame(self.controlframe,height= 40,width= 300,fg_color="#510723")
+        self.song_frame = CTkFrame(self.controlframe,height= 35,width= 300,fg_color="#510723")
         self.song_frame.place(x=85,y=25)
 
-        self.song_name = CTkLabel(self.song_frame,height= 40,width= 100,text = '',fg_color="#510723",font=("TImes",16),anchor= W)
+        self.song_name = CTkLabel(self.song_frame,height= 35,width= 100,text = '',fg_color="#510723",font=("TImes",16),anchor= W)
         self.song_name.place(x=0,y=0)
 
-        self.previous_btn = CTkButton(self.controlframe,text= "",image= self.img6,height= 35,width=35,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0)
+        self.shuffle_btn = CTkButton(self.controlframe,text= "",image= self.img16a,height= 25,width=25,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0)
+        self.shuffle_btn.place(x=380,y=50)
+
+        self.previous_btn = CTkButton(self.controlframe,text= "",image= self.img6a,height= 35,width=35,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0)
         self.previous_btn.place(x=415,y=41)
-        self.previous_btn.bind('<Enter>',lambda Event: self.Extra.highlight(Event,self.previous_btn))
-        self.previous_btn.bind('<Leave>',lambda Event: self.Extra.unhighlight(Event,self.previous_btn))
+        self.previous_btn.bind('<Enter>',lambda Event: self.Extra.highlightControls(Event,self.previous_btn,self.img6b))
+        self.previous_btn.bind('<Leave>',lambda Event: self.Extra.unhighlightControls(Event,self.previous_btn,self.img6a))
 
-        self.play_btn = CTkButton(self.controlframe,text= "",image= self.img7,height= 64,width=64,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0)
+        self.play_btn = CTkButton(self.controlframe,text= "",image= self.img7a,height= 64,width=64,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0)
         self.play_btn.place(x=462,y=25)
-        self.play_btn.bind('<Enter>',lambda Event: self.Extra.highlight(Event,self.play_btn))
-        self.play_btn.bind('<Leave>',lambda Event: self.Extra.unhighlight(Event,self.play_btn))
 
-        self.next_btn = CTkButton(self.controlframe,text= "",image= self.img9,height= 35,width=35,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0)
-        self.next_btn.place(x=540,y=41)
-        self.next_btn.bind('<Enter>',lambda Event: self.Extra.highlight(Event,self.next_btn))
-        self.next_btn.bind('<Leave>',lambda Event: self.Extra.unhighlight(Event,self.next_btn))
+        self.iconNorm = self.img7a
+        self.iconHighlight = self.img7b
+        self.play_btn.bind('<Enter>',lambda Event: self.Extra.highlightControls(Event,self.play_btn,self.iconHighlight))
+        self.play_btn.bind('<Leave>',lambda Event: self.Extra.unhighlightControls(Event,self.play_btn,self.iconNorm))
+
+        self.next_btn = CTkButton(self.controlframe,text= "",image= self.img9a,height= 35,width=35,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0)
+        self.next_btn.place(x=535,y=41)
+        self.next_btn.bind('<Enter>',lambda Event: self.Extra.highlightControls(Event,self.next_btn,self.img9b))
+        self.next_btn.bind('<Leave>',lambda Event: self.Extra.unhighlightControls(Event,self.next_btn,self.img9a))
+
+        self.loop_btn = CTkButton(self.controlframe,text= "",image= self.img17a,height= 25,width=25,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0,command=self.loop_songs)
+        self.loop_btn.place(x=585,y=50)
 
         self.vol_btn = CTkButton(self.controlframe,text= "",image= self.img3,height= 30,width=30,fg_color="#510723",corner_radius= 4,border_color="#510723",hover_color="#510723",border_width=0,command=self.switch_vol)
         self.vol_btn.place(x=830,y=55)
@@ -79,10 +92,8 @@ class AudioControls(Control):
     def select_song(self,Event,file_path,file_name,id):
         self.Id = id
  
-        # try:
         self.play_song(file_path,file_name)
-        # except Exception as e:
-        #     messagebox.showerror("Error",e)
+
 
     def play_song(self,file_path,file_name):
         self.song_value = f"{file_name}.mp3={file_path}"
@@ -112,6 +123,7 @@ class AudioControls(Control):
 
         if song in self.Extra.Favourites:
             if self.Id == "Favourites":
+                self.current_song_list = self.Extra.Favourites
                 index = self.Extra.Favourites.index(song)
                 self.Index = index
                 self.select_frame(index,self.Extra.Favourites_frames)
@@ -123,17 +135,26 @@ class AudioControls(Control):
             self.favourite = False
 
         if self.Id == "Recent":
+            self.current_song_list = self.Extra.Recent
             index = self.Extra.Recent.index(song)
             self.Index = index
             self.select_frame(index,self.Extra.Recent_frames)
         
         elif self.Id == "Playlist":
+            self.current_song_list = self.Extra.Playlist
             index = self.Extra.current_playlist_songs_edit.index(f"{song.split('=')[0]}.mp3")
             self.Index = index
             self.select_frame(index,self.Extra.playlist_frames)
 
-        self.play_btn.configure(image= self.img8)
+        elif self.Id == "Songs":
+            self.current_song_list = self.Extra.All_songs
+
+
+        self.iconNorm = self.img8a
+        self.iconHighlight = self.img8b
+        self.play_btn.configure(image= self.iconNorm)
         self.progressbar.configure(state = 'normal')
+        mixer.music.unload()
         mixer.music.load(self.current_song_path)
         mixer.music.play()
 
@@ -154,14 +175,27 @@ class AudioControls(Control):
     def pause(self):
         mixer.music.pause()
 
+        self.iconNorm = self.img7a
+        self.iconHighlight = self.img7b
         self.play_btn.configure(command= self.resume)
-        self.play_btn.configure(image= self.img7)
+
+        if self.loop_end:
+            self.play_btn.configure(image= self.iconNorm)
+        else:
+            self.play_btn.configure(image= self.iconHighlight)
 
     def resume(self):
-        mixer.music.unpause()
+        if self.loop_end:
+            self.play_song(self.current_song_path,self.current_song_name)
+        else:
+            mixer.music.unpause()
 
-        self.play_btn.configure(command= self.pause)
-        self.play_btn.configure(image= self.img8)
+            self.iconNorm = self.img8a
+            self.iconHighlight = self.img8b
+            self.play_btn.configure(image= self.iconHighlight)
+            self.play_btn.configure(command= self.pause)
+            self.play_btn.configure(image= self.iconHighlight)
+            
     
     def update_progress(self):
         while mixer.music.get_busy():
@@ -202,10 +236,10 @@ class AudioControls(Control):
             mixer.music.set_pos((self.current_time + self.added_time))
 
     def next_song(self):
-        self.play_btn.configure(image= self.img8)
 
         if self.Id == "Songs":
             index = self.Extra.All_songs.index(self.song_value)
+            self.current_song_list = self.Extra.All_songs
             if index != len(self.Extra.All_songs)-1:
                 index = index + 1
             else:
@@ -219,17 +253,20 @@ class AudioControls(Control):
             self.play_song(path,name)
 
         elif self.Id == "Favourites":
+            self.current_song_list = self.Extra.Favourites
             self.select_next_song(self.Extra.Favourites)
             
         elif self.Id == "Recent":
+            self.current_song_list = self.Extra.Recent
             self.select_next_song(self.Extra.Recent)
         
         elif self.Id == "Playlist":
+            self.current_song_list = self.Extra.current_playlist_songs
             self.select_next_song(self.Extra.current_playlist_songs)
             
     def select_next_song(self,song_list):
         if self.Index != len(song_list)-1:
-                self.Index = self.Index + 1
+            self.Index = self.Index + 1
         else:
             self.Index = 0
         
@@ -244,6 +281,7 @@ class AudioControls(Control):
     def previous_song(self):
         if self.Id == "Songs":
             index = self.Extra.All_songs.index(self.song_value)
+            self.current_song_list = self.Extra.All_songs
             if index != 0:
                 index = index - 1
             else:
@@ -256,15 +294,19 @@ class AudioControls(Control):
 
             self.play_song(path,name)
         elif self.Id == "Favourites":
+            self.current_song_list = self.Extra.Favourites
             self.select_previous_song(self.Extra.Favourites)
            
         elif self.Id == "Recent":
+            self.current_song_list = self.Extra.Recent
             self.select_previous_song(self.Extra.Recent)
 
         elif self.Id == "Playlist":
+            self.current_song_list = self.Extra.current_playlist_songs
             self.select_previous_song(self.Extra.current_playlist_songs)
 
     def select_previous_song(self,song_list):
+        self.current_song_list = song_list
         if self.Index != 0:
                 self.Index = self.Index - 1
         else:
@@ -278,8 +320,29 @@ class AudioControls(Control):
         self.play_song(path,name)
 
     def end_song(self):
-        self.play_btn.configure(image= self.img8)
-        self.next_song()
+        self.iconNorm = self.img8a
+        self.iconHighlight = self.img8b
+        self.play_btn.configure(image= self.iconNorm)
+
+        try:
+            index = self.current_song_list.index(self.song_value)
+        except:
+            for i in self.current_song_list:
+                if i.startswith(self.song_value.split("=")[0].split(".")[0]):
+                    index = self.current_song_list.index(i)
+                    break
+
+        if index == len(self.current_song_list)-1:
+            if self.loop == True:
+                self.loop_end = False
+                self.next_song()
+            else:
+                self.loop_end = True
+                self.pause()
+        
+        else:
+            self.loop_end = False
+            self.next_song()
 
     def select_frame(self,index,frames):
         for i in frames:
@@ -296,9 +359,11 @@ class AudioControls(Control):
             self.fav_btn.configure(image= self.img1)
             self.favourite = False
         else:
-            self.Database.add_favourites(self.current_song_name,self.current_song_path,self.Home)
-            self.fav_btn.configure(image= self.img2)
-            self.favourite = True
+
+            if len(self.current_song_name) > 0:
+                self.Database.add_favourites(self.current_song_name,self.current_song_path,self.Home)
+                self.fav_btn.configure(image= self.img2)
+                self.favourite = True
 
     def switch_vol(self):
         if self.vol_on == True:
@@ -334,6 +399,14 @@ class AudioControls(Control):
 
     def Normal_mode(self):
         self.controlframe.place(x=5,y=495)
+
+    def loop_songs(self):
+        if self.loop:
+            self.loop = False
+            self.loop_btn.configure(image=self.img17a)
+        else:
+            self.loop = True
+            self.loop_btn.configure(image=self.img17b)
 
 
 

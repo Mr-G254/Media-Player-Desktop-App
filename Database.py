@@ -131,7 +131,6 @@ class Database():
 
     def load_songs(self):
         self.Extra.All_songs.clear()
-        self.Extra.All_songs.clear()
         self.Extra.All_videos.clear()
 
         for i in self.Extra.Folders:

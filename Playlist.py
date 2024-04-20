@@ -30,7 +30,7 @@ class Playlist():
         add_playlist.bind('<Enter>',lambda Event: self.Extra.highlight(Event,add_playlist))
         add_playlist.bind('<Leave>',lambda Event: self.Extra.unhighlight(Event,add_playlist))
 
-        self.play_frame = CTkScrollableFrame(master,height=295,width=155,fg_color="#641E16")
+        self.play_frame = CTkScrollableFrame(master,height=285,width=155,fg_color="#641E16")
         self.play_frame.place(x=0,y=35)
 
         self.add_songs = CTkButton(self.frame,image=self.img0,compound=LEFT,text='',width=26,height=26,corner_radius=4,fg_color="#770B33",hover_color="#770B33",border_color="#0967CC",border_width=0)
@@ -46,7 +46,7 @@ class Playlist():
         self.del_playlist.bind('<Enter>',lambda Event: self.Extra.highlight(Event,self.del_playlist))
         self.del_playlist.bind('<Leave>',lambda Event: self.Extra.unhighlight(Event,self.del_playlist))
 
-        self.song_frame = CTkScrollableFrame(self.frame,height=295,width=480,fg_color="#641E16")
+        self.song_frame = CTkScrollableFrame(self.frame,height=285,width=475,fg_color="#641E16")
         self.song_frame.place(x=175,y=35)
 
         self.show_playlists()
@@ -232,7 +232,7 @@ class Playlist():
             value = i.split("=")
             name = value[0].replace('.mp3','')
             path = value[1]
-            msc4 = CTkFrame(self.song_frame,height=35,width=475,fg_color="#510723",border_color="#0967CC",border_width=0)
+            msc4 = CTkFrame(self.song_frame,height=35,width=470,fg_color="#510723",border_color="#0967CC",border_width=0)
             msc4.grid(column= 0,row= Y5,padx= 2,pady= 2)
             msc4.bind('<Enter>',lambda Event, msc4=msc4: self.Extra.highlight(Event,msc4))
             msc4.bind('<Leave>',lambda Event, msc4=msc4: self.Extra.unhighlight(Event,msc4))

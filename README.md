@@ -29,3 +29,6 @@ In this project Python has been used to create an application that not only play
 - ` Spacebar ` - play or pause video
 - ` Right arrow ` - fast forward the video 
 - ` Left arrow ` - rewind the video
+
+### Credit
+All icons have been provided by [FlatIcon](https://www.flaticon.com/)
