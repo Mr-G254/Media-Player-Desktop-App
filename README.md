@@ -10,6 +10,7 @@ In this project Python has been used to create an application that not only play
  ``` 
   pip3 install -r requirements.txt 
   ```
+Run ` MediaPlayer.py ` to start the app. Enjoy!
 
 ## **Overview**
 ![Home](Screenshots/playlist.PNG)
