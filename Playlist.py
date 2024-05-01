@@ -132,7 +132,7 @@ class Playlist():
         self.entry = CTkEntry(entry_frame,height=27,width=140,font=('Times',14),corner_radius=5,fg_color=['gray86', 'gray17'],border_width=0)
         self.entry.place(x=47,y=2)
 
-        add2 = CTkButton(entry_frame,image=self.img0,text="",width=22,height=30,corner_radius=4,fg_color="#770B33",hover_color="#770B33",command= lambda: self.add_playlist())
+        add2 = CTkButton(entry_frame,image=self.img0,text="",width=22,height=30,corner_radius=4,fg_color="#770B33",hover_color="#770B33",command= lambda song_title=song_title,path=path: self.add_playlist(song_title,path))
         add2.place(x=187,y=0)
 
         self.playlist_frame = CTkScrollableFrame(frame,width=535,height=200,fg_color="#641E16")
@@ -140,7 +140,7 @@ class Playlist():
 
         self.show_playlist_toplevel(song_title,path)
 
-    def show_playlist_toplevel(self,song,path):
+    def show_playlist_toplevel(self,song="",path=""):
         X = 0
         Y = 0
         for i in self.Extra.Playlist:
@@ -185,14 +185,14 @@ class Playlist():
             else:
                 self.playlist_labels[i].configure(fg_color="#510723")
 
-    def add_playlist(self):
+    def add_playlist(self,song="",path=""):
         playlist = str(self.entry.get())
 
         if playlist and playlist.capitalize() not in self.Extra.Playlist:
 
             self.Database.create_playlist(playlist)
             self.update_playlist_page()
-            self.show_playlist_toplevel("","")
+            self.show_playlist_toplevel(song,path)
             self.entry.delete(0,END)
         else:
             messagebox.showinfo("Can't create playlist",f"The playlist '{playlist.capitalize()}' already exists",parent=self.window)
@@ -301,7 +301,7 @@ class Playlist():
             index = self.Extra.songs_added.index(f"{name}.mp3={path}")
             self.Extra.songs_added.pop(index)
 
-        self.done_btn.configure(text=f"Done ({str(len(Extra.songs_added))})")
+        self.done_btn.configure(text=f"Done ({str(len(self.Extra.songs_added))})")
 
     def done(self,playlist_name):
         self.Database.add_songs_to_playlist(playlist_name)

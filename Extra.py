@@ -16,16 +16,22 @@ class Extra():
         self.Playlist = []
         self.current_playlist_songs = []
         self.current_playlist_songs_edit = []
+        self.current_playlist_played_songs = []
         self.playlist_frames = []
         self.songs_added = []
 
+        self.shuffle_list = []
+
         self.Recent = []
+        self.Recent_played_songs = []
         self.Recent_frames = []
 
         self.Favourites = []
+        self.Favourites_played_songs = []
         self.Favourites_frames = []
         
         self.All_songs = []
+        self.All_songs_played = []
         self.song_frames = []
 
         self.All_videos = []

@@ -1,6 +1,5 @@
 # **Media-Player-Desktop-App**
 In this project Python has been used to create an application that not only plays video and audio but also downloads videos and audios from You Tube. Try it out and feel free to write a review.
-**Email:** Gikuhiezekiel@gmail.com
 
 ## **Installation**
 **Note:** This program has only been tested in Windows and also ensure that you download the vlc 64 bit version using the link provided below.
@@ -30,6 +29,11 @@ Run ` MediaPlayer.py ` to start the app. Enjoy!
 - ` Spacebar ` - play or pause video
 - ` Right arrow ` - fast forward the video 
 - ` Left arrow ` - rewind the video
+
+### Improvements
+- Better UI
+- Addition of a loop feature
+- Addition of a shuffle feature
 
 ### Credit
 All icons have been provided by [FlatIcon](https://www.flaticon.com/)

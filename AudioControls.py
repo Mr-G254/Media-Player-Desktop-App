@@ -3,6 +3,7 @@ from customtkinter import*
 from pygame import mixer,USEREVENT,event
 from Extra import Extra
 from mutagen.mp4 import MP4
+from random import randint
 
 class AudioControls(Control):
     def __init__(self,extra: Extra):
@@ -16,6 +17,7 @@ class AudioControls(Control):
         self.current_song_path = ""
         self.current_song_name = ""
         self.song_value = ""
+        self.shuffle = False
         # self.current_song_list = []
 
         self.duration = 0
@@ -54,7 +56,7 @@ class AudioControls(Control):
         self.song_name = CTkLabel(self.song_frame,height= 35,width= 100,text = '',fg_color="#510723",font=("TImes",16),anchor= W)
         self.song_name.place(x=0,y=0)
 
-        self.shuffle_btn = CTkButton(self.controlframe,text= "",image= self.img16a,height= 25,width=25,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0)
+        self.shuffle_btn = CTkButton(self.controlframe,text= "",image= self.img16a,height= 25,width=25,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0,command=self.shuffle_songs)
         self.shuffle_btn.place(x=380,y=50)
 
         self.previous_btn = CTkButton(self.controlframe,text= "",image= self.img6a,height= 35,width=35,fg_color="#510723",hover_color="#510723",corner_radius= 4,border_color="#0967CC",border_width=0)
@@ -124,6 +126,7 @@ class AudioControls(Control):
         if song in self.Extra.Favourites:
             if self.Id == "Favourites":
                 self.current_song_list = self.Extra.Favourites
+                self.current_played_song_list = self.Extra.Favourites_played_songs
                 index = self.Extra.Favourites.index(song)
                 self.Index = index
                 self.select_frame(index,self.Extra.Favourites_frames)
@@ -136,19 +139,24 @@ class AudioControls(Control):
 
         if self.Id == "Recent":
             self.current_song_list = self.Extra.Recent
+            self.current_played_song_list = self.Extra.Recent_played_songs
             index = self.Extra.Recent.index(song)
             self.Index = index
             self.select_frame(index,self.Extra.Recent_frames)
         
         elif self.Id == "Playlist":
             self.current_song_list = self.Extra.Playlist
+            self.current_played_song_list = self.Extra.current_playlist_played_songs
             index = self.Extra.current_playlist_songs_edit.index(f"{song.split('=')[0]}.mp3")
             self.Index = index
             self.select_frame(index,self.Extra.playlist_frames)
 
         elif self.Id == "Songs":
             self.current_song_list = self.Extra.All_songs
+            self.current_played_song_list = self.Extra.All_songs_played
 
+        if f"{self.current_song_name}.mp3={self.current_song_path}" not in self.current_played_song_list:
+            self.current_played_song_list.append(f"{self.current_song_name}.mp3={self.current_song_path}")
 
         self.iconNorm = self.img8a
         self.iconHighlight = self.img8b
@@ -238,12 +246,18 @@ class AudioControls(Control):
     def next_song(self):
 
         if self.Id == "Songs":
-            index = self.Extra.All_songs.index(self.song_value)
             self.current_song_list = self.Extra.All_songs
-            if index != len(self.Extra.All_songs)-1:
-                index = index + 1
+            self.current_played_song_list = self.Extra.All_songs_played
+
+            index = 0
+            if self.shuffle:
+                index = self.get_random_index()
             else:
-                index = 0
+                index = self.Extra.All_songs.index(self.song_value)
+                if index != len(self.Extra.All_songs)-1:
+                    index = index + 1
+                else:
+                    index = 0
             
             name = self.Extra.All_songs[index]
             value = name.split('=')
@@ -254,21 +268,27 @@ class AudioControls(Control):
 
         elif self.Id == "Favourites":
             self.current_song_list = self.Extra.Favourites
+            self.current_played_song_list = self.Extra.Favourites_played_songs
             self.select_next_song(self.Extra.Favourites)
             
         elif self.Id == "Recent":
             self.current_song_list = self.Extra.Recent
+            self.current_played_song_list = self.Extra.Recent_played_songs
             self.select_next_song(self.Extra.Recent)
         
         elif self.Id == "Playlist":
             self.current_song_list = self.Extra.current_playlist_songs
+            self.current_played_song_list = self.Extra.current_playlist_played_songs
             self.select_next_song(self.Extra.current_playlist_songs)
             
     def select_next_song(self,song_list):
-        if self.Index != len(song_list)-1:
-            self.Index = self.Index + 1
+        if self.shuffle:
+            self.Index = self.get_random_index()
         else:
-            self.Index = 0
+            if self.Index != len(song_list)-1:
+                self.Index = self.Index + 1
+            else:
+                self.Index = 0
         
         name = song_list[self.Index]
         value = name.split('=')
@@ -280,12 +300,24 @@ class AudioControls(Control):
 
     def previous_song(self):
         if self.Id == "Songs":
-            index = self.Extra.All_songs.index(self.song_value)
             self.current_song_list = self.Extra.All_songs
-            if index != 0:
-                index = index - 1
+            self.current_played_song_list = self.Extra.All_songs_played
+
+            if self.shuffle:
+                indx = self.current_played_song_list.index(f"{self.current_song_name}.mp3={self.current_song_path}")
+
+                if indx > 0:
+                    song = self.current_played_song_list[indx - 1]
+                    index = self.Extra.All_songs.index(song)
+                else:
+                    index = self.get_random_index()
+
             else:
-                index = len(self.Extra.All_songs)-1
+                index = self.Extra.All_songs.index(self.song_value)
+                if index != 0:
+                    index = index - 1
+                else:
+                    index = len(self.Extra.All_songs)-1
 
             name = self.Extra.All_songs[index]
             value = name.split('=')
@@ -295,22 +327,44 @@ class AudioControls(Control):
             self.play_song(path,name)
         elif self.Id == "Favourites":
             self.current_song_list = self.Extra.Favourites
+            self.current_played_song_list = self.Extra.Favourites_played_songs
             self.select_previous_song(self.Extra.Favourites)
            
         elif self.Id == "Recent":
             self.current_song_list = self.Extra.Recent
+            self.current_played_song_list = self.Extra.Recent_played_songs
             self.select_previous_song(self.Extra.Recent)
 
         elif self.Id == "Playlist":
             self.current_song_list = self.Extra.current_playlist_songs
+            self.current_played_song_list = self.Extra.current_playlist_played_songs
             self.select_previous_song(self.Extra.current_playlist_songs)
 
     def select_previous_song(self,song_list):
         self.current_song_list = song_list
-        if self.Index != 0:
-                self.Index = self.Index - 1
+
+        if self.shuffle:
+            indx = self.current_played_song_list.index(f"{self.current_song_name}.mp3={self.current_song_path}")
+
+            if indx > 0:
+                song = self.current_played_song_list[indx - 1]
+
+                try:
+                    self.Index = self.current_song_list.index(song)
+                except:
+
+                    for i in self.current_song_list:
+                        if i.startswith(song.split("=")[0].split(".")[0]):
+                            self.Index = self.current_song_list.index(i)
+                            break
+
+            else:
+                self.Index = self.get_random_index()
         else:
-            self.Index = len(song_list)-1
+            if self.Index != 0:
+                    self.Index = self.Index - 1
+            else:
+                self.Index = len(song_list)-1
         
         name = song_list[self.Index]
         value = name.split('=')
@@ -324,13 +378,17 @@ class AudioControls(Control):
         self.iconHighlight = self.img8b
         self.play_btn.configure(image= self.iconNorm)
 
-        try:
-            index = self.current_song_list.index(self.song_value)
-        except:
-            for i in self.current_song_list:
-                if i.startswith(self.song_value.split("=")[0].split(".")[0]):
-                    index = self.current_song_list.index(i)
-                    break
+        if self.shuffle:
+            index = self.get_random_index()
+        
+        else:
+            try:
+                index = self.current_song_list.index(self.song_value)
+            except:
+                for i in self.current_song_list:
+                    if i.startswith(self.song_value.split("=")[0].split(".")[0]):
+                        index = self.current_song_list.index(i)
+                        break
 
         if index == len(self.current_song_list)-1:
             if self.loop == True:
@@ -407,6 +465,37 @@ class AudioControls(Control):
         else:
             self.loop = True
             self.loop_btn.configure(image=self.img17b)
+
+    def shuffle_songs(self):
+        if self.shuffle == False:
+            self.shuffle = True
+            self.shuffle_btn.configure(image= self.img16b)
+        else:
+            self.shuffle = False
+            self.shuffle_btn.configure(image= self.img16a)
+            self.current_played_song_list.clear()
+
+    def get_random_index(self):
+        index = 0
+        if len(self.current_song_list) == len(self.current_played_song_list):
+            self.current_played_song_list.clear()
+
+            if self.loop == False:
+                index = len(self.current_song_list) - 1
+            else:
+                self.get_random_index()
+
+        else:
+            index = randint(0,len(self.current_song_list)-1)
+
+            while self.current_song_list[index] in self.current_played_song_list:
+                index = randint(0,len(self.current_song_list)-1)
+            
+            # self.current_played_song_list.append(self.current_song_list[index])
+
+        return index
+
+
 
 
 
