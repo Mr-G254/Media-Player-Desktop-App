@@ -22,35 +22,22 @@ class Music():
         self.App = app
         
         self.Search = search
-        self.Search.unbind('<KeyRelease>')
-        self.Search.bind('<KeyRelease>',lambda Event: self.search_song(Event))
-
         self.Clear_btn = clear_btn
-        self.Clear_btn.configure(command= self.clear_entry)
-
-        self.Extra.close_small_frames()
-        b.place_forget()
-        c.configure(image=self.img0)
-        c.place(x= 5,y= 5)
+        self.icona = b
+        self.iconb = c
+    
         self.App.update()
 
-        if self.Extra.Music_frame != '':
-            self.Extra.configure_frames(self.Extra.Music_frame, self.Extra.frames_a)
-            self.Extra.Music_frame.place(x= 60,y= 105)
+        self.music_page = CTkFrame(frame,height= 385,width= 965,fg_color="#781F15",corner_radius= 6)
+        self.Extra.Music_frame = self.music_page
+        
+        if self.music_page in self.Extra.frames_a:
+            pass
         else:
-            self.music_page = CTkFrame(frame,height= 385,width= 965,fg_color="#781F15",corner_radius= 6)
-            self.Extra.Music_frame = self.music_page
+            self.Extra.frames_a.append(self.music_page)
             
-            if self.music_page in self.Extra.frames_a:
-                pass
-            else:
-                self.Extra.frames_a.append(self.music_page)
-                
-            self.Extra.configure_frames(self.music_page, self.Extra.frames_a)
-            self.music_page.place(x= 60,y= 105)
-
-            
-            self.show_all_songs()
+       
+        self.show_all_songs()
 
     def show_all_songs(self):
         music_frame = CTkScrollableFrame(self.music_page,height= 380,width= 945,fg_color="#781F15",corner_radius= 6)
@@ -155,6 +142,19 @@ class Music():
         self.Search.delete(0,END)
         self.search_frame.place_forget()
         self.Clear_btn.place_forget()
+
+    def display(self):
+        self.Extra.configure_frames(self.Extra.Music_frame, self.Extra.frames_a)
+        self.Extra.Music_frame.place(x= 60,y= 105)
+
+        self.Search.unbind('<KeyRelease>')
+        self.Search.bind('<KeyRelease>',lambda Event: self.search_song(Event))
+        self.Clear_btn.configure(command= self.clear_entry)
+
+        self.Extra.close_small_frames()
+        self.icona.place_forget()
+        self.iconb.configure(image=self.img0)
+        self.iconb.place(x= 5,y= 5)
 
 
 

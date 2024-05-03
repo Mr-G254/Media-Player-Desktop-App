@@ -11,6 +11,7 @@ class AudioControls(Control):
         self.vol_on = True
         self.Id = ""
         self.Index = 0
+        self.on_start = True
 
         mixer.init()
         mixer.music.set_volume(0.5)
@@ -89,6 +90,22 @@ class AudioControls(Control):
 
         self.fav_btn = CTkButton(self.controlframe,text= "",image= self.img1,height= 30,width=30,fg_color="#510723",corner_radius= 4,border_color="#510723",hover_color="#510723",border_width=0,command=self.fav_song)
         self.fav_btn.place(x=975,y=55)
+
+        self.restore_last_song()
+
+    def restore_last_song(self):
+        try:
+            song = self.Extra.Recent[0]
+        except:
+            song = self.Extra.All_songs[0]
+
+        values = song.split("=")
+        name = values[0].split(".")[0]
+        path = values[1]
+        self.Id = "Songs"
+        
+        self.song_name.configure(text=name)
+        self.play_btn.configure(command=lambda: self.play_song(path,name))
        
 
     def select_song(self,Event,file_path,file_name,id):
@@ -173,6 +190,8 @@ class AudioControls(Control):
         self.play_btn.configure(command= self.pause)
         self.next_btn.configure(command=self.next_song)
         self.update_progress()
+
+       
     
     def get_index(self,song,list):
         for i in range(len(list)):
@@ -253,7 +272,14 @@ class AudioControls(Control):
             if self.shuffle:
                 index = self.get_random_index()
             else:
-                index = self.Extra.All_songs.index(self.song_value)
+                try:
+                    index = self.Extra.All_songs.index(self.song_value)
+                except:
+                    for i in self.Extra.All_songs:
+                        if i.startswith(self.song_value.split("=")[0].split(".")[0]):
+                            index = self.current_song_list.index(i)
+                            break
+
                 if index != len(self.Extra.All_songs)-1:
                     index = index + 1
                 else:

@@ -22,37 +22,22 @@ class Video():
         self.AudioControls.Normal_mode()
         
         self.Search = search
-        self.Search.unbind('<KeyRelease>')
-        self.Search.bind('<KeyRelease>',lambda Event: self.search_video(Event))
-
         self.Clear_btn = clear_btn
-        self.Clear_btn.configure(command= self.clear_entry)
-
         self.App = app
-
-        self.Extra.close_small_frames()
-        b.place_forget()
-        c.configure(image=self.img0)
-        c.place(x= 5,y= 5)
+        self.icona = b
+        self.iconb = c
+        
         self.App.update()
 
-        if self.Extra.Video_frame != '':
-            self.Extra.configure_frames(self.Extra.Video_frame, self.Extra.frames_a)
-            self.Extra.Video_frame.place(x= 60,y= 105)
+        self.video_page = CTkFrame(frame,height= 385,width= 965,fg_color="#781F15",corner_radius= 6)
+        self.Extra.Video_frame = self.video_page
+        
+        if self.video_page in self.Extra.frames_a:
+            pass
         else:
+            self.Extra.frames_a.append(self.video_page)
 
-            self.video_page = CTkFrame(frame,height= 385,width= 965,fg_color="#781F15",corner_radius= 6)
-            self.Extra.Video_frame = self.video_page
-            
-            if self.video_page in self.Extra.frames_a:
-                pass
-            else:
-                self.Extra.frames_a.append(self.video_page)
-                
-            self.Extra.configure_frames(self.video_page, self.Extra.frames_a)
-            self.video_page.place(x= 60,y= 105)
-
-            self.show_all_videos()
+        self.show_all_videos()
 
     def show_all_videos(self):
         video_frame = CTkScrollableFrame(self.video_page,height= 380,width= 945,fg_color="#781F15",corner_radius= 6)
@@ -185,6 +170,19 @@ class Video():
         self.Search.delete(0,END)
         self.search_frame.place_forget()
         self.Clear_btn.place_forget()
+
+    def display(self):
+        self.Extra.configure_frames(self.Extra.Video_frame, self.Extra.frames_a)
+        self.Extra.Video_frame.place(x= 60,y= 105)
+
+        self.Search.unbind('<KeyRelease>')
+        self.Search.bind('<KeyRelease>',lambda Event: self.search_video(Event))
+        self.Clear_btn.configure(command= self.clear_entry)
+
+        self.Extra.close_small_frames()
+        self.icona.place_forget()
+        self.iconb.configure(image=self.img0)
+        self.iconb.place(x= 5,y= 5)
 
     def on_closing(self):
         print("ye")

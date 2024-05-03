@@ -117,21 +117,23 @@ class HomeUI():
 
         self.menu()
         self.Audioctrl.controls(self,self.app,self.Database)
+        self.Music.music(self.frame,self.app,self.pic,self.name2,self.search,self.clear_btn)
+        self.Video.video(self.frame,self.app,self.pic,self.name2,self.search,self.clear_btn)
         
     def menu(self):
         menuframe = CTkFrame(self.frame,height= 250,width=51,fg_color="#510723",corner_radius= 6)
         menuframe.place(x=8,y=150)
         
-        menubtn = CTkButton(menuframe,height= 35,width= 45,image= self.img0,text = '',corner_radius= 4,fg_color="#510723",anchor= CENTER,command= lambda: [self.Extra.configure_buttons(menubtn, self.Extra.buttons_a),self.home_action()])
+        menubtn = CTkButton(menuframe,height= 35,width= 45,image= self.img0,text = '',corner_radius= 4,fg_color="#510723",anchor= CENTER,command= lambda: [self.Extra.configure_buttons(menubtn, self.Extra.buttons_a),self.home_action(),self.Audioctrl.Normal_mode()])
         menubtn.place(x= 3,y= 3)
         menubtn.configure(fg_color= "#0967CC",state= DISABLED)
         self.Extra.buttons_a.append(menubtn)
         
-        mscbtn = CTkButton(menuframe,height= 35,width= 45,image= self.img1,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [self.Extra.configure_buttons(mscbtn, self.Extra.buttons_a),self.Music.music(self.frame,self.app,self.pic,self.name2,self.search,self.clear_btn)])
+        mscbtn = CTkButton(menuframe,height= 35,width= 45,image= self.img1,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [self.Extra.configure_buttons(mscbtn, self.Extra.buttons_a),self.Music.display(),self.Audioctrl.Normal_mode()])
         mscbtn.place(x= 3,y= 48)
         self.Extra.buttons_a.append(mscbtn)
         
-        vdbtn = CTkButton(menuframe,height= 35,width= 45,image= self.img2,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [self.Extra.configure_buttons(vdbtn, self.Extra.buttons_a),self.Video.video(self.frame,self.app,self.pic,self.name2,self.search,self.clear_btn)])
+        vdbtn = CTkButton(menuframe,height= 35,width= 45,image= self.img2,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [self.Extra.configure_buttons(vdbtn, self.Extra.buttons_a),self.Video.display(),self.Audioctrl.Normal_mode()])
         vdbtn.place(x= 3,y= 88)
         self.Extra.buttons_a.append(vdbtn)
         
@@ -143,7 +145,7 @@ class HomeUI():
         self.fdbtn.place(x= 3,y= 173)
         self.Extra.buttons_b.append(self.fdbtn)
         
-        self.stbtn = CTkButton(menuframe,height= 35,width= 45,image= self.img3,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [self.Extra.configure_buttons(self.stbtn, self.Extra.buttons_b),self.Settings.settings(self.frame,self.stbtn,self.app)])
+        self.stbtn = CTkButton(menuframe,height= 35,width= 45,image= self.img3,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [self.Extra.configure_buttons(self.stbtn, self.Extra.buttons_b),self.Settings.settings(self.frame,self.stbtn,self.app),self.Audioctrl.Normal_mode()])
         self.stbtn.place(x= 3,y= 213)
         self.Extra.buttons_b.append(self.stbtn)  
         

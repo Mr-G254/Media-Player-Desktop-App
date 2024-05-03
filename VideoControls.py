@@ -81,7 +81,7 @@ class VideoControls(Control):
         self.App.update()
 
         # Window.bind('<Configure>',lambda Event: self.reconfigure_widgets(Event))
-        self.Window.resizable(False,False)
+        # self.Window.resizable(False,False)
         self.Window.bind('<space>',self.spacebar)
         self.Window.bind('<Right>',self.right_arrow)
         self.Window.bind('<Left>',self.left_arrow)

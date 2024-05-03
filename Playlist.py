@@ -10,7 +10,7 @@ class Playlist():
         self.img1 = CTkImage(Image.open("Icons\playlist_thumbnail.png"),size=(100,100))
         self.img2 = CTkImage(Image.open("Icons\playlist_thumbnail.png"),size=(22,22))
         self.img3 = CTkImage(Image.open("Icons\\reject.png"),size=(20,20))
-        self.img4 = CTkImage(Image.open("Icons\delete.png"),size=(20,20))
+        self.img4 = CTkImage(Image.open("Icons\delete.png"),size=(17,17))
 
         self.frame = ''
         self.current_playlist = ''
@@ -57,30 +57,36 @@ class Playlist():
         for i in self.Extra.Playlist:
             name = i
 
-            playlist = CTkFrame(self.play_frame,width=150,height=155,corner_radius=8,fg_color="#510723",border_color="#0967CC",border_width=0)
+            playlist = CTkFrame(self.play_frame,width=151,height=155,corner_radius=6,fg_color="#510723",border_color="#0967CC",border_width=0)
             playlist.grid(column=0,row=Y,pady=5)
             playlist.bind('<Enter>',lambda Event, playlist=playlist: self.Extra.highlight(Event,playlist))
             playlist.bind('<Leave>',lambda Event, playlist=playlist: self.Extra.unhighlight(Event,playlist))
             playlist.bind('<Button-1>',lambda Event, name=name, Y=Y: [self.select_playlist(Y),self.fetch_current_playlist_songs(Event,name)])
 
-            img_label = CTkLabel(playlist,text='',image=self.img1,width=144,height=120,corner_radius=8,fg_color="#770B33")
+            img_label = CTkLabel(playlist,text='',image=self.img1,width=144,height=120,corner_radius=6,fg_color="#770B33")
             img_label.place(x=3,y=3)
             img_label.bind('<Enter>',lambda Event, playlist=playlist: self.Extra.highlight(Event,playlist))
             img_label.bind('<Leave>',lambda Event, playlist=playlist: self.Extra.unhighlight(Event,playlist))
             img_label.bind('<Button-1>',lambda Event, name=name, Y=Y: [self.select_playlist(Y),self.fetch_current_playlist_songs(Event,name)])
 
-            frame = CTkFrame(playlist,width=130,height=20,fg_color="#510723",corner_radius=5)
+            frame = CTkFrame(playlist,width=130,height=20,fg_color="#510723",corner_radius=4)
             frame.place(x=5,y=130)
             frame.bind('<Enter>',lambda Event, playlist=playlist: self.Extra.highlight(Event,playlist))
             frame.bind('<Leave>',lambda Event, playlist=playlist: self.Extra.unhighlight(Event,playlist))
             frame.bind('<Button-1>',lambda Event, name=name, Y=Y: [self.select_playlist(Y),self.fetch_current_playlist_songs(Event,name)])
 
-            play_name = CTkLabel(frame,height=20,text=name,fg_color="#510723",font=("Times",16),corner_radius=5)
+            play_name = CTkLabel(frame,height=20,text=name,fg_color="#510723",font=("Times",16),corner_radius=4)
             play_name.place(x=0,y=0)
             play_name.bind('<Enter>',lambda Event, playlist=playlist: self.Extra.highlight(Event,playlist))
             play_name.bind('<Leave>',lambda Event, playlist=playlist: self.Extra.unhighlight(Event,playlist))
             play_name.bind('<Button-1>',lambda Event, name=name, Y=Y: [self.select_playlist(Y),self.fetch_current_playlist_songs(Event,name)])
             self.playlist_labels.append(play_name)
+
+            del_playlist = CTkButton(playlist,image=self.img4,compound=LEFT,text='',width=24,height=24,corner_radius=4,fg_color="#770B33",hover_color="#770B33",border_color="#0967CC",border_width=0)
+            del_playlist.place(x=119,y=127)
+            del_playlist.bind('<Enter>',lambda Event: self.Extra.highlight(Event,self.del_playlist))
+            del_playlist.bind('<Leave>',lambda Event: self.Extra.unhighlight(Event,self.del_playlist))
+
 
             if Y == 0:
                 self.select_playlist(Y)
@@ -246,7 +252,7 @@ class Playlist():
             lb4.bind('<Button-1>',lambda Event, path=path, name=name: self.AudioControls.select_song(Event,path,name,"Playlist"))
 
             del_song = CTkButton(msc4,image=self.img4,compound=LEFT,text='',width=26,height=28,corner_radius=4,fg_color="#510723",hover_color="#510723",command=lambda name=name: self.del_song_from_playlist(name,playlist_name))
-            del_song.place(x=440,y=2)
+            del_song.place(x=435,y=2)
 
             Y5 = Y5 + 1
 

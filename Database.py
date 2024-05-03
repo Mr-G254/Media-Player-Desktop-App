@@ -45,8 +45,9 @@ class Database():
         self.Extra.Folders.clear()
         folder = self.db.execute('SELECT* FROM Folders;')
         for i in folder:
-            value = str(i[0]) + "=" + str(i[1]) + "=" + str(i[2])
-            self.Extra.Folders.append(value)
+            if os.path.exists(str(i[2])):
+                value = str(i[0]) + "=" + str(i[1]) + "=" + str(i[2])
+                self.Extra.Folders.append(value)
 
         self.Extra.Folders.sort()
 
@@ -54,8 +55,9 @@ class Database():
         self.Extra.Recent.clear()
         recent = self.db.execute('SELECT* FROM Recent;')
         for i in recent:
-            value = str(i[1]) + "=" + str(i[2])
-            self.Extra.Recent.append(value)
+            if os.path.exists(str(i[2])):
+                value = str(i[1]) + "=" + str(i[2])
+                self.Extra.Recent.append(value)
 
     def upload_recent(self):
         self.db.execute("DROP TABLE Recent;")
@@ -88,8 +90,9 @@ class Database():
         self.Extra.Favourites.clear()
         favourites = self.db.execute('SELECT* FROM Favourites;')
         for i in favourites:
-            value = str(i[1]) + "=" + str(i[2])
-            self.Extra.Favourites.append(value)
+            if os.path.exists(str(i[2])):
+                value = str(i[1]) + "=" + str(i[2])
+                self.Extra.Favourites.append(value)
         
         try:
             self.Home.configure_fav_page()
@@ -203,8 +206,9 @@ class Database():
         self.Extra.current_playlist_songs.clear()
         self.Extra.current_playlist_songs_edit.clear()
         for i in self.db.execute(f"SELECT * from '{playlist_name}=playlist';"):
-            self.Extra.current_playlist_songs.append(f"{i[1]}={i[2]}")
-            self.Extra.current_playlist_songs_edit.append(f"{i[1]}")
+            if os.path.exists(str(i[2])):
+                self.Extra.current_playlist_songs.append(f"{i[1]}={i[2]}")
+                self.Extra.current_playlist_songs_edit.append(f"{i[1]}")
 
     def check_if_song_exist(self,name,playlist):
         exist = False

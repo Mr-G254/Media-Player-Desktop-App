@@ -7,6 +7,7 @@ from youtube_search import YoutubeSearch
 import urllib.request
 import webbrowser
 from Downloader import Downloader
+import threading
 
 class You_Tube():
     def __init__(self,extra: Extra,audioctrl: AudioControls,download: Downloader):
@@ -60,7 +61,8 @@ class You_Tube():
             self.Yt_frame = CTkScrollableFrame(self.Youtube_page,height=490,width=945,fg_color="#781F15")
             self.Yt_frame.place(x=0,y=0)
 
-            self.search_yt_video("Technology")    
+            thread = threading.Thread(target=self.search_yt_video,args=("Technology",),daemon=True)
+            thread.start()
 
     def check_search(self,Event):
         if len(self.Search.get()) > 0:
