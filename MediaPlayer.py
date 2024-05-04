@@ -31,7 +31,7 @@ class HomeUI():
         self.Music = Music(self.Extra,self.Playlist,self.Audioctrl)
         self.Video = Video(self.Extra,self.Videoctrl,self.Audioctrl)
         self.Database = Database(self.Extra,self.Music,self.Video)
-        self.Settings = Settings(self.Extra,self.Database)
+        self.Settings = Settings(self.Extra,self.Database,self.Audioctrl)
         self.Folders = Folders(self.Extra,self.Database)
         self.Downloader = Downloader(self.Extra,self.Database)
         self.You_Tube = You_Tube(self.Extra,self.Audioctrl,self.Downloader)        
@@ -119,6 +119,7 @@ class HomeUI():
         self.Audioctrl.controls(self,self.app,self.Database)
         self.Music.music(self.frame,self.app,self.pic,self.name2,self.search,self.clear_btn)
         self.Video.video(self.frame,self.app,self.pic,self.name2,self.search,self.clear_btn)
+        self.Settings.settings(self.frame,self.app,self.pic,self.name2,self.search)
         
     def menu(self):
         menuframe = CTkFrame(self.frame,height= 250,width=51,fg_color="#510723",corner_radius= 6)
@@ -145,9 +146,9 @@ class HomeUI():
         self.fdbtn.place(x= 3,y= 173)
         self.Extra.buttons_b.append(self.fdbtn)
         
-        self.stbtn = CTkButton(menuframe,height= 35,width= 45,image= self.img3,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [self.Extra.configure_buttons(self.stbtn, self.Extra.buttons_b),self.Settings.settings(self.frame,self.stbtn,self.app),self.Audioctrl.Normal_mode()])
+        self.stbtn = CTkButton(menuframe,height= 35,width= 45,image= self.img3,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [self.Extra.configure_buttons(self.stbtn, self.Extra.buttons_a),self.Settings.display(),self.Audioctrl.Normal_mode()])
         self.stbtn.place(x= 3,y= 213)
-        self.Extra.buttons_b.append(self.stbtn)  
+        self.Extra.buttons_a.append(self.stbtn)  
         
         ext = CTkButton(self.frame,text= "",image= self.img11,height= 40,width=50,fg_color="#510723",corner_radius= 5,border_color="#0967CC",border_width=0,command= self.on_closing_app)
         ext.place(x=8,y=405)
