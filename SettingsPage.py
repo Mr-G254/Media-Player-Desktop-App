@@ -16,6 +16,8 @@ class Settings():
         self.img5 = CTkImage(Image.open("Icons\gmail.png"),size=(24,24))
         self.img6 = CTkImage(Image.open("Icons\\folder.png"),size=(24,24))
         self.img7 = CTkImage(Image.open("Icons\\reject.png"),size=(21,21))
+        self.img8 = CTkImage(Image.open("Icons\\folder2.png"),size=(40,40))
+        self.img9 = CTkImage(Image.open("Icons/delete.png"),size=(18,18))
 
         self.Extra = extra
         self.Database = db
@@ -98,8 +100,21 @@ class Settings():
         self.ver_frame = CTkFrame(self.settings_page,width=340,height=60,fg_color="#641E16",corner_radius=10)
         self.ver_frame.place(x=5,y=325)
 
-        dev_label = CTkLabel(self.ver_frame,text="Version: 2.0.0",font=("TImes",17),fg_color="#510723",height=40,width=320,corner_radius=8)
-        dev_label.place(x=10,y=10)
+        ver_label = CTkLabel(self.ver_frame,text="Version: 2.0.0",font=("TImes",17),fg_color="#510723",height=40,width=320,corner_radius=8)
+        ver_label.place(x=10,y=10)
+
+        self.fold_frame = CTkFrame(self.settings_page,width=350,height=375,fg_color="#641E16",corner_radius=10)
+        self.fold_frame.place(x=355,y=10)
+
+        fold_label = CTkLabel(self.fold_frame,text="Folders",font=("TImes",17),width=340)
+        fold_label.place(x=5,y=5)
+
+        self.add_btn = CTkButton(self.fold_frame,height=30,width=200,text="Add a folder",font=("TImes",16),fg_color="#510723",command=self.new_folder)
+        self.add_btn.place(x=70,y=340)
+
+        self.load_folders()
+
+        
         
     def copy_email(self,app):
         clipboard.copy("gikuhiezekiel@gmail.com")
@@ -130,6 +145,72 @@ class Settings():
         else:
             self.Database.update_location(file)
             self.loc_text.configure(text = f":  {file}")
+
+    def load_folders(self):
+        self.folders_frame = CTkScrollableFrame(self.fold_frame,width=320,height=295,fg_color="#641E16",)
+        self.folders_frame.place(x=5,y=30)
+
+        try:
+            for i in range(len(self.Extra.Folders)):
+                val = self.Extra.Folders[i].split("=")
+                id = val[0]
+                name = val[1]
+
+                self.folder1 = CTkFrame(self.folders_frame,width=315,height=58,fg_color="#510723",corner_radius=9)
+                self.folder1.grid(row=i,column=0,pady=2)
+
+                self.item_frame = CTkFrame(self.folder1,width=275,height=51,corner_radius=9,fg_color="#510723")
+                self.item_frame.place(x=3,y=3)
+                item_frame=self.item_frame
+                self.item_frame.bind('<Enter>',lambda Event,item_frame=item_frame: self.highlight_folder(Event,item_frame))
+                self.item_frame.bind('<Leave>',lambda Event,item_frame=item_frame: self.unhighlight_folder(Event,item_frame))
+
+                self.icon = CTkLabel(self.item_frame,height=50,width=50,fg_color="#510723",text="",image=self.img8)
+                self.icon.place(x=10,y=5)
+                self.icon.bind('<Enter>',lambda Event,item_frame=item_frame: self.highlight_folder(Event,item_frame))
+                self.icon.bind('<Leave>',lambda Event,item_frame=item_frame: self.unhighlight_folder(Event,item_frame))
+
+
+                self.folder_name = CTkLabel(self.item_frame,width=150,height=30,fg_color="#510723",text=name,font=("Times",17),anchor=W)
+                self.folder_name.place(x=70,y=10)
+                self.folder_name.bind('<Enter>',lambda Event,item_frame=item_frame: self.highlight_folder(Event,item_frame))
+                self.folder_name.bind('<Leave>',lambda Event,item_frame=item_frame: self.unhighlight_folder(Event,item_frame))
+
+                self.folder1.bind('<Enter>',lambda Event,item_frame=item_frame: self.highlight_folder(Event,item_frame))
+                self.folder1.bind('<Leave>',lambda Event,item_frame=item_frame: self.unhighlight_folder(Event,item_frame))
+
+                self.delete = CTkButton(self.folder1,height=30,width=30,image=self.img9,text="",fg_color="#510723",hover_color="#510723",command=lambda id=id, name=name: self.delete_folder(id,name))
+                self.delete.place(x=280,y=14)
+                self.delete.bind('<Enter>',lambda Event,item_frame=item_frame: self.highlight_folder(Event,item_frame))
+                self.delete.bind('<Leave>',lambda Event,item_frame=item_frame: self.unhighlight_folder(Event,item_frame))
+    
+        except:
+            pass
+
+    def highlight_folder(self,Event,frame):
+        frame.configure(fg_color="#770B33")
+        for i in frame.winfo_children():
+            i.configure(fg_color="#770B33")
+        
+    def unhighlight_folder(self,Event,frame):
+        frame.configure(fg_color="#510723")
+        for i in frame.winfo_children():
+            i.configure(fg_color="#510723")
+
+    def new_folder(self):
+        lc = filedialog.askdirectory()
+        
+        if lc != "":
+            values = lc.split("""/""") 
+            self.Database.add_folder(values[len(values)-1],lc)
+            self.App.update()
+            self.load_folders()
+
+    def delete_folder(self,id,name):
+        self.Database.del_folder(id,name)
+        self.App.update()
+        self.load_folders()
+    
 
     def display(self):
         self.Extra.configure_frames(self.settings_page, self.Extra.frames_a)  

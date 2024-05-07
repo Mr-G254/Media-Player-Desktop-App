@@ -5,7 +5,6 @@ from Extra import Extra
 from Database import Database
 from VideoPage import Video
 from SettingsPage import Settings
-from FoldersPage import Folders
 from MusicPage import Music
 from YouTubePage import You_Tube
 from AudioControls import AudioControls
@@ -32,7 +31,6 @@ class HomeUI():
         self.Video = Video(self.Extra,self.Videoctrl,self.Audioctrl)
         self.Database = Database(self.Extra,self.Music,self.Video)
         self.Settings = Settings(self.Extra,self.Database,self.Audioctrl)
-        self.Folders = Folders(self.Extra,self.Database)
         self.Downloader = Downloader(self.Extra,self.Database)
         self.You_Tube = You_Tube(self.Extra,self.Audioctrl,self.Downloader)        
         
@@ -122,8 +120,8 @@ class HomeUI():
         self.Settings.settings(self.frame,self.app,self.pic,self.name2,self.search)
         
     def menu(self):
-        menuframe = CTkFrame(self.frame,height= 250,width=51,fg_color="#510723",corner_radius= 6)
-        menuframe.place(x=8,y=150)
+        menuframe = CTkFrame(self.frame,height= 203,width=51,fg_color="#510723",corner_radius= 6)
+        menuframe.place(x=8,y=176)
         
         menubtn = CTkButton(menuframe,height= 35,width= 45,image= self.img0,text = '',corner_radius= 4,fg_color="#510723",anchor= CENTER,command= lambda: [self.Extra.configure_buttons(menubtn, self.Extra.buttons_a),self.home_action(),self.Audioctrl.Normal_mode()])
         menubtn.place(x= 3,y= 3)
@@ -131,27 +129,23 @@ class HomeUI():
         self.Extra.buttons_a.append(menubtn)
         
         mscbtn = CTkButton(menuframe,height= 35,width= 45,image= self.img1,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [self.Extra.configure_buttons(mscbtn, self.Extra.buttons_a),self.Music.display(),self.Audioctrl.Normal_mode()])
-        mscbtn.place(x= 3,y= 48)
+        mscbtn.place(x= 3,y= 43)
         self.Extra.buttons_a.append(mscbtn)
         
         vdbtn = CTkButton(menuframe,height= 35,width= 45,image= self.img2,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [self.Extra.configure_buttons(vdbtn, self.Extra.buttons_a),self.Video.display(),self.Audioctrl.Normal_mode()])
-        vdbtn.place(x= 3,y= 88)
+        vdbtn.place(x= 3,y= 83)
         self.Extra.buttons_a.append(vdbtn)
         
         ytbtn = CTkButton(menuframe,height= 35,width= 45,image= self.img4,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [self.Extra.configure_buttons(ytbtn, self.Extra.buttons_a),self.You_Tube.youtube(self.frame,self.app,self.pic,self.name2,self.search,self.clear_btn)])
-        ytbtn.place(x= 3,y= 128)
+        ytbtn.place(x= 3,y= 125)
         self.Extra.buttons_a.append(ytbtn)
         
-        self.fdbtn = CTkButton(menuframe,height= 35,width= 45,image= self.img5,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [self.Extra.configure_buttons(self.fdbtn, self.Extra.buttons_b),self.Folders.folders(self.frame,self.fdbtn,self.app)])
-        self.fdbtn.place(x= 3,y= 173)
-        self.Extra.buttons_b.append(self.fdbtn)
-        
         self.stbtn = CTkButton(menuframe,height= 35,width= 45,image= self.img3,text = '',fg_color="#510723",corner_radius= 4,anchor= CENTER,command= lambda: [self.Extra.configure_buttons(self.stbtn, self.Extra.buttons_a),self.Settings.display(),self.Audioctrl.Normal_mode()])
-        self.stbtn.place(x= 3,y= 213)
+        self.stbtn.place(x= 3,y= 163)
         self.Extra.buttons_a.append(self.stbtn)  
         
         ext = CTkButton(self.frame,text= "",image= self.img11,height= 40,width=50,fg_color="#510723",corner_radius= 5,border_color="#0967CC",border_width=0,command= self.on_closing_app)
-        ext.place(x=8,y=405)
+        ext.place(x=8,y=384)
         ext.bind('<Enter>',lambda Event: self.Extra.highlight(Event,ext))
         ext.bind('<Leave>',lambda Event: self.Extra.unhighlight(Event,ext)) 
 

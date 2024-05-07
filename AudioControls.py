@@ -91,7 +91,10 @@ class AudioControls(Control):
         self.fav_btn = CTkButton(self.controlframe,text= "",image= self.img1,height= 30,width=30,fg_color="#510723",corner_radius= 4,border_color="#510723",hover_color="#510723",border_width=0,command=self.fav_song)
         self.fav_btn.place(x=975,y=55)
 
-        self.restore_last_song()
+        try:
+            self.restore_last_song()
+        except:
+            pass
 
     def restore_last_song(self):
         try:

@@ -111,7 +111,7 @@ class Database():
         self.db.execute(update)
         self.db.commit()
     
-    def del_folder(self,Event,folder_id,folder_name,folder_class):
+    def del_folder(self,folder_id,folder_name):
         prompt = messagebox.askyesno("Delete Folder",f"Are you sure you want to delete {folder_name} folder")
         if prompt:
             self.Extra.notify(f"Deleting {folder_name} from Folders...")
@@ -119,7 +119,7 @@ class Database():
             self.db.commit()
 
             self.get_folder()
-            folder_class.load_folders()
+            # folder_class.load_folders()
             self.load_songs()
             self.Extra.undo_noyify()
 
