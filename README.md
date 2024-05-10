@@ -14,6 +14,8 @@ Run ` MediaPlayer.py ` to start the app. Enjoy!
 ## **Overview**
 ![Home](Screenshots/playlist.PNG)
 
+![Home](Screenshots/recent.PNG)
+
 ![Music](Screenshots/songs.PNG)
 
 ![Video](Screenshots/videos.PNG)
