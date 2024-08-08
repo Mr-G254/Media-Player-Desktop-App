@@ -21,16 +21,16 @@ class VideoControls(Control):
 
         self.Window = window
         
-        self.Height = window.winfo_height()
+        self.Height = window.winfo_screenheight()
 
-        self.Width = window.winfo_width()
+        self.Width = window.winfo_screenwidth()
 
         self.frame_width = self.Width - 10
 
         self.prog_width = self.frame_width-20
 
-        self.controlframe = CTkFrame(window,fg_color="#510723",height= 80,width=self.Width,corner_radius= 6)
-        self.controlframe.place(x=0,y=self.Height-80)
+        self.controlframe = CTkFrame(window,fg_color="#510723",height= 90,width=self.Width,corner_radius= 6)
+        self.controlframe.place(x=0,y=self.Height-105)
 
         self.progressbar = CTkSlider(self.controlframe,from_=0,to=self.frame_width-20,progress_color="#770B33",fg_color=['gray86', 'gray17'], orientation="horizontal",width=self.Width-30,command=self.move_video_progress)
         self.progressbar.set(self.Width-30)
@@ -158,13 +158,13 @@ class VideoControls(Control):
         self.media_player.set_time(time)
 
     def minimize(self):
-        self.controlframe.place(x=0,y=self.Height-25)
+        self.controlframe.place(x=0,y=self.Height-50)
         self.resize.configure(image=self.img14,command=self.maximize)
         self.is_maxsize = False
 
     def maximize(self):
         self.App.update()
-        self.controlframe.place(x=0,y=self.Height-80)
+        self.controlframe.place(x=0,y=self.Height-105)
         self.resize.configure(image=self.img15,command=self.minimize)
         self.is_maxsize = True
 
@@ -175,8 +175,8 @@ class VideoControls(Control):
 
     def reconfigure_widgets(self,Event):
         self.App.update()
-        Height = self.Window.winfo_height()
-        Width = self.Window.winfo_width()
+        Height = self.Window.winfo_screenheight()
+        Width = self.Window.winfo_screenwidth()
         frame_width = Width - 10
         self.prog_width = frame_width-20
 

@@ -118,7 +118,8 @@ class Video():
         video_window.minsize(900,500)
         video_window.protocol("WM_DELETE_WINDOW",self.on_closing)
 
-        frame = CTkFrame(video_window,fg_color="black",height=video_window.winfo_height(),width=video_window.winfo_width())
+
+        frame = CTkFrame(video_window,fg_color="black",height=video_window.winfo_screenheight(),width=video_window.winfo_screenwidth(),corner_radius=0,border_width=0)
         frame.place(x=0,y=0)
 
         self.VideoControls.play_video(file_path,name,frame)
