@@ -2,6 +2,7 @@ customtkinter
 pygame
 Pillow
 db-sqlite3
+pydub
 pathlib
 pytube
 mutagen

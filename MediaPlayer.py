@@ -38,7 +38,7 @@ class HomeUI():
         self.img1 = CTkImage(Image.open("Icons\\music.png"),size=(24,24))
         self.img2 = CTkImage(Image.open('Icons\\video.png'),size=(24,24))
         self.img3 = CTkImage(Image.open("Icons\\setting.png"),size=(24,24))
-        self.img4 = CTkImage(Image.open("Icons\\youtube.png"),size=(24,24))
+        self.img4 = CTkImage(Image.open("Icons\\internet.png"),size=(24,24))
         self.img5 = CTkImage(Image.open("Icons\\folder.png"),size=(24,24))
         self.img6 = CTkImage(Image.open("Icons\\cancel.png"),size=(24,24))
         self.img7 = CTkImage(Image.open("Icons\\recent.png"),size=(20,20))

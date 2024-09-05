@@ -14,7 +14,7 @@ class You_Tube():
     
         self.Keywords = ''
         self.vid_window=''
-        self.img0 = CTkImage(Image.open("Icons\\youtube_bg.png"),size=(64,64))
+        self.img0 = CTkImage(Image.open("Icons\\internet_bg.png"),size=(64,64))
 
         self.Extra = extra
         self.AudioControls = audioctrl

@@ -6,6 +6,7 @@ from moviepy.editor import VideoFileClip
 from PIL import Image
 from VideoControls  import VideoControls
 from AudioControls import AudioControls
+from ctypes import windll
 
 class Video():
     def __init__(self,extra: Extra,videoctrl: VideoControls,audioctrl: AudioControls):
@@ -17,6 +18,7 @@ class Video():
         self.Extra = extra
         self.VideoControls = videoctrl
         self.AudioControls = audioctrl
+        self.taskbar = windll.user32.FindWindowA(b'Shell_TrayWnd', None)
 
     def video(self,frame,app,b,c,search,clear_btn):
         self.AudioControls.Normal_mode()
@@ -107,11 +109,13 @@ class Video():
             no = no + 1
         
     def play_video(self,Event,file_path,name):
+        windll.user32.ShowWindow(self.taskbar, 0)
+        self.App.update()
         if self.vid_window !='':
             self.on_closing()
 
         self.App.iconify()
-        video_window =CTkToplevel()
+        video_window = Toplevel()
         self.vid_window = video_window
         video_window.state('zoomed')
         video_window.title(name)
@@ -186,10 +190,10 @@ class Video():
         self.iconb.place(x= 5,y= 5)
 
     def on_closing(self):
-        print("ye")
         self.VideoControls.stop_video()
         self.vid_window.destroy()
         self.VideoControls.is_maxsize = True
+        windll.user32.ShowWindow(self.taskbar, 9)
         self.App.deiconify()
         
 

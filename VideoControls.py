@@ -80,7 +80,7 @@ class VideoControls(Control):
 
         self.App.update()
 
-        # Window.bind('<Configure>',lambda Event: self.reconfigure_widgets(Event))
+        self.Window.bind('<Configure>',lambda Event: self.reconfigure_widgets(Event))
         # self.Window.resizable(False,False)
         self.Window.bind('<space>',self.spacebar)
         self.Window.bind('<Right>',self.right_arrow)
@@ -174,9 +174,13 @@ class VideoControls(Control):
             self.media_player.set_position(position)
 
     def reconfigure_widgets(self,Event):
-        self.App.update()
-        Height = self.Window.winfo_screenheight()
-        Width = self.Window.winfo_screenwidth()
+        print("ooooooooo")
+        self.App.update_idletasks()
+        print(self.Window.geometry())
+        geometry = self.Window.geometry().split("+")[0]
+        Height = int(geometry.split("x")[1])
+        Width = int(geometry.split("x")[0])
+        print(f"{Height} {Width}")
         frame_width = Width - 10
         self.prog_width = frame_width-20
 
@@ -184,9 +188,9 @@ class VideoControls(Control):
 
         self.controlframe.configure(width=Width)
         if self.is_maxsize:
-            self.controlframe.place(x=0,y=Height-80)
+            self.controlframe.place(x=0,y=Height-105)
         else:
-            self.controlframe.place(x=0,y=Height-25)
+            self.controlframe.place(x=0,y=Height-50)
 
         self.progressbar.configure(from_=0,to=Width-30,width=Width-30)
 
